@@ -76,11 +76,14 @@ class RDSRadioTextView : public OptionTabView {
    private:
     Labels labels{
         {{2 * 8, 3 * 8}, "Radiotext", Theme::getInstance()->fg_light->foreground},
-        {{1 * 8, 6 * 8}, "Text:", Theme::getInstance()->fg_light->foreground}};
+        // {{1 * 8, 6 * 8}, "Text:", Theme::getInstance()->fg_light->foreground}};
+        {{2 * 8, 6 * 8}, "Text:", Theme::getInstance()->fg_light->foreground}};
 
     Text text_radiotext{
-        {1 * 8, 4 * 16, 28 * 8, 16},
-        "-"};
+        // {1 * 8, 4 * 16, 28 * 8, 16},
+        {4 * 8, 4 * 16, 28 * 8, 16},
+        "-"
+    };
     Button button_set{
         {88, 6 * 16, 64, 32},
         "Set"};
@@ -92,7 +95,10 @@ class RDSDateTimeView : public OptionTabView {
 
    private:
     Labels labels{
-        {{44, 5 * 16}, "Not yet implemented", Theme::getInstance()->error_dark->foreground}};
+        {
+            // {44, 5 * 16}, "Not yet implemented", Theme::getInstance()->error_dark->foreground}
+            {44 + 320 /8, 5 * 16}, "Not yet implemented", Theme::getInstance()->error_dark->foreground}
+        };
 };
 
 class RDSAudioView : public OptionTabView {
@@ -101,7 +107,10 @@ class RDSAudioView : public OptionTabView {
 
    private:
     Labels labels{
-        {{44, 5 * 16}, "Not yet implemented", Theme::getInstance()->error_dark->foreground}};
+        {
+            {44 + 320 /8, 5 * 16}, "Not yet implemented", Theme::getInstance()->error_dark->foreground
+        }
+    };
 };
 
 class RDSThread {

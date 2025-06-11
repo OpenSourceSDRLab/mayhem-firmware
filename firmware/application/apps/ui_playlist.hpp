@@ -45,10 +45,12 @@ class PlaylistView : public View {
     PlaylistView(NavigationView& nav);
     PlaylistView(NavigationView& nav, const std::filesystem::path& path);
     ~PlaylistView();
-
+    bool initialized_ = false;
     // Following 2 called by 'NavigationView::update_view' after view is created.
-    void set_parent_rect(Rect new_parent_rect) override;
     void focus() override;
+    void set_parent_rect(Rect new_parent_rect) override;
+
+    // 这是隐藏代码？？
     void on_hide() override;
 
     std::string title() const override { return "Replay"; };
@@ -60,7 +62,8 @@ class PlaylistView : public View {
         "tx_replay", app_settings::Mode::TX};
 
     // More header == less spectrum view.
-    static constexpr ui::Dim header_height = 6 * 16;
+    // static constexpr ui::Dim header_height = 6 * 16;
+    static constexpr ui::Dim header_height = 6 *32;
 
     struct playlist_entry {
         std::filesystem::path path{};
@@ -76,7 +79,7 @@ class PlaylistView : public View {
     bool playlist_dirty_{};
     std::vector<playlist_entry> playlist_db_{};
     std::filesystem::path playlist_path_{};
-
+    void clear_ui(); 
     void load_file(const std::filesystem::path& path);
     Optional<playlist_entry> load_entry(std::filesystem::path&& path);
     void on_file_changed(const std::filesystem::path& path);
@@ -100,6 +103,10 @@ class PlaylistView : public View {
     void send_current_track();
     void stop();
 
+    // 模仿ui_navigation添加此函数
+    // 没用
+    void free_view();
+
     void update_ui();
 
     /* There are called by Message handlers. */
@@ -107,16 +114,16 @@ class PlaylistView : public View {
     void handle_replay_thread_done(uint32_t return_code);
 
     Text text_filename{
-        {0 * 8, 0 * 16, screen_width, 16}};
+        {0 * 8, 0 * ui::new_font_height, screen_width, ui::new_font_height}};
 
     FrequencyField field_frequency{
-        {0 * 8, 1 * 16}};
+        {0 * 8, 1 * ui::new_font_height}};
 
     Text text_sample_rate{
-        {10 * 8, 1 * 16, 7 * 8, 16}};
+        {10 * 8, 1 * ui::new_font_height, 7 * 8, ui::new_font_height}};
 
     ProgressBar progressbar_track{
-        {18 * 8, 1 * 16, 12 * 8, 8 + 1}};
+        {18 * 8, 1 * ui::new_font_height, 12 * 8, 8 + 1}};
 
     // (-1) to overlap with progressbar_track so there's
     // only 1 pixel between them instead of 2.
@@ -124,61 +131,61 @@ class PlaylistView : public View {
         {18 * 8, 3 * 8 - 1, 12 * 8, 8}};
 
     Text text_duration{
-        {0 * 8, 2 * 16, 5 * 8, 16}};
+        {0 * 8, 2 * ui::new_font_height, 5 * 8, ui::new_font_height}};
 
     // TODO: delay duration field.
 
     TransmitterView2 tx_view{
-        {11 * 8, 2 * 16},
+        {11 * 8, 2 * ui::new_font_height},
         /*short_ui*/ true};
 
     Checkbox check_loop{
-        {21 * 8, 2 * 16},
+        {21 * 8, 2 * ui::new_font_height},
         4,
         "Loop",
         true};
 
     ImageButton button_play{
-        {screen_width - 2 * 8, 2 * 16, 2 * 8, 1 * 16},
+        {screen_width - 2 * 8, 2 * ui::new_font_height, 2 * 8, 1 * ui::new_font_height},
         &bitmap_play,
         Theme::getInstance()->fg_green->foreground,
         Theme::getInstance()->fg_green->background};
 
     Text text_track{
-        {0 * 8, 3 * 16, screen_width, 16}};
+        {0 * 8, 3 * ui::new_font_height, screen_width, ui::new_font_height}};
 
     NewButton button_prev{
-        {2 * 8, 4 * 16, 4 * 8, 2 * 16},
+        {2 * 8, 4 * ui::new_font_height, 4 * 8, 2 * ui::new_font_height},
         "",
         &bitmap_arrow_left,
         Theme::getInstance()->bg_dark->background};
 
     NewButton button_next{
-        {6 * 8, 4 * 16, 4 * 8, 2 * 16},
+        {6 * 8, 4 * ui::new_font_height, 4 * 8, 2 * ui::new_font_height},
         "",
         &bitmap_arrow_right,
         Theme::getInstance()->bg_dark->background};
 
     NewButton button_add{
-        {11 * 8, 4 * 16, 4 * 8, 2 * 16},
+        {11 * 8, 4 * ui::new_font_height, 4 * 8, 2 * ui::new_font_height},
         "",
         &bitmap_icon_new_file,
         Theme::getInstance()->fg_orange->foreground};
 
     NewButton button_delete{
-        {15 * 8, 4 * 16, 4 * 8, 2 * 16},
+        {15 * 8, 4 * ui::new_font_height, 4 * 8, 2 * ui::new_font_height},
         "",
         &bitmap_icon_delete,
         Theme::getInstance()->fg_orange->foreground};
 
     NewButton button_open{
-        {20 * 8, 4 * 16, 4 * 8, 2 * 16},
+        {20 * 8, 4 * ui::new_font_height, 4 * 8, 2 * ui::new_font_height},
         "",
         &bitmap_icon_load,
         Theme::getInstance()->fg_blue->foreground};
 
     NewButton button_save{
-        {24 * 8, 4 * 16, 4 * 8, 2 * 16},
+        {24 * 8, 4 * ui::new_font_height, 4 * 8, 2 * ui::new_font_height},
         "",
         &bitmap_icon_save,
         Theme::getInstance()->fg_blue->foreground};

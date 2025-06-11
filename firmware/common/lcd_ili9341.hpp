@@ -43,7 +43,10 @@ class ILI9341 {
     void operator=(const ILI9341&) = delete;
 
     bool read_display_status();
-
+    void draw_glyph_v2(const ui::Point p,ui::Size size,const ui::Color foreground,const ui::Color background,void *target);
+    //change there add only paint string
+    void draw_bitmap_only_char(const ui::Point p,const ui::Size size,const uint8_t* const pixels, const ui::Color foreground,const ui::Color background);
+    void draw_bitmap_only_char_16(const ui::Point p,const ui::Size size,const uint16_t* const pixels, const ui::Color foreground,const ui::Color background);
     void init();
     void shutdown();
 

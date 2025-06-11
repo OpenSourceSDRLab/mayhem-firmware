@@ -351,8 +351,8 @@ void AISRecentEntryDetailView::paint(Painter& painter) {
     const auto s = style();
     const auto rect = screen_rect();
 
-    auto field_rect = Rect{rect.left(), rect.top() + 16, rect.width(), 16};
-
+    // auto field_rect = Rect{rect.left(), rect.top() + 16, rect.width(), 16};
+     auto field_rect = Rect{rect.left(), rect.top() + ui::new_font_height, rect.width(), ui::new_font_height};
     field_rect = draw_field(painter, field_rect, s, "MMSI", ais::format::mmsi(entry_.mmsi));
     field_rect = draw_field(painter, field_rect, s, "Ctry", ais::format::mid(entry_.mmsi));
     field_rect = draw_field(painter, field_rect, s, "Name", ais::format::text(entry_.name));
@@ -429,7 +429,8 @@ void AISAppView::focus() {
 
 void AISAppView::set_parent_rect(const Rect new_parent_rect) {
     View::set_parent_rect(new_parent_rect);
-    const Rect content_rect{0, header_height, new_parent_rect.width(), new_parent_rect.height() - header_height};
+    const Rect content_rect{0, ui::new_font_height, new_parent_rect.width(), new_parent_rect.height() - ui::new_font_height - 16};
+    
     recent_entries_view.set_parent_rect(content_rect);
     recent_entry_detail_view.set_parent_rect(content_rect);
 }

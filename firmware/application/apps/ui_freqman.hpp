@@ -41,6 +41,7 @@ class FreqManBaseView : public View {
     void focus() override;
 
    protected:
+    int FIT_OFFSET = 320/8;
     using options_t = OptionsField::options_t;
 
     NavigationView& nav_;
@@ -61,18 +62,18 @@ class FreqManBaseView : public View {
 
     /* The top section (category) is 20px tall. */
     Labels label_category{
-        {{0, 2}, "F:", Theme::getInstance()->fg_light->foreground}};
+        {{FIT_OFFSET +0, 2}, "F:", Theme::getInstance()->fg_light->foreground}};
 
     OptionsField options_category{
-        {3 * 8, 2},
+        {FIT_OFFSET +3 * 8, 2},
         20 /* length */,
         {}};
 
     FreqManUIList freqlist_view{
-        {0, 3 * 8, screen_width, 12 * 16 + 2 /* 2 Keeps text out of border. */}};
+        {  0, 3 * 8, screen_width, 12 * 16 + 2 /* 2 Keeps text out of border. */}};
 
     Button button_exit{
-        {15 * 8, 17 * 16, 15 * 8, 2 * 16},
+        {FIT_OFFSET +15 * 8, 17 * 16, 15 * 8, 2 * 16},
         "Exit"};
 
    protected:
@@ -123,6 +124,7 @@ class FrequencyManagerView : public FreqManBaseView {
     std::string title() const override { return "Freqman"; }
 
    private:
+    int FIT_OFFSET = 320/8;
     std::string temp_buffer_{};
 
     void on_edit_entry();
@@ -134,44 +136,44 @@ class FrequencyManagerView : public FreqManBaseView {
     void on_del_entry();
 
     NewButton button_add_category{
-        {23 * 8, 0 * 16, 7 * 4, 20},
+        {FIT_OFFSET +23 * 8, 0 * 16, 7 * 4, 20},
         {},
         &bitmap_icon_new_file,
         Theme::getInstance()->bg_darkest->foreground,
         true};
 
     NewButton button_del_category{
-        {26 * 8 + 4, 0 * 16, 7 * 4, 20},
+        {FIT_OFFSET +26 * 8 + 4, 0 * 16, 7 * 4, 20},
         {},
         &bitmap_icon_trash,
         Theme::getInstance()->fg_red->foreground,
         true};
 
     Button button_edit_entry{
-        {0 * 8, 14 * 16 - 4, 15 * 8, 1 * 16 + 4},
+        { FIT_OFFSET + 0 * 8, 14 * 16 - 4, 15 * 8, 1 * 16 + 4},
         "Edit"};
 
     Rectangle rect_padding{
-        {15 * 8, 14 * 16 - 4, 15 * 8, 1 * 16 + 4},
+        {FIT_OFFSET +15 * 8, 14 * 16 - 4, 15 * 8, 1 * 16 + 4},
         Theme::getInstance()->fg_medium->background};
 
     Button button_edit_freq{
-        {0 * 8, 15 * 16, 15 * 8, 2 * 16},
+        { FIT_OFFSET + 0 * 8, 15 * 16, 15 * 8, 2 * 16},
         "Frequency"};
 
     Button button_edit_desc{
-        {0 * 8, 17 * 16, 15 * 8, 2 * 16},
+        { FIT_OFFSET +0 * 8, 17 * 16, 15 * 8, 2 * 16},
         "Description"};
 
     NewButton button_add_entry{
-        {15 * 8, 15 * 16, 7 * 8 + 4, 2 * 16},
+        {FIT_OFFSET +15 * 8, 15 * 16, 7 * 8 + 4, 2 * 16},
         {},
         &bitmap_icon_add,
         Theme::getInstance()->bg_darkest->foreground,
         true};
 
     NewButton button_del_entry{
-        {22 * 8 + 4, 15 * 16, 7 * 8 + 4, 2 * 16},
+        {FIT_OFFSET +22 * 8 + 4, 15 * 16, 7 * 8 + 4, 2 * 16},
         {},
         &bitmap_icon_delete,
         Theme::getInstance()->fg_red->foreground,

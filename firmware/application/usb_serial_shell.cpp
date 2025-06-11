@@ -1375,13 +1375,6 @@ static void cmd_setfreq(BaseSequentialStream* chp, int argc, char* argv[]) {
     chprintf(chp, "ok\r\n");
 }
 
-static void cmd_getres(BaseSequentialStream* chp, int argc, char* argv[]) {
-    (void)argc;
-    (void)argv;
-    std::string res = to_string_dec_uint(screen_width) + "x" + to_string_dec_uint(screen_height) + "\r\nok\r\n";
-    chprintf(chp, res.c_str());
-}
-
 static const ShellCommand commands[] = {
     {"reboot", cmd_reboot},
     {"dfu", cmd_dfu},
@@ -1417,7 +1410,6 @@ static const ShellCommand commands[] = {
     {"sendpocsag", cmd_sendpocsag},
     {"asyncmsg", cmd_asyncmsg},
     {"setfreq", cmd_setfreq},
-    {"getres", cmd_getres},
     {NULL, NULL}};
 
 static const ShellConfig shell_cfg1 = {

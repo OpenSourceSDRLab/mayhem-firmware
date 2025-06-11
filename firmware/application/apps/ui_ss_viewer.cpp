@@ -27,7 +27,9 @@ namespace fs = std::filesystem;
 
 namespace ui {
 
-const std::filesystem::path splash_dot_bmp{u"/splash.bmp"};
+// const std::filesystem::path splash_dot_bmp{u"/splash.bmp"};
+// 修改开机图片
+const std::filesystem::path splash_dot_bmp{u"sdcard/SPLASH/mayhem-default.bmp"};
 
 ScreenshotViewer::ScreenshotViewer(
     NavigationView& nav,

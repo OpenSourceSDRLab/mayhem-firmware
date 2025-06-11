@@ -284,10 +284,16 @@ class BLERxView : public View {
         {21 * 8, 0 * 16}};
 
     RSSI rssi{
-        {24 * 8, 0, 6 * 8, 4}};
+        // {24 * 8, 0, 6 * 8, 4}
+        // 加长加高，左对其
+        {24 * 8, 0, 24 * 8, 8}
+    };
 
     Channel channel{
-        {24 * 8, 5, 6 * 8, 4}};
+        // {24 * 8, 5, 6 * 8, 4}
+        // 加长加高，左对其
+        { 24 * 8, 9, 24 * 8, 8}
+    };
 
     Labels label_sort{
         {{0 * 8, 2 * 8}, "Sort:", Theme::getInstance()->fg_light->foreground}};
@@ -328,10 +334,12 @@ class BLERxView : public View {
         "Find"};
 
     Labels label_found{
-        {{5 * 8, 7 * 8 - 2}, "Found:", Theme::getInstance()->fg_light->foreground}};
+        {{320 - 8*10, 7 * 8 - 2}, "Found:", Theme::getInstance()->fg_light->foreground}};
+        // {{5 * 8, 7 * 8 - 2}, "Found:", Theme::getInstance()->fg_light->foreground}};
 
     Text text_found_count{
-        {11 * 8, 7 * 8 - 2, 20 * 8, 16},
+        // {11 * 8, 7 * 8 - 2, 20 * 8, 16},
+        {320 - 8 * 5, 7 * 8 - 2, 20 * 8, 16},
         "0/0"};
 
     Checkbox check_serial_log{
@@ -361,10 +369,16 @@ class BLERxView : public View {
     BleRecentEntries recent{};
     BleRecentEntries tempList{};
 
+    // 这里是动态渲染的图标
+    // 这里计算的方法是屏幕宽度假设为320
+    // 320/8 = 40 ，绘制头部的时候每个个体间还有个空格因此需要设置为37即可
     const RecentEntriesColumns columns{{
-        {"Mac Address", 17},
-        {"Hits", 7},
-        {"dB", 4},
+        // {"Mac Address", 17},
+        // {"Hits", 7},
+        // {"dB", 4},
+        {"  Mac Address  ", 16 +1},
+        {"  Hits  ", 9 + 1},
+        {"   dB   ", 9 + 1 },
     }};
 
     BleRecentEntriesView recent_entries_view{columns, recent};

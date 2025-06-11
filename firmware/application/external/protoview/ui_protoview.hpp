@@ -60,29 +60,29 @@ class ProtoView : public View {
         "rx_protoview", app_settings::Mode::RX};
 
     RFAmpField field_rf_amp{
-        {UI_POS_X(13), UI_POS_Y(0)}};
+        {13 * 8, 0 * 16}};
     LNAGainField field_lna{
-        {UI_POS_X(15), UI_POS_Y(0)}};
+        {15 * 8, 0 * 16}};
     VGAGainField field_vga{
-        {UI_POS_X(18), UI_POS_Y(0)}};
+        {18 * 8, 0 * 16}};
     RSSI rssi{
-        {UI_POS_X(21), UI_POS_Y(0), UI_POS_WIDTH(6), 4}};
+        {21 * 8, 0, 6 * 8, 4}};
 
     AudioVolumeField field_volume{
-        {UI_POS_X_RIGHT(2), UI_POS_Y(0)}};
+        {screen_width - 2 * 8, 0 * 16}};
 
     RxFrequencyField field_frequency{
-        {UI_POS_X(0), UI_POS_Y(0)},
+        {0 * 8, 0 * 16},
         nav_};
 
     // need to seperate because label shift need to hide independently
     Labels label_zoom{
-        {{UI_POS_X(0), UI_POS_Y(1)}, "Zoom: ", Theme::getInstance()->fg_light->foreground}};
+        {{0 * 8, 1 * 16}, "Zoom: ", Theme::getInstance()->fg_light->foreground}};
     Labels label_shift{
-        {{UI_POS_X(0), UI_POS_Y(2)}, "Shift: ", Theme::getInstance()->fg_light->foreground}};
+        {{0 * 8, 2 * 16}, "Shift: ", Theme::getInstance()->fg_light->foreground}};
 
     OptionsField options_zoom{
-        {UI_POS_X(7), UI_POS_Y(1)},
+        {7 * 8, 1 * 16},
         4,
         {{"1", 1},
          {"2", 2},
@@ -96,22 +96,22 @@ class ProtoView : public View {
          {"1000", 1000}}};
 
     NumberField number_shift{
-        {UI_POS_X(7), UI_POS_Y(2)},
+        {7 * 8, 2 * 16},
         5,
         {-MAXSIGNALBUFFER, MAXSIGNALBUFFER},
         1,
         ' '};
 
     Button button_reset{
-        {UI_POS_X_RIGHT(12), UI_POS_Y(1), UI_POS_WIDTH(12), UI_POS_HEIGHT(1.5)},
+        {screen_width - 12 * 8, 1 * 16, 96, 24},
         LanguageHelper::currentMessages[LANG_RESET]};
 
     Button button_pause{
-        {UI_POS_X_RIGHT(12), UI_POS_Y(2.5), UI_POS_WIDTH(12), UI_POS_HEIGHT(1.5)},
+        {screen_width - 12 * 8, 1 * 16 + 24, 96, 24},
         LanguageHelper::currentMessages[LANG_PAUSE]};
 
     Waveform waveform{
-        {UI_POS_X(0), UI_POS_Y(4), UI_POS_MAXWIDTH, (UI_POS_HEIGHT_REMAINING(5) / 4) - 4},
+        {0, 8 * 8, screen_width, 50},
         waveform_buffer,
         0,
         0,
@@ -119,7 +119,7 @@ class ProtoView : public View {
         Theme::getInstance()->fg_yellow->foreground};
 
     Waveform waveform2{
-        {UI_POS_X(0), UI_POS_Y(4) + (UI_POS_HEIGHT_REMAINING(5) / 4), UI_POS_MAXWIDTH, (UI_POS_HEIGHT_REMAINING(5) / 4) - 4},
+        {0, 8 * 8 + 55, screen_width, 50},
         &waveform_buffer[MAXDRAWCNTPERWF],
         0,
         0,
@@ -127,7 +127,7 @@ class ProtoView : public View {
         Theme::getInstance()->fg_yellow->foreground};
 
     Waveform waveform3{
-        {UI_POS_X(0), UI_POS_Y(4) + 2 * (UI_POS_HEIGHT_REMAINING(5) / 4), UI_POS_MAXWIDTH, (UI_POS_HEIGHT_REMAINING(5) / 4) - 4},
+        {0, 8 * 8 + 110, screen_width, 50},
         &waveform_buffer[MAXDRAWCNTPERWF * 2],
         0,
         0,
@@ -135,7 +135,7 @@ class ProtoView : public View {
         Theme::getInstance()->fg_yellow->foreground};
 
     Waveform waveform4{
-        {UI_POS_X(0), UI_POS_Y(4) + 3 * (UI_POS_HEIGHT_REMAINING(5) / 4), UI_POS_MAXWIDTH, (UI_POS_HEIGHT_REMAINING(5) / 4) - 4},
+        {0, 8 * 8 + 165, screen_width, 50},
         &waveform_buffer[MAXDRAWCNTPERWF * 3],
         0,
         0,

@@ -93,6 +93,16 @@ class SondeView : public View {
 
     // AudioOutput audio_output { };
 
+    // Labels labels{
+    //     {{4 * 8, 2 * 16}, "Type:", Theme::getInstance()->fg_light->foreground},
+    //     {{6 * 8, 3 * 16}, "ID:", Theme::getInstance()->fg_light->foreground},
+    //     {{0 * 8, 4 * 16}, "DateTime:", Theme::getInstance()->fg_light->foreground},
+
+    //     {{3 * 8, 5 * 16}, "Vbatt:", Theme::getInstance()->fg_light->foreground},
+    //     {{3 * 8, 6 * 16}, "Frame:", Theme::getInstance()->fg_light->foreground},
+    //     {{4 * 8, 7 * 16}, "Temp:", Theme::getInstance()->fg_light->foreground},
+    //     {{0 * 8, 8 * 16}, "Humidity:", Theme::getInstance()->fg_light->foreground}
+    // };
     Labels labels{
         {{4 * 8, 2 * 16}, "Type:", Theme::getInstance()->fg_light->foreground},
         {{6 * 8, 3 * 16}, "ID:", Theme::getInstance()->fg_light->foreground},
@@ -101,7 +111,8 @@ class SondeView : public View {
         {{3 * 8, 5 * 16}, "Vbatt:", Theme::getInstance()->fg_light->foreground},
         {{3 * 8, 6 * 16}, "Frame:", Theme::getInstance()->fg_light->foreground},
         {{4 * 8, 7 * 16}, "Temp:", Theme::getInstance()->fg_light->foreground},
-        {{0 * 8, 8 * 16}, "Humidity:", Theme::getInstance()->fg_light->foreground}};
+        {{0 * 8, 8 * 16}, "Humidity:", Theme::getInstance()->fg_light->foreground}
+    };
 
     RxFrequencyField field_frequency{
         {0 * 8, 0 * 8},
@@ -117,20 +128,26 @@ class SondeView : public View {
         {18 * 8, 0 * 16}};
 
     RSSI rssi{
-        {21 * 8, 0, 6 * 8, 4}};
+        // {21 * 8, 0, 6 * 8, 4}
+        {21 * 8, 0, 16 * 8, 16}
+    };
 
     AudioVolumeField field_volume{
         {screen_width - 2 * 8, 0 * 16}};
 
     Checkbox check_log{
-        {22 * 8, 8 * 16},
+        // {22 * 8,  8 * 16},
+        {screen_width/2 + 8*3 ,8 * 16},
         3,
-        "Log"};
+        "Log"
+    };
 
     Checkbox check_crc{
-        {22 * 8, 10 * 16},
+        // {22 * 8, 10 * 16},
+        {screen_width/2 + 8*3 ,10 * 16},
         3,
-        "CRC"};
+        "CRC"
+    };
 
     Text text_signature{
         {9 * 8, 2 * 16, 10 * 8, 16},
@@ -166,11 +183,13 @@ class SondeView : public View {
         GeoPos::spd_unit::HIDDEN};
 
     Button button_see_qr{
-        {2 * 8, 15 * 16, 12 * 8, 3 * 16},
+        // {2 * 8, 15 * 16, 12 * 8, 3 * 16},
+        {screen_width/2 - 12 *8 , screen_height - 7 * 16, 12 * 8, 3 * 16},
         "See QR"};
 
     Button button_see_map{
-        {16 * 8, 15 * 16, 12 * 8, 3 * 16},
+        // {16 * 8, 15 * 16, 12 * 8, 3 * 16},
+        {screen_width/2 + 2 * 8, screen_height - 7 * 16, 12 * 8, 3 * 16},
         "See on map"};
 
     GeoMapView* geomap_view_{nullptr};

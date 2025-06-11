@@ -138,11 +138,11 @@ class ERTAppView : public View {
         "rx_ert", app_settings::Mode::RX};
 
     const RecentEntriesColumns columns{{
-        {"ID", 10},
-        {"Ty", 2},
-        {"Consumpt", 8},
-        {"Tamp", 4},
-        {"Ct", 2},
+        {"   ID   ", 9}, //10
+        {" Ty  ", 6}, //7 
+        {" Consumpt ",11}, //12
+        {"Tamp", 5}, // 6
+        {"Ct", 3}, //4
     }};
     ERTRecentEntriesView recent_entries_view{columns, recent};
 
@@ -159,10 +159,12 @@ class ERTAppView : public View {
         {15 * 8, 0 * 16}};
 
     VGAGainField field_vga{
-        {18 * 8, 0 * 16}};
+        {18 * 8, 0 * 16}
+    };
 
     RSSI rssi{
-        {21 * 8, 0, 6 * 8, 4},
+        // {21 * 8, 0, 6 * 8, 4},
+        {21 * 8, 0, 16 * 8, 16},
     };
 
     AudioVolumeField field_volume{

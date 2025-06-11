@@ -186,6 +186,7 @@ class StatusTray : public View {
     uint8_t width_{};
 };
 
+// 最顶部的栏目
 class SystemStatusView : public View {
    public:
     std::function<void(void)> on_back{};
@@ -205,22 +206,22 @@ class SystemStatusView : public View {
     NavigationView& nav_;
 
     Rectangle backdrop{
-        {0 * 8, 0 * 16, ui::screen_width, 16},
+        {0 * 8, 0 * 16, ui::screen_width, ui::good_display_header_height },
         Theme::getInstance()->bg_dark->background};
 
     ImageButton button_back{
-        {0, 0 * 16, 12 * 8, 16},  // Back button also covers the title for easier touch.
+        {0, 0 * 16, 12 * 8, ui::good_display_header_height},  // Back button also covers the title for easier touch.
         &bitmap_icon_previous,
         Theme::getInstance()->bg_dark->foreground,
         Theme::getInstance()->bg_dark->background};
 
     Text title{
-        {20, 0, 14 * 8, 1 * 16},
+        {20, 0, 14 * 8, 1 * ui::good_display_header_height},
         default_title,
     };
 
     ImageButton button_title{
-        {2, 0, 80, 16},
+        {2, 0, 80, ui::good_display_header_height},
         &bitmap_titlebar_image,
         Theme::getInstance()->bg_dark->foreground,
         Theme::getInstance()->bg_dark->background};
@@ -228,7 +229,7 @@ class SystemStatusView : public View {
     StatusTray status_icons{{screen_width, 0}};
 
     ImageToggle toggle_speaker{
-        {0, 0, 2 * 8, 1 * 16},
+        {0, 0, 2 * 8, 1 * ui::good_display_header_height},
         &bitmap_icon_speaker_mute,
         &bitmap_icon_speaker,
         Theme::getInstance()->fg_light->foreground,
@@ -237,7 +238,7 @@ class SystemStatusView : public View {
         Theme::getInstance()->bg_dark->background};
 
     ImageToggle toggle_mute{
-        {0, 0, 2 * 8, 1 * 16},
+        {0, 0, 2 * 8, 1 * ui::good_display_header_height},
         &bitmap_icon_speaker_and_headphones_mute,
         &bitmap_icon_speaker_and_headphones,
         Theme::getInstance()->fg_light->foreground,
@@ -246,13 +247,13 @@ class SystemStatusView : public View {
         Theme::getInstance()->bg_dark->background};
 
     ImageButton button_converter{
-        {0, 0, 2 * 8, 1 * 16},
+        {0, 0, 2 * 8, 1 * ui::good_display_header_height},
         &bitmap_icon_upconvert,
         Theme::getInstance()->fg_light->foreground,
         Theme::getInstance()->bg_dark->background};
 
     ImageToggle toggle_stealth{
-        {0, 0, 2 * 8, 1 * 16},
+        {0, 0, 2 * 8, 1 * ui::good_display_header_height},
         &bitmap_icon_stealth,
         &bitmap_icon_stealth,
         *Theme::getInstance()->status_active,
@@ -261,40 +262,40 @@ class SystemStatusView : public View {
         Theme::getInstance()->bg_dark->background};
 
     ImageButton button_camera{
-        {0, 0, 2 * 8, 1 * 16},
+        {0, 0, 2 * 8, 1 * ui::good_display_header_height},
         &bitmap_icon_camera,
         Theme::getInstance()->bg_dark->foreground,
         Theme::getInstance()->bg_dark->background};
 
     ImageButton button_sleep{
-        {0, 0, 2 * 8, 1 * 16},
+        {0, 0, 2 * 8, 1 * ui::good_display_header_height},
         &bitmap_icon_sleep,
         Theme::getInstance()->bg_dark->foreground,
         Theme::getInstance()->bg_dark->background};
 
     ImageButton button_bias_tee{
-        {0, 0, 2 * 8, 1 * 16},
+        {0, 0, 2 * 8, 1 * ui::good_display_header_height},
         &bitmap_icon_biast_off,
         Theme::getInstance()->fg_light->foreground,
         Theme::getInstance()->bg_dark->background};
 
     ImageButton button_clock_status{
-        {0, 0 * 16, 8, 1 * 16},
+        {0, 0 * 16, 8, 1 * ui::good_display_header_height},
         &bitmap_icon_clk_int,
         Theme::getInstance()->fg_light->foreground,
         Theme::getInstance()->bg_dark->background};
 
     ImageButton button_fake_brightness{
-        {0, 0, 2 * 8, 1 * 16},
+        {0, 0, 2 * 8, 1 * ui::good_display_header_height},
         &bitmap_icon_brightness,
         *Theme::getInstance()->status_active,
         Theme::getInstance()->bg_dark->background};
 
     SDCardStatusView sd_card_status_view{
-        {0, 0 * 16, 2 * 8, 1 * 16}};
+        {0, 0 * 16, 2 * 8, 1 * ui::good_display_header_height}};
 
-    BatteryTextField battery_text{{0, 0, 2 * 8, 1 * 16}, 102};
-    BatteryIcon battery_icon{{0, 0, 10, 1 * 16}, 102};
+    BatteryTextField battery_text{{0, 0, 2 * 8, 1 * ui::good_display_header_height}, 102};
+    BatteryIcon battery_icon{{0, 0, 10, 1 * ui::good_display_header_height}, 102};
 
     void on_converter();
     void on_bias_tee();
@@ -321,6 +322,7 @@ class SystemStatusView : public View {
         }};
 };
 
+// 最下方的栏目
 class InformationView : public View {
    public:
     InformationView(NavigationView& nav);
@@ -329,18 +331,23 @@ class InformationView : public View {
 
    private:
     // static constexpr auto version_string = "v1.4.4"; // This is commented out as we are now setting the version via ENV (VERSION_STRING=v1.0.0)
+    static constexpr auto version_string = "my_test";
     NavigationView& nav_;
 
     Rectangle backdrop{
-        {0, 0, screen_width, 16},
+        {0, 0, screen_width, ui::new_font_height},
         Theme::getInstance()->bg_darker->background};
 
+    // Text version{
+    //     {2, 0, 11 * 8, 16},
+    //     VERSION_STRING};
+
     Text version{
-        {2, 0, 11 * 8, 16},
-        VERSION_STRING};
+        {0, 0, 11 * 8, ui::new_font_height},
+        version_string};
 
     LiveDateTime ltime{
-        {screen_width - 19 * 8, 0, 19 * 8, 16}};
+        {screen_width - 19 * 8, 0, 19 * 8, ui::new_font_height}};
 };
 
 class SplashScreenView : public View {
@@ -419,6 +426,8 @@ class SystemMenuView : public BtnGridView {
     void hackrf_mode(NavigationView& nav);
 };
 
+// 主要显示界面
+// 包含状态栏；菜单；最下栏
 class SystemView : public View {
    public:
     SystemView(
@@ -462,8 +471,9 @@ private:
         };
 };*/
 
+ 
 class ModalMessageView : public View {
-   public:
+    public:
     ModalMessageView(
         NavigationView& nav,
         const std::string& title,
@@ -471,7 +481,7 @@ class ModalMessageView : public View {
         modal_t type,
         std::function<void(bool)> on_choice,
         bool compact = false);
-
+    // 实际绘制图形的位置？？
     void paint(Painter& painter) override;
     void focus() override;
 
@@ -483,19 +493,33 @@ class ModalMessageView : public View {
     const modal_t type_;
     const std::function<void(bool)> on_choice_;
     const bool compact;
+    // source
+    // Button button_ok{
+    //     {10 * 8, 14 * 16, 10 * 8, 48},
+    //     "OK",
+    // };
 
+    // Button button_yes{
+    //     {5 * 8, 14 * 16, 8 * 8, 48},
+    //     "YES",
+    // };
+
+    // Button button_no{
+    //     {17 * 8, 14 * 16, 8 * 8, 48},
+    //     "NO",
+    // };
     Button button_ok{
-        {10 * 8, 14 * 16, 10 * 8, 48},
+        {0, ui::screen_height - (48 + ui::new_font_height), 10 * 8, ui::new_font_height*2},
         "OK",
     };
 
     Button button_yes{
-        {5 * 8, 14 * 16, 8 * 8, 48},
+         {ui::screen_width- 10*8*2 , ui::screen_height - (48 + ui::new_font_height), 10 * 8, ui::new_font_height*2},
         "YES",
     };
 
     Button button_no{
-        {17 * 8, 14 * 16, 8 * 8, 48},
+        {ui::screen_width - 10*8*1, ui::screen_height - (48 +ui::new_font_height) , 10 * 8, ui::new_font_height*2},
         "NO",
     };
 };

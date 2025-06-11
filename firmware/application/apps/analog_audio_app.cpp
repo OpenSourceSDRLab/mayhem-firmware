@@ -217,7 +217,8 @@ AnalogAudioView::AnalogAudioView(
                   &field_volume,
                   &text_ctcss,
                   &record_view,
-                  &waterfall});
+                  &waterfall
+                });
 
     // Filename Datetime and Frequency
     record_view.set_filename_date_frequency(true);

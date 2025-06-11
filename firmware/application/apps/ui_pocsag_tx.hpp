@@ -133,7 +133,10 @@ class POCSAGTXView : public View {
         "Set message"};
 
     ProgressBar progressbar{
-        {16, 210, 208, 16}};
+        // {16, 210, 208, 16}
+        {16, 210, 320 - 2 *16, 16}
+    
+    };
 
     TransmitterView tx_view{
         16 * 16,

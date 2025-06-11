@@ -294,15 +294,19 @@ class BLETxView : public View {
         {0, 9 * 18, screen_width, screen_height - 80}};
 
     Button button_clear_marked{
-        {1 * 8, 14 * 16, 13 * 8, 3 * 8},
+        // {1 * 8, 14 * 16, 13 * 8, 3 * 8},
+        {ui::screen_width/8*1, 14 * 16, 13 * 8, 3 * 8},
         "Clear Marked"};
 
     Button button_save_packet{
-        {1 * 8, 16 * 16, 13 * 8, 2 * 16},
+        // {1 * 8, 16 * 16, 13 * 8, 2 * 16},
+        {ui::screen_width/8*1, 16 * 16, 13 * 8, 2 * 16},
         "Save Packet"};
 
     Button button_switch{
-        {16 * 8, 16 * 16, 13 * 8, 2 * 16},
+        // {16 * 8, 16 * 16, 13 * 8, 2 * 16},
+
+        {ui::screen_width/8*5, 16 * 16, 13 * 8, 2 * 16},
         "Switch to Rx"};
 
     std::string str_log{""};

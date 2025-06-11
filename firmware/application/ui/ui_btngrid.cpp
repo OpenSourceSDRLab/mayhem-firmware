@@ -38,28 +38,29 @@ BtnGridView::BtnGridView(
     set_parent_rect(new_parent_rect);
     set_focusable(true);
 
-    button_pgup.set_focusable(false);
-    button_pgup.on_select = [this](Button&) {
-        if (arrow_up_enabled) {
-            if (((int64_t)highlighted_item - displayed_max) > 0)
-                set_highlighted(highlighted_item - displayed_max);
-            else
-                set_highlighted(0);
-        }
-    };
+    //先不要设置 page up 和page down 两个标签
+    // button_pgup.set_focusable(false);
+    // button_pgup.on_select = [this](Button&) {
+    //     if (arrow_up_enabled) {
+    //         if (((int64_t)highlighted_item - displayed_max) > 0)
+    //             set_highlighted(highlighted_item - displayed_max);
+    //         else
+    //             set_highlighted(0);
+    //     }
+    // };
 
-    button_pgdown.set_focusable(false);
-    button_pgdown.on_select = [this](Button&) {
-        if (arrow_down_enabled) {
-            set_highlighted(highlighted_item + displayed_max);
-        }
-    };
+    // button_pgdown.set_focusable(false);
+    // button_pgdown.on_select = [this](Button&) {
+    //     if (arrow_down_enabled) {
+    //         set_highlighted(highlighted_item + displayed_max);
+    //     }
+    // };
 
-    button_pgup.set_style(Theme::getInstance()->bg_darkest_small);
-    button_pgdown.set_style(Theme::getInstance()->bg_darkest_small);
+    // button_pgup.set_style(Theme::getInstance()->bg_darkest_small);
+    // button_pgdown.set_style(Theme::getInstance()->bg_darkest_small);
 
-    add_child(&button_pgup);
-    add_child(&button_pgdown);
+    // add_child(&button_pgup);
+    // add_child(&button_pgdown);
 }
 
 BtnGridView::~BtnGridView() {
@@ -75,8 +76,10 @@ int BtnGridView::rows() {
 
 void BtnGridView::set_parent_rect(const Rect new_parent_rect) {
     View::set_parent_rect(new_parent_rect);
-
-    button_h = 48;  // btn_h_min;
+    // 之前是16
+    // button_h = 48;  // btn_h_min;
+    // 现在是24
+    button_h = 72;
     /*
     // DISABLED FOR NOW. TODO fix next, prev button pos
     int min_remainder = parent_rect().size().height();
@@ -98,8 +101,8 @@ void BtnGridView::set_parent_rect(const Rect new_parent_rect) {
     */
     displayed_max = (parent_rect().size().height() / button_h);
 
-    button_pgup.set_parent_rect({0, (Coord)(displayed_max * button_h), screen_width / 2, 16});
-    button_pgdown.set_parent_rect({screen_width / 2, (Coord)(displayed_max * button_h), screen_width / 2, 16});
+    button_pgup.set_parent_rect({0, (Coord)(displayed_max * button_h), screen_width / 2, ui::new_font_height});
+    button_pgdown.set_parent_rect({screen_width / 2, (Coord)(displayed_max * button_h), screen_width / 2, ui::new_font_height});
 
     displayed_max *= rows_;
 

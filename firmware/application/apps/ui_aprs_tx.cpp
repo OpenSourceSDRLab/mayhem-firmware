@@ -87,7 +87,8 @@ APRSTXView::APRSTXView(NavigationView& nav) {
                   &num_ssid_dest,
                   &text_payload,
                   &button_set,
-                  &tx_view});
+                  &tx_view
+    });
 
     button_set.on_select = [this, &nav](Button&) {
         text_prompt(

@@ -45,15 +45,17 @@ EncodersConfigView::EncodersConfigView(
     // Default encoder def
     encoder_def = &encoder_defs[0];
 
-    add_children({&labels,
-                  &options_enctype,
-                  &field_repeat_min,
-                  &field_clk,
-                  &field_clk_step,
-                  &field_frameduration,
-                  &field_frameduration_step,
-                  &text_format,
-                  &waveform});
+    add_children({
+        &labels,
+        &options_enctype,
+        &field_repeat_min,
+        &field_clk,
+        &field_clk_step,
+        &field_frameduration,
+        &field_frameduration_step,
+        &text_format,
+        &waveform
+    });
 
     // Load encoder types in option field
     for (i = 0; i < ENC_TYPES_COUNT; i++)
@@ -174,7 +176,7 @@ void EncodersConfigView::draw_waveform() {
         waveform_buffer[i] = 0;
     }
 
-    // real wf
+    // real wf 
     for (size_t n = 0; n < length; n++) {
         waveform_buffer[n + PADDING_LEFT] = (frame_fragments[n] == '0') ? 0 : 1;
     }

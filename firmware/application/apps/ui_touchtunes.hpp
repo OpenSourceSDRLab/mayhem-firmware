@@ -67,6 +67,8 @@
 #define TOUCHTUNES_REPEATS 4
 #define TOUCHTUNES_SYNC_WORD 0x5D
 
+static int  FIT_OFFSET = 320/8;
+
 // Each 16bit button code is actually 8bit followed by its complement
 const uint8_t button_codes[32] = {
     0x32,  // Pause
@@ -143,75 +145,79 @@ class TouchTunesView : public View {
         std::string text;
     };
 
-    const std::array<remote_layout_t, 32> remote_layout{{{{12 * 8, 0}, "PAUSE"},
-                                                         {{21 * 8, 0}, "POWER"},
+    
 
-                                                         {{14 * 8, 5 * 8}, "P1"},
-                                                         {{18 * 8, 5 * 8}, "P2"},
-                                                         {{22 * 8, 5 * 8}, "P3"},
+    const std::array<remote_layout_t, 32> remote_layout{{{{FIT_OFFSET +12 * 8, 0}, "PAUSE"},
+                                                         {{FIT_OFFSET +21 * 8, 0}, "POWER"},
 
-                                                         {{14 * 8, 10 * 8}, "F1"},
-                                                         {{18 * 8 + 4, 10 * 8}, "^"},
-                                                         {{22 * 8, 10 * 8}, "F2"},
+                                                         {{FIT_OFFSET +14 * 8, 5 * 8}, "P1"},
+                                                         {{FIT_OFFSET +18 * 8, 5 * 8}, "P2"},
+                                                         {{FIT_OFFSET +22 * 8, 5 * 8}, "P3"},
 
-                                                         {{14 * 8, 14 * 8}, "<"},
-                                                         {{18 * 8, 14 * 8}, "OK"},
-                                                         {{23 * 8, 14 * 8}, ">"},
+                                                         {{FIT_OFFSET +14 * 8, 10 * 8}, "F1"},
+                                                         {{FIT_OFFSET +18 * 8 + 4, 10 * 8}, "^"},
+                                                         {{FIT_OFFSET +22 * 8, 10 * 8}, "F2"},
 
-                                                         {{14 * 8, 18 * 8}, "F3"},
-                                                         {{18 * 8 + 4, 18 * 8}, "V"},
-                                                         {{22 * 8, 18 * 8}, "F4"},
+                                                         {{FIT_OFFSET +14 * 8, 14 * 8}, "<"},
+                                                         {{FIT_OFFSET +18 * 8, 14 * 8}, "OK"},
+                                                         {{FIT_OFFSET +23 * 8, 14 * 8}, ">"},
 
-                                                         {{0 * 8, 5 * 8}, "1"},
-                                                         {{4 * 8, 5 * 8}, "2"},
-                                                         {{8 * 8, 5 * 8}, "3"},
-                                                         {{0 * 8, 10 * 8}, "4"},
-                                                         {{4 * 8, 10 * 8}, "5"},
-                                                         {{8 * 8, 10 * 8}, "6"},
-                                                         {{0 * 8, 15 * 8}, "7"},
-                                                         {{4 * 8, 15 * 8}, "8"},
-                                                         {{8 * 8, 15 * 8}, "9"},
-                                                         {{0 * 8, 20 * 8}, "*"},
-                                                         {{4 * 8, 20 * 8}, "0"},
-                                                         {{8 * 8, 20 * 8}, "#"},
+                                                         {{FIT_OFFSET +14 * 8, 18 * 8}, "F3"},
+                                                         {{FIT_OFFSET +18 * 8 + 4, 18 * 8}, "V"},
+                                                         {{FIT_OFFSET +22 * 8, 18 * 8}, "F4"},
 
-                                                         {{13 * 8, 23 * 8}, "+"},
-                                                         {{18 * 8, 23 * 8}, "+"},
-                                                         {{23 * 8, 23 * 8}, "+"},
+                                                         {{FIT_OFFSET +0 * 8, 5 * 8}, "1"},
+                                                         {{FIT_OFFSET +4 * 8, 5 * 8}, "2"},
+                                                         {{FIT_OFFSET +8 * 8, 5 * 8}, "3"},
+                                                         {{FIT_OFFSET +0 * 8, 10 * 8}, "4"},
+                                                         {{FIT_OFFSET +4 * 8, 10 * 8}, "5"},
+                                                         {{FIT_OFFSET +8 * 8, 10 * 8}, "6"},
+                                                         {{FIT_OFFSET +0 * 8, 15 * 8}, "7"},
+                                                         {{FIT_OFFSET +4 * 8, 15 * 8}, "8"},
+                                                         {{FIT_OFFSET +8 * 8, 15 * 8}, "9"},
+                                                         {{FIT_OFFSET +0 * 8, 20 * 8}, "*"},
+                                                         {{FIT_OFFSET +4 * 8, 20 * 8}, "0"},
+                                                         {{FIT_OFFSET +8 * 8, 20 * 8}, "#"},
 
-                                                         {{13 * 8, 29 * 8}, "-"},
-                                                         {{18 * 8, 29 * 8}, "-"},
-                                                         {{23 * 8, 29 * 8}, "-"}}};
+                                                         {{FIT_OFFSET +13 * 8, 23 * 8}, "+"},
+                                                         {{FIT_OFFSET +18 * 8, 23 * 8}, "+"},
+                                                         {{ FIT_OFFSET +23 * 8, 23 * 8}, "+"},
+
+                                                         {{ FIT_OFFSET +13 * 8, 29 * 8}, "-"},
+                                                         {{FIT_OFFSET +18 * 8, 29 * 8}, "-"},
+                                                         {{FIT_OFFSET +23 * 8, 29 * 8}, "-"}}};
 
     Labels labels{
-        {{2 * 8, 1 * 8}, "PIN:", Theme::getInstance()->fg_light->foreground},
-        {{13 * 8 + 4, 27 * 8}, "VOL1 VOL2 VOL3", Theme::getInstance()->fg_light->foreground}};
+        {{FIT_OFFSET +2 * 8, 1 * 8}, "PIN:", Theme::getInstance()->fg_light->foreground},
+        {{FIT_OFFSET +13 * 8 + 4, 27 * 8}, "VOL1 VOL2 VOL3", Theme::getInstance()->fg_light->foreground}};
 
     std::array<Button, 32> buttons{};
 
     NumberField field_pin{
-        {6 * 8, 1 * 8},
+        {FIT_OFFSET +6 * 8, 1 * 8},
         3,
         {0, 255},
         1,
         '0'};
 
     Checkbox check_scan{
-        {2 * 8, 25 * 8},
+        {FIT_OFFSET +2 * 8, 25 * 8},
         4,
         "Scan"};
 
     Checkbox check_ew{
-        {2 * 8, 29 * 8},
+        {FIT_OFFSET +2 * 8, 29 * 8},
         4,
         "EW Mode"};
 
     Text text_status{
-        {2 * 8, 33 * 8, 128, 16},
+        {FIT_OFFSET +2 * 8, 33 * 8, 128, 16},
         "Ready"};
 
     ProgressBar progressbar{
-        {2 * 8, 35 * 8, 208, 16}};
+        // {2 * 8, 35 * 8, 208, 16}
+        {2 * 8, 35 * 8, 320-2*8*2, 16}
+    };
 
     MessageHandlerRegistration message_handler_tx_progress{
         Message::ID::TXProgress,

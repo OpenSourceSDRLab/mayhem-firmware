@@ -127,8 +127,11 @@ class SubGhzDView : public View {
         {15 * 8, 0 * 16}};
     VGAGainField field_vga{
         {18 * 8, 0 * 16}};
+    
     RSSI rssi{
-        {21 * 8, 0, 6 * 8, 4}};
+        // {21 * 8, 0, 6 * 8, 4}
+        {21 * 8, 0, 16 * 8, 16}
+    };
     RxFrequencyField field_frequency{
         {0 * 8, 0 * 16},
         nav_};
@@ -137,22 +140,28 @@ class SubGhzDView : public View {
 
     Button button_clear_list{
         {0, 16, 7 * 8, 32},
-        "Clear"};
+        "Clear"
+    };
 
     Checkbox check_log{
         {10 * 8, 18},
         3,
         "Log",
-        true};
+        true
+    };
 
     static constexpr auto header_height = 3 * 16;
 
     std::unique_ptr<SubGhzDLogger> logger{};
 
     const RecentEntriesColumns columns{{
-        {"Type", 19},
-        {"Bits", 4},
-        {"Age", 3},
+        // {"Type", 19},
+        // {"Bits", 4},
+        // {"Age", 3},
+        // 这里与ble rx 一致
+        {"  Type  ", 17},
+        {"  Bits  ", 10},
+        {"  Age   ", 10},
     }};
     SubGhzDRecentEntriesView recent_entries_view{columns, recent};
 

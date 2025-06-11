@@ -57,13 +57,19 @@ void TransmitterView::paint(Painter& painter) {
     size_t c;
     Point pos = {0, screen_pos().y()};
 
-    for (c = 0; c < 20; c++) {
+    // for (c = 0; c < 20; c++) 
+    // 这里的逻辑是前一部分绘制上面一行
+    // 即10对应240
+    // 要适配320 需要前半部是 13
+    // 所以总共是26 即 c == 26
+    for (c = 0; c < 26; c++) 
+    {
         painter.draw_bitmap(
             pos,
             bitmap_stripes,
             Theme::getInstance()->fg_yellow->foreground,
             Theme::getInstance()->fg_yellow->background);
-        if (c != 9)
+        if (c != 12)
             pos += {24, 0};
         else
             pos = {0, screen_pos().y() + 32 + 8};

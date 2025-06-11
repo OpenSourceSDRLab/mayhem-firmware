@@ -98,13 +98,16 @@ class SoundBoardView : public View {
         {{24 * 8, 180}, "Vol:", Theme::getInstance()->fg_light->foreground},
         {{0, 180}, "Key:", Theme::getInstance()->fg_light->foreground}};
 
-    Button button_next_page{
-        {30 * 7, 25 * 8, 10 * 3, 2 * 14},
-        "=>"};
+    
 
     Button button_prev_page{
         {17 * 10, 25 * 8, 10 * 3, 2 * 14},
         "<="};
+    
+    Button button_next_page{
+        // {30 * 7, 25 * 8, 10 * 3, 2 * 14},
+        {ui::screen_width - 10 * 3, 25 * 8, 10 * 3, 2 * 14},
+        "=>"};
 
     Text page_info{
         {0, 29 * 8, screen_width, 16}};
@@ -112,8 +115,10 @@ class SoundBoardView : public View {
     MenuView menu_view{
         {0, 0, screen_width, 175},
         true};
+
     Text text_empty{
-        {7 * 8, 12 * 8, 16 * 8, 16},
+        // {7 * 8, 12 * 8, 16 * 8, 16},
+        {7 * 8 + ui::screen_width/8 , 12 * 8, 16 * 8, 16},
         "Empty directory !",
     };
 

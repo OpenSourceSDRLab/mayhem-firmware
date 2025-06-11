@@ -150,15 +150,19 @@ void RecentEntriesTable<BleRecentEntries>::draw(
         line = to_string_mac_address(entry.packetData.macAddress, 6, false);
     }
 
+
     // Pushing single digit values down right justified.
     std::string hitsStr = to_string_dec_int(entry.numHits);
     int hitsDigits = hitsStr.length();
-    uint8_t hits_spacing = 8 - hitsDigits;
+    // uint8_t hits_spacing = 8 - hitsDigits;
+    uint8_t hits_spacing = 10 - hitsDigits;
 
     // Pushing single digit values down right justified.
     std::string dbStr = to_string_dec_int(entry.dbValue);
     int dbDigits = dbStr.length();
-    uint8_t db_spacing = 5 - dbDigits;
+    // uint8_t db_spacing = 5 - dbDigits;
+    uint8_t db_spacing = 10 - dbDigits;
+
 
     line += pad_string_with_spaces(hits_spacing) + hitsStr;
 
@@ -171,14 +175,16 @@ void RecentEntriesTable<BleRecentEntries>::draw(
 BleRecentEntryDetailView::BleRecentEntryDetailView(NavigationView& nav, const BleRecentEntry& entry)
     : nav_{nav},
       entry_{entry} {
-    add_children({&button_done,
-                  &button_send,
-                  &button_save,
-                  &label_mac_address,
-                  &text_mac_address,
-                  &label_pdu_type,
-                  &text_pdu_type,
-                  &labels});
+    add_children({
+        &button_done,
+        &button_send,
+        &button_save,
+        &label_mac_address,
+        &text_mac_address,
+        &label_pdu_type,
+        &text_pdu_type,
+        &labels
+        });
 
     text_mac_address.set(to_string_mac_address(entry.packetData.macAddress, 6, false));
     text_pdu_type.set(pdu_type_to_string(entry.pduType));
@@ -272,7 +278,7 @@ void BleRecentEntryDetailView::paint(Painter& painter) {
     uint8_t type[total_data_lines];
     uint8_t length[total_data_lines];
     uint8_t data[total_data_lines][40];
-
+    
     int currentByte = 0;
     int currentPacket = 0;
     int i = 0;
@@ -425,30 +431,44 @@ BLERxView::BLERxView(NavigationView& nav)
     : nav_{nav} {
     baseband::run_image(portapack::spi_flash::image_tag_btle_rx);
 
-    add_children({&rssi,
-                  &channel,
-                  &field_rf_amp,
-                  &field_lna,
-                  &field_vga,
-                  &options_channel,
-                  &field_frequency,
-                  &check_log,
-                  &button_find,
-                  &check_name,
-                  &label_sort,
-                  &options_sort,
-                  &label_found,
-                  &text_found_count,
-                  &check_serial_log,
-                  &button_filter,
-                  &options_filter,
-                  &button_save_list,
-                  &button_clear_list,
-                  &button_switch,
-                  &recent_entries_view});
+    add_children({
+        &options_channel,
+        &field_frequency,
+        &field_rf_amp,
+        &field_lna,
+        &field_vga,
+        &rssi,        
+        &channel,
+        // 第1列结束
+
+        &label_sort,    
+        &options_sort,          
+        &button_filter,          
+        &options_filter,
+        // 第2列结束      
+
+        &check_log,   
+        &check_name,
+        &check_serial_log,
+        // 第3列结束 
+                  
+        &button_find,          
+        &label_found,
+        &text_found_count,
+        // 第4列结束           
+        
+        // 假设这里是动态渲染的
+        &recent_entries_view,
+                  
+        &button_save_list,
+        &button_clear_list,
+        &button_switch,
+                
+        });
 
     async_tx_states_when_entered = portapack::async_tx_enabled;
 
+    // 这里是动态添加？？？
     recent_entries_view.on_select = [this](const BleRecentEntry& entry) {
         nav_.push<BleRecentEntryDetailView>(entry);
     };

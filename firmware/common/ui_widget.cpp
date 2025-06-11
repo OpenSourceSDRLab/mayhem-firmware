@@ -398,11 +398,28 @@ void Text::paint(Painter& painter) {
 
     if (text_view.length() > max_len)
         text_view = text_view.substr(0, max_len);
-
-    painter.draw_string(
+    // source code
+    // painter.draw_string(
+    //     rect.location(),
+    //     s,
+    //     text_view);
+    // 这里增加一个逻辑
+    // 窗体的高度与字体大小一样就不需要增加比例参数，否则就设置一下即可
+    if(rect.height() == ui::new_font_height)
+    {
+        painter.draw_string_with_fitsize(
+        rect.location(),
+        s,
+        text_view,1);
+    }
+    else
+    {
+        painter.draw_string_with_fitsize(
         rect.location(),
         s,
         text_view);
+    }
+    
 }
 
 /* Labels ****************************************************************/
@@ -1332,8 +1349,11 @@ void NewButton::paint(Painter& painter) {
         style.background);
 
     int y = r.top();
+    // 这是绘制图标
     if (bitmap_) {
+        // 这里将图标下移动4行会更好看一点
         int offset_y = vertical_center_ ? (r.height() / 2) - (bitmap_->size.height() / 2) : 6;
+        offset_y+=4;
         Point bmp_pos = {r.left() + (r.width() / 2) - (bitmap_->size.width() / 2), r.top() + offset_y};
         y += bitmap_->size.height() - offset_y;
 
@@ -1343,13 +1363,31 @@ void NewButton::paint(Painter& painter) {
             color_,
             style.background);
     }
-
+    // 绘制按钮上的文字
     if (!text_.empty()) {
-        const auto label_r = style.font.size_of(text_);
+
+        // const auto label_r = style.font.size_of(text_);
+        int font_width = text_.size()*12;
+
         painter.draw_string(
-            {r.left() + (r.width() - label_r.width()) / 2, y + (r.height() - label_r.height()) / 2},
+            // {r.left() + (r.width() - label_r.width()) / 2, y + (r.height() - label_r.height()) / 2},
+            {r.left()+ (r.width() - font_width) / 2, y + (r.height() - ui::new_font_height) / 2 },
             style,
             text_);
+        // const auto label_r = style.font.size_of(text_);
+
+        // int text_area_top = y;
+        // int text_area_height = (r.top() + r.height()) - y;
+
+        // int text_y = text_area_top + (text_area_height - label_r.height()) / 2;
+        // if (text_y < text_area_top) {
+        //     text_y = text_area_top;  // 防止文字顶部超出
+        // }
+
+        // painter.draw_string(
+        //     {r.left() + (r.width() - label_r.width()) / 2, text_y},
+        //     style,
+        //     text_);
     }
 }
 
@@ -1468,6 +1506,26 @@ void Image::paint(Painter& painter) {
             selected ? background_ : foreground_,
             selected ? foreground_ : background_);
     }
+
+    /*
+    if(bitmap_)
+    {
+        const bool selected = (has_focus() || highlighted());
+
+        if(this->parent_rect().height() == 32)
+        {
+            painter.draw_bitmap_with_autofit(screen_pos(),*bitmap_,selected ? background_ : foreground_,selected ? foreground_ : background_,2);
+        }
+        else
+        {
+            
+            painter.draw_bitmap_with_autofit(screen_pos(),*bitmap_,selected ? background_ : foreground_,selected ? foreground_ : background_,1);
+        }
+    }
+    
+    */
+
+    
 }
 
 /* ImageButton ***********************************************************/

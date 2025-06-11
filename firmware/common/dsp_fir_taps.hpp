@@ -1240,11 +1240,11 @@ constexpr fir_taps_real<24> taps_180k_wfm_decim_0 = {
     }},
 };
 
-// IFIR prototype filter: fs=768000, pass=90000, stop=170000, decim=2, fout=384000
+// IFIR prototype filter: fs=768000, pass=90000, stop=110000, decim=2, fout=384000
 constexpr fir_taps_real<16> taps_180k_wfm_decim_1 = {
     .low_frequency_normalized = -90000.0f / 768000.0f,
     .high_frequency_normalized = 90000.0f / 768000.0f,
-    .transition_normalized = 80000.0f / 768000.0f,
+    .transition_normalized = 20000.0f / 768000.0f,
     .taps = {{
         55,
         19,
@@ -1265,13 +1265,13 @@ constexpr fir_taps_real<16> taps_180k_wfm_decim_1 = {
     }},
 };
 
-// WFM 80kHZ filter with sharp transition  //////////////////////////////////////////////
+// WFM 40kHZ filter for NOAA APT reception in 137Mhz band with sharp transition  //////////////////////////////////////////////
 
-// IFIR image-reject filter: fs=3072000, pass=97000, stop=300000, decim=4, fout=768000
-constexpr fir_taps_real<24> taps_80k_wfm_decim_0 = {
-    .low_frequency_normalized = -97000.0f / 3072000.0f,
-    .high_frequency_normalized = 97000.0f / 3072000.0f,
-    .transition_normalized = 203000.0f / 3072000.0f,
+// IFIR image-reject filter: fs=3072000, pass=20000, stop=97000, decim=4, fout=768000
+constexpr fir_taps_real<24> taps_40k_wfm_decim_0 = {
+    .low_frequency_normalized = -20000.0f / 3072000.0f,
+    .high_frequency_normalized = 20000.0f / 3072000.0f,
+    .transition_normalized = 67000.0f / 3072000.0f,
     .taps = {{
         46,
         112,
@@ -1300,11 +1300,11 @@ constexpr fir_taps_real<24> taps_80k_wfm_decim_0 = {
     }},
 };
 
-// IFIR prototype filter: fs=768000, pass=37500, stop=112500, decim=2, fout=384000
-constexpr fir_taps_real<16> taps_80k_wfm_decim_1 = {
-    .low_frequency_normalized = -37500.0f / 768000.0f,
-    .high_frequency_normalized = 37500.0f / 768000.0f,
-    .transition_normalized = 75000.0f / 768000.0f,
+// IFIR prototype filter: fs=768000, pass=20000, stop=55000, decim=2, fout=384000
+constexpr fir_taps_real<16> taps_40k_wfm_decim_1 = {
+    .low_frequency_normalized = -20000.0f / 768000.0f,
+    .high_frequency_normalized = 20000.0f / 768000.0f,
+    .transition_normalized = 35000.0f / 768000.0f,
     .taps = {{
         83,
         299,
@@ -1489,26 +1489,6 @@ constexpr fir_taps_real<64> taps_64_lp_1875_2166{
         -21,
         38,
     }},
-};
-
-/* 1st Wideband FM demod baseband filter of audio AM tones ,
-   to pass all DSB band of  AM  fsubcarrier 2.4Khz mod. with APT */
-/* 24kHz int16_t input
- * -> FIR filter, BPF center 2k4 carrier ,APT  BW 2kHz
- * -> 12kHz int16_t output, gain of 1.0 (I think).
- */
-constexpr fir_taps_real<64> taps_64_bpf_2k4_bw_2k{
-    .low_frequency_normalized = -0.1875f,  // not updated, this is just for LPF , waterfall GUI,  we are not using in BPF NOAA app.
-    .high_frequency_normalized = 0.1875f,  // not used GUI in NOAA App.
-    .transition_normalized = 0.03f,        // not used GUI in NOAA app.
-    .taps = {{-45, -29, 32, 63, 0, -125, -181, -81, 61,
-              0, -329, -635, -551, -147, 0, -547, -1404, -1625,
-              -849, 0, -414, -2118, -3358, -2422, 0, 911, -1792,
-              -6126, -6773, 0, 11839, 21131, 21131, 11839, 0, -6773,
-              -6126, -1792, 911, 0, -2422, -3358, -2118, -414, 0,
-              -849, -1625, -1404, -547, 0, -147, -551, -635, -329,
-              0, 61, -81, -181, -125, 0, 63, 32, -29,
-              -45}},
 };
 
 // TPMS decimation filters ////////////////////////////////////////////////

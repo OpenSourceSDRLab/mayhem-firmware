@@ -146,7 +146,9 @@ class WeatherView : public View {
     VGAGainField field_vga{
         {18 * 8, 0 * 16}};
     RSSI rssi{
-        {21 * 8, 0, 6 * 8, 4}};
+        // {21 * 8, 0, 6 * 8, 4}
+        {21 * 8, 0, 16 * 8, 16}
+    };
 
     AudioVolumeField field_volume{
         {screen_width - 2 * 8, 0 * 16}};
@@ -171,11 +173,17 @@ class WeatherView : public View {
 
     std::unique_ptr<WeatherLogger> logger{};
 
+    // 这里同ERT RX
     const RecentEntriesColumns columns{{
-        {"Type", 10},
-        {"Temp", 5},
-        {"Hum", 4},
-        {"Ch", 3},
+        // {"Type", 10},
+        // {"Temp", 5},
+        // {"Hum", 4},
+        // {"Ch", 3},
+        // {"Age", 4},
+        {"  Type  ", 9},
+        {"Temp", 6},
+        {"  Hum  ", 11},
+        {" Ch ", 5},
         {"Age", 4},
     }};
     WeatherRecentEntriesView recent_entries_view{columns, recent};

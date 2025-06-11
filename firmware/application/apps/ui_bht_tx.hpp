@@ -92,7 +92,8 @@ class XylosView : public View {
         ' '};
 
     Checkbox checkbox_wcsubfamily{
-        {20 * 8, 6 * 8 + 6},
+        // { 20 * 8, 6 * 8 + 6},
+        {ui::screen_width - 10 * 8, 6 * 8 + 6},
         3,
         "All"};
 
@@ -103,7 +104,7 @@ class XylosView : public View {
         1,
         '0'};
     Checkbox checkbox_wcid{
-        {20 * 8, 10 * 8 + 4},
+        {ui::screen_width - 10 * 8, 10 * 8 + 4},
         3,
         "All"};
 
@@ -208,10 +209,12 @@ class BHTView : public View {
 
     Checkbox checkbox_flashing{
         {16 * 8, 25 * 8},
-        8,
+        // { ui::screen_width - 16 * 8, 25 * 8},
+        10,
         "Flashing"};
     NumberField field_speed{
-        {26 * 8, 25 * 8 + 4},
+        {32 * 8, 25 * 8 + 4},
+        // {ui::screen_width - 3, 25 * 8 + 4},
         2,
         {1, 99},
         1,

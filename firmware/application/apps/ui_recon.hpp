@@ -51,6 +51,7 @@
 #include <string>
 #include <memory>
 
+
 namespace ui {
 
 enum class recon_mode : uint8_t {
@@ -61,6 +62,7 @@ enum class recon_mode : uint8_t {
 
 class ReconView : public View {
    public:
+    int FIT_OFFSET = 320/8;
     ReconView(NavigationView& nav);
     ~ReconView();
 
@@ -218,7 +220,7 @@ class ReconView : public View {
 
     Labels labels{
         {{0 * 8, 0 * 16}, "LNA:   VGA:   AMP:  VOL:     ", Theme::getInstance()->fg_light->foreground},
-        {{3 * 8, 8 * 16}, "START       END", Theme::getInstance()->fg_light->foreground},
+        {{40 + 3 * 8, 8 * 16}, "START       END", Theme::getInstance()->fg_light->foreground},
         {{0 * 8, (22 * 8)}, "                S:          ", Theme::getInstance()->fg_light->foreground},
         {{0 * 8, (24 * 8) + 4}, "NBLCKS:x      W,L:      ,     ", Theme::getInstance()->fg_light->foreground},
         {{0 * 8, (26 * 8) + 4}, "MODE:     ,      SQUELCH:    ", Theme::getInstance()->fg_light->foreground}};
@@ -297,11 +299,11 @@ class ReconView : public View {
         "CONFIG"};
 
     ButtonWithEncoder button_manual_start{
-        {0 * 8, 9 * 16, 11 * 8, 28},
+        {FIT_OFFSET+ 0 * 8, 9 * 16, 11 * 8, 28},
         ""};
 
     ButtonWithEncoder button_manual_end{
-        {12 * 8 - 6, 9 * 16, 11 * 8, 28},
+        {FIT_OFFSET+12 * 8 - 6, 9 * 16, 11 * 8, 28},
         ""};
 
     OptionsField field_recon_match_mode{
@@ -363,31 +365,31 @@ class ReconView : public View {
     };
 
     ButtonWithEncoder button_pause{
-        {0, (15 * 16) - 4, 72, 28},
+        {FIT_OFFSET + 0, (15 * 16) - 4, 72, 28},
         "PAUSE"};
 
     Button button_audio_app{
-        {84, (15 * 16) - 4, 72, 28},
+        {FIT_OFFSET + 84, (15 * 16) - 4, 72, 28},
         "AUDIO"};
 
     ButtonWithEncoder button_add{
-        {168, (15 * 16) - 4, 72, 28},
+        {FIT_OFFSET + 168, (15 * 16) - 4, 72, 28},
         "<STORE>"};
 
     Button button_dir{
-        {0, (35 * 8) - 4, 34, 28},
+        { FIT_OFFSET + 0, (35 * 8) - 4, 34, 28},
         "FW>"};
 
     Button button_restart{
-        {38, (35 * 8) - 4, 34, 28},
+        { FIT_OFFSET+ 38, (35 * 8) - 4, 34, 28},
         "RST"};
 
     Button button_mic_app{
-        {84, (35 * 8) - 4, 72, 28},
+        { FIT_OFFSET+ 84, (35 * 8) - 4, 72, 28},
         "MIC TX"};
 
     ButtonWithEncoder button_remove{
-        {168, (35 * 8) - 4, 72, 28},
+        {FIT_OFFSET+168, (35 * 8) - 4, 72, 28},
         "<REMOVE>"};
 
     ProgressBar progressbar{

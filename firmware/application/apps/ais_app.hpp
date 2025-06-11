@@ -174,23 +174,29 @@ class AISAppView : public View {
 
     AISRecentEntries recent{};
     std::unique_ptr<AISLogger> logger{};
-
+    
     const RecentEntriesColumns columns{{
-        {"MMSI", 9},
-        {"Name/Call", 20},
+        // 计算方式 每个字符长度 比例 比如现在有个 1：2
+        //  就拿320/8 = 40 
+        //  40 /3 *1 = 13 *2=26
+        // 所以长度为 13 和 26
+        {"MMSI", 13},
+        {"Name/Call", 26},
     }};
+    // 这两个会在对应paint函数进行绘制
     AISRecentEntriesView recent_entries_view{columns, recent};
     AISRecentEntryDetailView recent_entry_detail_view{nav_};
 
     static constexpr auto header_height = 1 * 16;
 
+
     Text label_channel{
-        {0 * 8, 0 * 16, 2 * 8, 1 * 16},
+        {0 * 8, 0 * 16, 2 * 8, 1 * ui::new_font_height},
         "Ch"};
 
     OptionsField options_channel{
         {3 * 8, 0 * 16},
-        3,
+        5,
         {
             {"87B", 161975000},
             {"88B", 162025000},
@@ -206,14 +212,15 @@ class AISAppView : public View {
         {18 * 8, 0 * 16}};
 
     RSSI rssi{
-        {21 * 8, 0, 6 * 8, 4},
+        {21 * 8, ui::new_font_height/4, 9 * 8, ui::new_font_height/4},
     };
 
     AudioVolumeField field_volume{
         {screen_width - 2 * 8, 0 * 16}};
 
     Channel channel{
-        {21 * 8, 5, 6 * 8, 4},
+        // {21 * 8, 5, 6 * 8, 4},
+        {21 * 8, ui::new_font_height/2+1, 6 * 8, ui::new_font_height/4},
     };
 
     MessageHandlerRegistration message_handler_packet{

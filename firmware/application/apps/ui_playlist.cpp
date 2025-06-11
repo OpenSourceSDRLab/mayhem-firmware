@@ -54,6 +54,18 @@ namespace ui {
 // TODO: consolidate extesions into a shared header?
 static const fs::path ppl_ext = u".PPL";
 
+void PlaylistView::clear_ui() {
+    text_filename.set("-");
+    text_sample_rate.set("-");
+    text_duration.set("-");
+    text_track.set("-");
+    progressbar_track.set_value(0);
+    progressbar_track.set_max(0);
+    progressbar_transmit.set_value(0);
+    progressbar_transmit.set_max(0);
+}
+
+
 void PlaylistView::load_file(const fs::path& playlist_path) {
     File playlist_file;
     auto error = playlist_file.open(playlist_path.string());
@@ -103,7 +115,10 @@ Optional<PlaylistView::playlist_entry> PlaylistView::load_entry(fs::path&& path)
 }
 
 void PlaylistView::on_file_changed(const fs::path& new_file_path) {
+    // if (playlist_path_ == new_file_path && !playlist_db_.empty())
+    //     return;
     stop();
+
 
     current_index_ = 0;
     playlist_path_ = new_file_path;
@@ -303,10 +318,14 @@ void PlaylistView::stop() {
 
     // Reset the transmit progress bar.
     progressbar_transmit.set_value(0);
+    
+    // change there
     update_ui();
 }
 
+// 疑似重复渲染！
 void PlaylistView::update_ui() {
+
     if (playlist_db_.empty()) {
         text_filename.set("-");
         text_sample_rate.set("-");
@@ -321,7 +340,8 @@ void PlaylistView::update_ui() {
         progressbar_track.set_max(0);
         progressbar_transmit.set_max(0);
 
-    } else {
+    } 
+    else {
         chDbgAssert(!at_end(), "update_ui #1", "current_index_ invalid");
 
         text_filename.set(current()->path.filename().string());
@@ -367,7 +387,7 @@ PlaylistView::PlaylistView(
     NavigationView& nav)
     : nav_(nav) {
     baseband::run_image(portapack::spi_flash::image_tag_replay);
-
+    
     add_children({
         &text_filename,
         &text_sample_rate,
@@ -385,17 +405,22 @@ PlaylistView::PlaylistView(
         &button_open,
         &button_save,
         &button_next,
+        // 先注释掉瀑布看看效果
         &waterfall,
     });
-
+    // 从这个地方全部注释看看效果
     ensure_directory(playlist_dir);
-    waterfall.show_audio_spectrum_view(false);
+
+    // 这里设置为true就显示正常了
+    // waterfall.show_audio_spectrum_view(false);
+    waterfall.show_audio_spectrum_view(true);
 
     field_frequency.set_value(transmitter_model.target_frequency());
     field_frequency.on_change = [this](rf::Frequency f) {
         if (current())
             current()->metadata.center_frequency = f;
     };
+
     field_frequency.on_edit = [this]() {
         auto freq_view = nav_.push<FrequencyKeypadView>(field_frequency.value());
         freq_view->on_changed = [this](rf::Frequency f) {
@@ -452,7 +477,7 @@ PlaylistView::PlaylistView(
             current_index_ = 0;
         update_ui();
     };
-
+    // 这里原始有，先将其注释看看效果
     update_ui();
 }
 
@@ -491,7 +516,18 @@ void PlaylistView::focus() {
 void PlaylistView::on_hide() {
     stop();
     waterfall.on_hide();
+    // free_view();
     View::on_hide();
+    // 这边隐藏什么都不做？
 }
+
+// void PlaylistView::free_view() {
+//     this->blur();
+//     for (auto* child : children_) {
+//         remove_child(child);
+//     }
+//     children_.clear(); 
+// }
+
 
 } /* namespace ui */

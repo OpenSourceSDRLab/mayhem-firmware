@@ -115,7 +115,8 @@ class TransmitterView : public View {
         ' '};
 
     Button button_start{
-        {21 * 8, 1 * 8, 9 * 8, 32},
+        // {21 * 8, 1 * 8, 9 * 8, 32},
+        { ui::screen_width - 9*8, 1 * 8, 9 * 8, 32},
         "START"};
 
     FrequencyStepView field_frequency_step{

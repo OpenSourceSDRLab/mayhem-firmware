@@ -33,6 +33,7 @@ RecentEntriesHeader::RecentEntriesHeader(
     : _columns{columns} {
 }
 
+// 这是修改动态渲染列表头部的地方
 void RecentEntriesHeader::paint(Painter& painter) {
     const auto r = screen_rect();
     const auto& parent_style = style();

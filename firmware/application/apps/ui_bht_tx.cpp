@@ -141,15 +141,17 @@ BHTView::~BHTView() {
 }
 
 BHTView::BHTView(NavigationView& nav) {
-    add_children({&tab_view,
-                  &labels,
-                  &view_xylos,
-                  &view_EPAR,
-                  &checkbox_scan,
-                  &checkbox_flashing,
-                  &field_speed,
-                  &progressbar,
-                  &tx_view});
+    add_children({
+        &tab_view,
+        &labels,
+        &view_xylos,
+        &view_EPAR,
+        &checkbox_scan,
+        &checkbox_flashing,
+        &field_speed,
+        &progressbar,
+        &tx_view
+    });
 
     field_speed.set_value(1);
 
@@ -227,7 +229,11 @@ EPARView::EPARView(
 
     size_t n = 0;
     for (auto& relay_state : relay_states) {
-        relay_state.set_parent_rect({static_cast<Coord>(90 + (n * 36)),
+        // relay_state.set_parent_rect({static_cast<Coord>(90 + (n * 36)),
+        //                              80,
+        //                              24, 24});
+
+        relay_state.set_parent_rect({static_cast<Coord>(90 + (n * 70 )),
                                      80,
                                      24, 24});
         relay_state.set_options(relay_options);
@@ -325,7 +331,11 @@ XylosView::XylosView(
 
     size_t n = 0;
     for (auto& relay_state : relay_states) {
-        relay_state.set_parent_rect({static_cast<Coord>(54 + (n * 36)),
+        // relay_state.set_parent_rect({static_cast<Coord>(54 + (n * 36)),
+        //                              134,
+        //                              24, 24});
+        // 这里是渲染Relay下方图标的欸之
+        relay_state.set_parent_rect({static_cast<Coord>(54 + (n * 56)),
                                      134,
                                      24, 24});
         relay_state.set_options(relay_options);
