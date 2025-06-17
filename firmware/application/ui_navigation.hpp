@@ -197,6 +197,12 @@ class SystemStatusView : public View {
     void set_back_hidden(bool new_value);
     void set_title_image_enabled(bool new_value);
     void set_title(const std::string new_value);
+    // 
+    Text title{
+        {20, 0, 14 * 8, 1 * ui::good_display_header_height},
+        default_title,
+        false,
+    };
 
    private:
     static constexpr auto default_title = "";
@@ -215,10 +221,7 @@ class SystemStatusView : public View {
         Theme::getInstance()->bg_dark->foreground,
         Theme::getInstance()->bg_dark->background};
 
-    Text title{
-        {20, 0, 14 * 8, 1 * ui::good_display_header_height},
-        default_title,
-    };
+    
 
     ImageButton button_title{
         {2, 0, 80, ui::good_display_header_height},
@@ -344,7 +347,9 @@ class InformationView : public View {
 
     Text version{
         {0, 0, 11 * 8, ui::new_font_height},
-        version_string};
+        version_string,
+        true
+    };
 
     LiveDateTime ltime{
         {screen_width - 19 * 8, 0, 19 * 8, ui::new_font_height}};
@@ -509,17 +514,17 @@ class ModalMessageView : public View {
     //     "NO",
     // };
     Button button_ok{
-        {0, ui::screen_height - (48 + ui::new_font_height), 10 * 8, ui::new_font_height*2},
+        {0, ui::screen_height - ui::new_font_height*3 , ui::new_font_width * 8, ui::new_font_height*2},
         "OK",
     };
 
     Button button_yes{
-         {ui::screen_width- 10*8*2 , ui::screen_height - (48 + ui::new_font_height), 10 * 8, ui::new_font_height*2},
+         {ui::screen_width- 10*8*2 , ui::screen_height - ui::new_font_height*3 , ui::new_font_width * 8, ui::new_font_height*2},
         "YES",
     };
 
     Button button_no{
-        {ui::screen_width - 10*8*1, ui::screen_height - (48 +ui::new_font_height) , 10 * 8, ui::new_font_height*2},
+        {ui::screen_width - 10*8*1, ui::screen_height - ui::new_font_height*3  , ui::new_font_width * 8, ui::new_font_height*2},
         "NO",
     };
 };

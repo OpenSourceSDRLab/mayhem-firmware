@@ -209,32 +209,43 @@ class APRSRxView : public View {
     std::string str_log{""};
 
     RFAmpField field_rf_amp{
-        {13 * 8, 0 * 16}};
+        {13 * ui::new_font_width, 0 * 16}
+    };
+
     LNAGainField field_lna{
-        {15 * 8, 0 * 16}};
+        {15 * ui::new_font_width , 0 * 16}
+    };
+
     VGAGainField field_vga{
-        {18 * 8, 0 * 16}};
+        {18 * ui::new_font_width , 0 * 16}
+    };
+
     RSSI rssi{
-        {21 * 8, ui::new_font_height/4, 6 * 8, ui::new_font_height/4}};
+        {21 * ui::new_font_width, 0, 3 * 8, 8}};
     Channel channel{
-        {21 * 8, ui::new_font_height/2+1, 6 * 8, ui::new_font_height/4}};
+        {21 * ui::new_font_width, 9, 3 * 8, 8}};
 
     AudioVolumeField field_volume{
-        {screen_width - 2 * 8, 0 * 16}};
+        {screen_width - 2 * ui::new_font_width, 0 * 16}};
 
     OptionsField options_region{
         {0 * 8, 0 * 8},
         3,
-        {{"MAN", 0},
-         {"NA ", 1},
-         {"NZ ", 2},
-         {"JAP", 3},
-         {"PHI", 4},
-         {"EUR", 5},
-         {"THA", 6},
-         {"AUS", 7},
-         {"BR ", 8},
-         {"ISS", 9}}};
+        {
+            {"MAN", 0},
+            {"NA ", 1},
+            {"NZ ", 2},
+            {"JAP", 3},
+            {"PHI", 4},
+            {"EUR", 5},
+            {"THA", 6},
+            {"AUS", 7},
+            {"BR ", 8},
+            {"ISS", 9}
+        },
+        false,
+        true,
+    };
 
     FrequencyField field_frequency{
         {3 * 8, 0 * 16}};

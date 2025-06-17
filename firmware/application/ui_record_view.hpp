@@ -143,17 +143,17 @@ class RecordView : public View {
     };
 
     Text text_record_dropped{
-        {16 * 8, 0 * 16, 3 * 8, ui::new_font_height},
+        {16 * 8, 0 * 16, 3 * ui::new_font_width, ui::new_font_height},
         "",
     };
 
     Text text_time_available{
-        {ui::screen_width-10 * 8, 0 * 16, 10 * 8, ui::new_font_height},
-        "",
+        {ui::screen_width-10 * ui::new_font_width, 0 * 16, 10 * ui::new_font_width, ui::new_font_height},
+        "",true
     };
 
     Image gps_icon{
-        {2 * 8 + 1, 0 * 16, 2 * 8, 1 * 16},
+        {2 * ui::new_font_width + 1, 0 * 16, 2 * ui::new_font_width, 1 * ui::new_font_height},
         &bitmap_target,
         Theme::getInstance()->bg_darkest->foreground,
         Theme::getInstance()->bg_darkest->background};

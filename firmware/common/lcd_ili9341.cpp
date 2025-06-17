@@ -830,14 +830,14 @@ void ILI9341::draw_glyph(
     const ui::Color background,
     uint8_t zoom_level) {
     // 原始渲染函数
-    // draw_bitmap(p, glyph.size(), glyph.pixels(), foreground, background, zoom_level);
+    draw_bitmap(p, glyph.size(), glyph.pixels(), foreground, background, zoom_level);
     // if(glyph.w() == 12)
     // {
     //     draw_bitmap_only_char_16(p, glyph.size(), glyph.pixels(), foreground, background);
     // }
     // else
     // 大字渲染函数
-        draw_bitmap_only_char(p, glyph.size(), glyph.pixels(), foreground, background);
+    // draw_bitmap_only_char(p, glyph.size(), glyph.pixels(), foreground, background);
 }
 
 void ILI9341::scroll_set_area(

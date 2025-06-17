@@ -264,6 +264,8 @@ FrequencyKeypadView::FrequencyKeypadView(
 
     const char* const key_caps = "123456789<0.";
 
+    
+
     int n = 0;
     for (auto& button : buttons) {
         add_child(&button);
@@ -274,9 +276,14 @@ FrequencyKeypadView::FrequencyKeypadView(
             focused_button = button.id;
         };
         button.on_select = button_fn;
+        // button.set_parent_rect({(n % 3) * button_w,
+        //                         (n / 3) * button_h + 24,
+        //                         button_w, button_h});
+
         button.set_parent_rect({(n % 3) * button_w,
-                                (n / 3) * button_h + 24,
-                                button_w, button_h});
+                                (n / 3) * 64 + 64,
+                                button_w, 64});
+
         button.set_text(label);
         n++;
     }

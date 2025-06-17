@@ -259,108 +259,138 @@ class BLERxView : public View {
     std::filesystem::path log_packets_path{blerx_dir / u"Logs/????.TXT"};
     std::filesystem::path packet_save_path{blerx_dir / u"Lists/????.csv"};
 
-    static constexpr auto header_height = 9 * 8;
-    static constexpr auto switch_button_height = 3 * 16;
+    // 动态渲染区域要求不遮盖已有行
+    static constexpr auto header_height = 4 * 24;
+    static constexpr auto switch_button_height = 24;
 
     OptionsField options_channel{
         {0 * 8, 0 * 8},
         5,
-        {{"Ch.37", 37},
-         {"Ch.38", 38},
-         {"Ch.39", 39},
-         {"Auto", 40}}};
+        {
+            {"Ch.37", 37},
+            {"Ch.38", 38},
+            {"Ch.39", 39},
+            {"Auto", 40}
+        },
+        false,
+        true,
+    };
 
     RxFrequencyField field_frequency{
-        {6 * 8, 0 * 16},
+        {6 * ui::new_font_width, 0 * 16},
         nav_};
 
     RFAmpField field_rf_amp{
-        {16 * 8, 0 * 16}};
+        {16 * ui::new_font_width, 0 * 16}};
 
     LNAGainField field_lna{
-        {18 * 8, 0 * 16}};
+        {18 * ui::new_font_width, 0 * 16}};
 
     VGAGainField field_vga{
-        {21 * 8, 0 * 16}};
+        {21 * ui::new_font_width , 0 * 16}};
 
     RSSI rssi{
         // {24 * 8, 0, 6 * 8, 4}
         // 加长加高，左对其
-        {24 * 8, 0, 24 * 8, 8}
+        {24 * ui::new_font_width, 0, 4 * 8, 8}
     };
 
     Channel channel{
         // {24 * 8, 5, 6 * 8, 4}
         // 加长加高，左对其
-        { 24 * 8, 9, 24 * 8, 8}
+        { 24 * ui::new_font_width, 9, 4 * 8, 8}
     };
+    //  上述第1行结束
 
     Labels label_sort{
-        {{0 * 8, 2 * 8}, "Sort:", Theme::getInstance()->fg_light->foreground}};
+        {
+            {0 * 8, 1 * ui::new_font_height}, 
+            "Sort:", 
+            Theme::getInstance()->fg_light->foreground
+    }};
 
     OptionsField options_sort{
-        {5 * 8, 2 * 8},
+        {5 * ui::new_font_width, 1 * ui::new_font_height},
         4,
-        {{"MAC", 0},
-         {"Hits", 1},
-         {"dB", 2},
-         {"Time", 3},
-         {"Name", 4}}};
+        {
+            {"MAC", 0},
+            {"Hits", 1},
+            {"dB", 2},
+            {"Time", 3},
+            {"Name", 4}
+        },
+        false,
+        true
+    };
 
     Button button_filter{
-        {11 * 8, 2 * 8, 7 * 8, 16},
+        {11 * ui::new_font_width, 1 * ui::new_font_height, 7 * ui::new_font_width, ui::new_font_height},
         "Filter:"};
 
     OptionsField options_filter{
-        {18 * 8 + 2, 2 * 8},
+        {18 * ui::new_font_width + 2, 1 * ui::new_font_height},
         4,
-        {{"Data", 0},
-         {"MAC", 1}}};
+        {
+            {"Data", 0},
+            {"MAC", 1}
+        },
+        false,
+        true
+    };
+    //  上述第2行结束
 
     Checkbox check_log{
-        {10 * 8, 4 * 8 + 2},
+        {10 * ui::new_font_width, 2 * ui::new_font_height},
         3,
         "Log",
         true};
 
+    Checkbox check_serial_log{
+        {18 * ui::new_font_width + 2, 2 * ui::new_font_height},
+        7,
+        "USB Log",
+        true
+    };
+
     Checkbox check_name{
-        {0 * 8, 4 * 8 + 2},
+        {0 * ui::new_font_width, 2 * ui::new_font_height},
         3,
         "Name",
-        true};
+        true
+    };
+    //  上述第3行结束
 
     Button button_find{
-        {0 * 8, 7 * 8 - 2, 4 * 8, 16},
-        "Find"};
+        {0 * 8, 3 * ui::new_font_height, 4 * ui::new_font_width, ui::new_font_height},
+        "Find"
+    };
 
     Labels label_found{
-        {{320 - 8*10, 7 * 8 - 2}, "Found:", Theme::getInstance()->fg_light->foreground}};
+        {{5 * ui::new_font_width, 3* ui::new_font_height}, "Found:", Theme::getInstance()->fg_light->foreground}};
         // {{5 * 8, 7 * 8 - 2}, "Found:", Theme::getInstance()->fg_light->foreground}};
 
     Text text_found_count{
         // {11 * 8, 7 * 8 - 2, 20 * 8, 16},
-        {320 - 8 * 5, 7 * 8 - 2, 20 * 8, 16},
-        "0/0"};
-
-    Checkbox check_serial_log{
-        {18 * 8 + 2, 4 * 8 + 2},
-        7,
-        "USB Log",
-        true};
+        {11 * ui::new_font_width, 3* ui::new_font_height, 3 * ui::new_font_width, ui::new_font_height},
+        "0/0",
+        true
+    };
+    //  上述第4行结束
 
     // Console console{
     //     {0, 10 * 8, screen_height, screen_height-80}};
 
+    // button的高度是字体的两倍
     Button button_clear_list{
-        {2 * 8, screen_height - (16 + 32), 7 * 8, 32},
+        {1 * ui::new_font_width, screen_height - (3* ui::new_font_height), 6 * ui::new_font_width,2* ui::new_font_height},
         "Clear"};
 
     Button button_save_list{
-        {11 * 8, screen_height - (16 + 32), 11 * 8, 32},
+        {10 * ui::new_font_width, screen_height - (3* ui::new_font_height), 11 * ui::new_font_width,2* ui::new_font_height},
         "Export CSV"};
 
     Button button_switch{
-        {screen_width - 6 * 8, screen_height - (16 + 32), 4 * 8, 32},
+        {23 * ui::new_font_width, screen_height - (3* ui::new_font_height), 3 * ui::new_font_width, 2*ui::new_font_height},
         "Tx"};
 
     std::string str_log{""};
@@ -376,9 +406,9 @@ class BLERxView : public View {
         // {"Mac Address", 17},
         // {"Hits", 7},
         // {"dB", 4},
-        {"  Mac Address  ", 16 +1},
-        {"  Hits  ", 9 + 1},
-        {"   dB   ", 9 + 1 },
+        {"Mac Address", 13},
+        {"Hits", 7},
+        {"dB", 3},
     }};
 
     BleRecentEntriesView recent_entries_view{columns, recent};

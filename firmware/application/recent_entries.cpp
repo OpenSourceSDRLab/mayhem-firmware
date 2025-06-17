@@ -53,7 +53,8 @@ void RecentEntriesHeader::paint(Painter& painter) {
         }
 
         painter.draw_string(p, style, text);
-        p += {static_cast<Coord>((width * 8) + 8), 0};
+        p += {static_cast<Coord>((width * ui::new_font_width) + 8), 0};
+        // p += {static_cast<Coord>((width * 8) + 8), 0};
     }
 }
 

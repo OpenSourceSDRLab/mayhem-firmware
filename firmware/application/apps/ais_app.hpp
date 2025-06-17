@@ -191,36 +191,47 @@ class AISAppView : public View {
 
 
     Text label_channel{
-        {0 * 8, 0 * 16, 2 * 8, 1 * ui::new_font_height},
-        "Ch"};
+        {0 , 0 , 2 * ui::new_font_width, 1 * ui::new_font_height},
+        "Ch",
+        true
+    };
 
     OptionsField options_channel{
-        {3 * 8, 0 * 16},
+        {3 * ui::new_font_width, 0 * 16},
         5,
         {
             {"87B", 161975000},
             {"88B", 162025000},
-        }};
-
-    RFAmpField field_rf_amp{
-        {13 * 8, 0 * 16}};
-
-    LNAGainField field_lna{
-        {15 * 8, 0 * 16}};
-
-    VGAGainField field_vga{
-        {18 * 8, 0 * 16}};
-
-    RSSI rssi{
-        {21 * 8, ui::new_font_height/4, 9 * 8, ui::new_font_height/4},
+        },
+        false,
+        true
     };
 
+    RFAmpField field_rf_amp{
+        {13 * ui::new_font_width, 0 * 16}};
+
+    LNAGainField field_lna{
+        {15 *  ui::new_font_width, 0 * 16}};
+
+    VGAGainField field_vga{
+        {18 *  ui::new_font_width, 0 * 16}};
+
+    RSSI rssi{
+        {
+            21 * ui::new_font_width, 
+            ui::new_font_height/4, 
+            4 * 8, 
+            ui::new_font_height/4
+        },
+    };
+    
+    // 这个是ui的宽度
     AudioVolumeField field_volume{
-        {screen_width - 2 * 8, 0 * 16}};
+        {screen_width - 2 * ui::new_font_width, 0 * 16}};
 
     Channel channel{
         // {21 * 8, 5, 6 * 8, 4},
-        {21 * 8, ui::new_font_height/2+1, 6 * 8, ui::new_font_height/4},
+        {21 * ui::new_font_width, ui::new_font_height/2+1, 4 * 8, ui::new_font_height/4},
     };
 
     MessageHandlerRegistration message_handler_packet{

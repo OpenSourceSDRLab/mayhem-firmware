@@ -93,6 +93,12 @@ static void convert_8x16_to_12x24(const uint8_t* src, uint16_t* dst) {
     }
 }
 
+int Painter::draw_char_source(Point p, const Style& style, char c, uint8_t zoom_level) {
+    const auto glyph = style.font.glyph(c);
+
+    display.draw_glyph(p, glyph, style.foreground, style.background, zoom_level);
+    return glyph.advance().x() * zoom_level;
+}
 
 // 目前看起来8*16变为 8*24好看一点
 int Painter::draw_char(Point p, const Style& style, char c, uint8_t zoom_level) {

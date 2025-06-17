@@ -171,6 +171,7 @@ class RecentEntriesTable : public Widget {
         const auto& s = style();
 
         Rect target_rect{r.location(), {r.width(), s.font.line_height()}};
+
         const size_t visible_item_count = r.height() / s.font.line_height();
 
         set_focusable(!recent.empty());
@@ -188,6 +189,7 @@ class RecentEntriesTable : public Widget {
             const auto item_style = (has_focus() && is_selected_key) ? s.invert() : s;
             
             // 这里是绘制每一行信息的地方
+            // 注释掉这里查看是否有文字
             draw(entry, target_rect, painter, item_style);
             
             target_rect += {0, target_rect.height()};
@@ -298,13 +300,14 @@ class RecentEntriesView : public View {
 
     void set_parent_rect(const Rect new_parent_rect) override {
         // constexpr Dim scale_height = 16;
-        constexpr Dim scale_height = 32;
+        constexpr Dim scale_height = 24;
 
         View::set_parent_rect(new_parent_rect);
         _header.set_parent_rect({0, 0, new_parent_rect.width(), scale_height});
+        // 按钮的高度是字体的两倍
         _table.set_parent_rect({0, scale_height,
                                 new_parent_rect.width(),
-                                new_parent_rect.height() - scale_height});
+                                new_parent_rect.height() - 4*scale_height});
     }
 
     void paint(Painter&) override {

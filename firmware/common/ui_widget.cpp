@@ -367,15 +367,17 @@ void Rectangle::paint(Painter& painter) {
 
 Text::Text(
     Rect parent_rect,
-    std::string text)
-    : Widget{parent_rect},
-      text{std::move(text)} {
+    std::string text,bool boom_tag)
+    : Widget{parent_rect},text{std::move(text)} 
+{
+        this->boom_tag = boom_tag;
 }
 
-Text::Text(
-    Rect parent_rect)
-    : Text{parent_rect, {}} {
+Text::Text(Rect parent_rect,bool boom_tag): Widget{parent_rect}
+{
+        this->boom_tag = boom_tag;
 }
+
 
 void Text::set(std::string_view value) {
     text = std::string{value};
@@ -405,20 +407,35 @@ void Text::paint(Painter& painter) {
     //     text_view);
     // 这里增加一个逻辑
     // 窗体的高度与字体大小一样就不需要增加比例参数，否则就设置一下即可
-    if(rect.height() == ui::new_font_height)
+    if(this->boom_tag == false)
     {
         painter.draw_string_with_fitsize(
         rect.location(),
         s,
-        text_view,1);
+        text_view,0);
     }
     else
     {
         painter.draw_string_with_fitsize(
         rect.location(),
         s,
-        text_view);
+        text_view,1);
     }
+    
+    // if(rect.height() == ui::new_font_height)
+    // {
+    //     painter.draw_string_with_fitsize(
+    //     rect.location(),
+    //     s,
+    //     text_view,1);
+    // }
+    // else
+    // {
+    //     painter.draw_string_with_fitsize(
+    //     rect.location(),
+    //     s,
+    //     text_view);
+    // }
     
 }
 
@@ -986,6 +1003,8 @@ void Button::getWidgetName(std::string& result) {
     result = "Button";
 }
 
+// button的按键渲染字体应当设置为大小可以根据字体的长度宽度进行大小配置会好一点
+
 void Button::paint(Painter& painter) {
     Color bg, fg;
     const auto r = screen_rect();
@@ -1007,12 +1026,50 @@ void Button::paint(Painter& painter) {
     painter.fill_rectangle(
         {r.location().x(), r.location().y() + 1, r.size().width() - 1, r.size().height() - 2},
         paint_style.background);
-
-    const auto label_r = paint_style.font.size_of(text_);
+    
+    // button默认使用大字
+    
+    int button_string_len = text_.length();
+    int offset_x = r.size().width() / 2 - button_string_len*ui::new_font_width / 2; 
     painter.draw_string(
-        {r.location().x() + (r.size().width() - label_r.width()) / 2, r.location().y() + (r.size().height() - label_r.height()) / 2},
+        {r.location().x() + offset_x, r.location().y() + (r.size().height() - ui::new_font_height) / 2},
         paint_style,
         text_);
+   
+
+    
+    // source code is here
+    // const auto label_r = paint_style.font.size_of(text_);
+    // painter.draw_string(
+    //     {r.location().x() + (r.size().width() - label_r.width()) / 3, r.location().y() + (r.size().height() - label_r.height()) / 2},
+    //     paint_style,
+    //     text_);
+
+    // 这里的三格渲染与二格渲染逻辑需要进行区分
+    // 进行1行2列渲染
+    // if(r.size().width() > ui::screen_width/3)
+    // {
+    //     int button_string_len = text_.length();
+    //     int offset_x = r.size().width() / 2 - button_string_len*ui::new_font_width / 2; 
+    //     painter.draw_string(
+    //         {r.location().x() + offset_x, r.location().y() + (r.size().height() - ui::new_font_height) / 2},
+    //         paint_style,
+    //         text_);
+
+    // }
+    // // 进行1行3列渲染
+    // else
+    // {
+    //     const auto label_r = paint_style.font.size_of(text_);
+    //     painter.draw_string_with_fitsize(
+    //         {r.location().x() + (r.size().width() - label_r.width()) / 2, r.location().y() + (r.size().height() - label_r.height()) / 2},
+    //         paint_style,
+    //         text_);
+    //     // painter.draw_string(
+    //     //     {r.location().x() + (r.size().width() - label_r.width()) / 2, r.location().y() + (r.size().height() - label_r.height()) / 2},
+    //     //     paint_style,
+    //     //     text_);
+    // }
 }
 
 void Button::on_focus() {
@@ -1363,17 +1420,44 @@ void NewButton::paint(Painter& painter) {
             color_,
             style.background);
     }
+    // 选项栏目-按钮的文字
     // 绘制按钮上的文字
     if (!text_.empty()) {
+        if(r.size().width() > ui::screen_width/3)
+        {
+            int button_string_len = text_.length();
+            int offset_x = r.size().width() / 2 - button_string_len*ui::new_font_width / 2; 
+            painter.draw_string(
+                {r.location().x() + offset_x, r.location().y() + (r.size().height() - ui::new_font_height) / 2},
+                style,
+                text_);
+
+        }
+        // 进行1行3列渲染
+        else
+        {
+            const auto label_r = style.font.size_of(text_);
+            painter.draw_string_with_fitsize(
+                {r.location().x() + (r.size().width() - label_r.width()) / 2, r.location().y() + (r.size().height() - label_r.height()) / 2},
+                style,
+                text_);
+            // painter.draw_string(
+            //     {r.location().x() + (r.size().width() - label_r.width()) / 2, r.location().y() + (r.size().height() - label_r.height()) / 2},
+            //     paint_style,
+            //     text_);
+        }
+        // 目前设想根据文字多少进行渲染
 
         // const auto label_r = style.font.size_of(text_);
-        int font_width = text_.size()*12;
+        // int font_width = text_.size()*12;
 
-        painter.draw_string(
-            // {r.left() + (r.width() - label_r.width()) / 2, y + (r.height() - label_r.height()) / 2},
-            {r.left()+ (r.width() - font_width) / 2, y + (r.height() - ui::new_font_height) / 2 },
-            style,
-            text_);
+        // painter.draw_string(
+        //     // {r.left() + (r.width() - label_r.width()) / 2, y + (r.height() - label_r.height()) / 2},
+        //     {r.left()+ (r.width() - font_width) / 2, y + (r.height() - ui::new_font_height) / 2 },
+        //     style,
+        //     text_);
+
+        // source code
         // const auto label_r = style.font.size_of(text_);
 
         // int text_area_top = y;
@@ -1768,12 +1852,16 @@ OptionsField::OptionsField(
     Point parent_pos,
     size_t length,
     options_t options,
-    bool centered)
+    bool centered,
+    bool boom_tag
+    )
     : Widget{{parent_pos, {8 * (int)length, 16}}},
       length_{length},
       options_{std::move(options)},
-      centered_{centered} {
+      centered_{centered} 
+{
     set_focusable(true);
+    this->boom_tag = boom_tag;
 }
 
 size_t OptionsField::selected_index() const {
@@ -1874,11 +1962,20 @@ void OptionsField::paint(Painter& painter) {
             int x_offset = (available_width - text_width) / 2;
             draw_pos = {draw_pos.x() + x_offset, draw_pos.y()};
         }
-
-        painter.draw_string(
-            draw_pos,
-            paint_style,
-            temp);
+        if(this->boom_tag == false)
+        {
+            painter.draw_string_with_fitsize(draw_pos,paint_style, temp,0);
+        }
+        else
+        {
+            painter.draw_string_with_fitsize(draw_pos,paint_style, temp,1);
+        }
+        
+        // 修改这里全部用小的？
+        // painter.draw_string(
+        //     draw_pos,
+        //     paint_style,
+        //     temp);
     }
 }
 
@@ -2538,7 +2635,7 @@ void SymField::paint(Painter& painter) {
         }
 
         painter.draw_char(p, paint_style, c);
-        p += {8, 0};
+        p += {ui::new_font_width, 0};
     }
 }
 

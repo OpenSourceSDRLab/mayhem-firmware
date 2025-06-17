@@ -50,8 +50,12 @@ class AudioSpectrumView : public View {
 
     int16_t audio_spectrum[128]{0};
 
+
     Labels labels{
-        {{6 * 8, 0 * 16}, "Hz", Theme::getInstance()->fg_light->foreground}};
+        {
+            {6 * ui::new_font_width, 0 * 16}, "Hz", Theme::getInstance()->fg_light->foreground
+        }
+    };
 
     NumberField field_frequency{
         {0 * 8, 0 * 16},
@@ -61,7 +65,7 @@ class AudioSpectrumView : public View {
         ' '};
 
     Waveform waveform{
-        {0, 1 * 16 + cursor_band_height, screen_width, 2 * 16},
+        {0, 1 * ui::new_font_height + cursor_band_height, screen_width, 2 * ui::new_font_height},
         audio_spectrum,
         128,
         0,
@@ -151,10 +155,10 @@ class WaterfallView : public View {
     void update_widgets_rect();
 
     // 
-    const Rect audio_spectrum_view_rect{0 * 8, 0 * 16, screen_width, 2 * 16 + 20};
+    const Rect audio_spectrum_view_rect{0 * 8, 0 * 16, screen_width, 3 * ui::new_font_height};
     
-    static constexpr Dim audio_spectrum_height = 16 * 2 + 20;
-    static constexpr Dim scale_height = 20;
+    static constexpr Dim audio_spectrum_height = 24 * 3 ;
+    static constexpr Dim scale_height = 24;
 
     WaterfallWidget waterfall_widget{};
     FrequencyScale frequency_scale{};

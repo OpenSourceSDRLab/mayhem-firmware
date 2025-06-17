@@ -207,12 +207,15 @@ class Rectangle : public Widget {
 
 class Text : public Widget {
    public:
-    Text()
+    Text(bool boom_tag = false)
         : text{""} {
+            this->boom_tag = boom_tag;
     }
 
-    Text(Rect parent_rect, std::string text);
-    Text(Rect parent_rect);
+    bool boom_tag;
+
+    Text(Rect parent_rect, std::string text,bool boom_tag = false);
+    Text(Rect parent_rect,bool boom_tag = false);
 
     void set(std::string_view value);
 
@@ -684,7 +687,9 @@ class OptionsField : public Widget {
     std::function<void(size_t, value_t)> on_change{};
     std::function<void(void)> on_show_options{};
 
-    OptionsField(Point parent_pos, size_t length, options_t options, bool centered = false);
+    bool boom_tag;
+
+    OptionsField(Point parent_pos, size_t length, options_t options, bool centered = false,bool boom_tag = false);
 
     options_t& options() { return options_; }
     const options_t& options() const { return options_; }
@@ -843,7 +848,7 @@ class NumberField : public Widget {
     std::function<void(NumberField&)> on_select{};
     std::function<void(int32_t)> on_change{};
     std::function<void(int32_t)> on_wrap{};
-
+    bool boom_tag;
     using range_t = std::pair<int32_t, int32_t>;
 
     NumberField(Point parent_pos, int length, range_t range, int32_t step, char fill_char, bool can_loop);

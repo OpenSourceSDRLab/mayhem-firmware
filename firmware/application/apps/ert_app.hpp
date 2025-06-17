@@ -146,29 +146,31 @@ class ERTAppView : public View {
     }};
     ERTRecentEntriesView recent_entries_view{columns, recent};
 
-    static constexpr auto header_height = 1 * 16;
+    static constexpr auto header_height = 1 * 24;
 
     RxFrequencyField field_frequency{
         {0 * 8, 0 * 16},
         nav_};
 
     RFAmpField field_rf_amp{
-        {13 * 8, 0 * 16}};
+        {13 * ui::new_font_width , 0 * 16}
+    };
 
     LNAGainField field_lna{
-        {15 * 8, 0 * 16}};
+        {15 * ui::new_font_width, 0 * 16}
+    };
 
     VGAGainField field_vga{
-        {18 * 8, 0 * 16}
+        {18 * ui::new_font_width, 0 * 16}
     };
 
     RSSI rssi{
         // {21 * 8, 0, 6 * 8, 4},
-        {21 * 8, 0, 16 * 8, 16},
+        {21 *ui::new_font_width, 0, 4 * 8, ui::new_font_height},
     };
 
     AudioVolumeField field_volume{
-        {screen_width - 2 * 8, 0 * 16}};
+        {screen_width - 2 * ui::new_font_width, 0 * 16}};
 
     MessageHandlerRegistration message_handler_packet{
         Message::ID::ERTPacket,

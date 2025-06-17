@@ -104,92 +104,108 @@ class SondeView : public View {
     //     {{0 * 8, 8 * 16}, "Humidity:", Theme::getInstance()->fg_light->foreground}
     // };
     Labels labels{
-        {{4 * 8, 2 * 16}, "Type:", Theme::getInstance()->fg_light->foreground},
-        {{6 * 8, 3 * 16}, "ID:", Theme::getInstance()->fg_light->foreground},
-        {{0 * 8, 4 * 16}, "DateTime:", Theme::getInstance()->fg_light->foreground},
+        {{4 * ui::new_font_width, 2 * ui::new_font_height}, "Type:", Theme::getInstance()->fg_light->foreground},
+        {{6 * ui::new_font_width, 3 * ui::new_font_height}, "ID:", Theme::getInstance()->fg_light->foreground},
+        {{0 * ui::new_font_width, 4 * ui::new_font_height}, "DateTime:", Theme::getInstance()->fg_light->foreground},
 
-        {{3 * 8, 5 * 16}, "Vbatt:", Theme::getInstance()->fg_light->foreground},
-        {{3 * 8, 6 * 16}, "Frame:", Theme::getInstance()->fg_light->foreground},
-        {{4 * 8, 7 * 16}, "Temp:", Theme::getInstance()->fg_light->foreground},
-        {{0 * 8, 8 * 16}, "Humidity:", Theme::getInstance()->fg_light->foreground}
+        {{3 * ui::new_font_width, 5 * ui::new_font_height}, "Vbatt:", Theme::getInstance()->fg_light->foreground},
+        {{3 * ui::new_font_width, 6 * ui::new_font_height}, "Frame:", Theme::getInstance()->fg_light->foreground},
+        {{4 * ui::new_font_width, 7 * ui::new_font_height}, "Temp:", Theme::getInstance()->fg_light->foreground},
+        {{0 * ui::new_font_width, 8 * ui::new_font_height}, "Humidity:", Theme::getInstance()->fg_light->foreground}
     };
 
+    // 第一列开始
     RxFrequencyField field_frequency{
         {0 * 8, 0 * 8},
         nav_};
 
     RFAmpField field_rf_amp{
-        {13 * 8, 0 * 16}};
+        {13 * ui::new_font_width, 0 * 16}};
 
     LNAGainField field_lna{
-        {15 * 8, 0 * 16}};
+        {15 * ui::new_font_width, 0 * 16}};
 
     VGAGainField field_vga{
-        {18 * 8, 0 * 16}};
+        {18 * ui::new_font_width, 0 * 16}};
 
     RSSI rssi{
         // {21 * 8, 0, 6 * 8, 4}
-        {21 * 8, 0, 16 * 8, 16}
+        {21 * ui::new_font_width, 0, 4 * 8, ui::new_font_height}
     };
 
     AudioVolumeField field_volume{
-        {screen_width - 2 * 8, 0 * 16}};
+        {screen_width - 2 * ui::new_font_width, 0 * 16}};
+    // 第一列结束
+
 
     Checkbox check_log{
         // {22 * 8,  8 * 16},
-        {screen_width/2 + 8*3 ,8 * 16},
+        { ui::new_font_width * 3 ,10 * ui::new_font_height},
         3,
         "Log"
     };
 
     Checkbox check_crc{
         // {22 * 8, 10 * 16},
-        {screen_width/2 + 8*3 ,10 * 16},
+        {screen_width/2 + ui::new_font_width *3 ,10 * ui::new_font_height},
         3,
         "CRC"
     };
 
-    Text text_signature{
-        {9 * 8, 2 * 16, 10 * 8, 16},
-        "..."};
+    Text text_signature
+    {
+        {9 * ui::new_font_width, 2 * ui::new_font_height, 10 * ui::new_font_width, ui::new_font_height},
+        "...",
+        true
+    };
 
     Text text_serial{
-        {9 * 8, 3 * 16, 11 * 8, 16},
-        "..."};
+        {9 * ui::new_font_width, 3 * ui::new_font_height, 11 * ui::new_font_width, ui::new_font_height},
+        "...",
+        true
+    };
 
     Text text_timestamp{
-        {9 * 8, 4 * 16, 11 * 8, 16},
-        "..."};
+        {9 * ui::new_font_width, 4 * ui::new_font_height, 11 * ui::new_font_width, ui::new_font_height},
+        "...",
+        true
+    };
 
     Text text_voltage{
-        {9 * 8, 5 * 16, 10 * 8, 16},
-        "..."};
+        {9 * ui::new_font_width, 5 * ui::new_font_height, 10 * ui::new_font_width, ui::new_font_height},
+        "...",
+        true
+    };
 
     Text text_frame{
-        {9 * 8, 6 * 16, 10 * 8, 16},
-        "..."};
+        {9 * ui::new_font_width, 6 * ui::new_font_height, 10 * ui::new_font_width, ui::new_font_height},
+        "...",
+        true};
 
     Text text_temp{
-        {9 * 8, 7 * 16, 10 * 8, 16},
-        "..."};
+        {9 * ui::new_font_width, 7 * ui::new_font_height, 10 * ui::new_font_width, ui::new_font_height},
+        "...",
+        true};
 
     Text text_humid{
-        {9 * 8, 8 * 16, 10 * 8, 16},
-        "..."};
+        {9 * ui::new_font_width, 8 * ui::new_font_height, 10 * ui::new_font_width, ui::new_font_height},
+        "...",
+        true
+    };
 
     GeoPos geopos{
-        {0, 12 * 16},
+        {0, 12 * ui::new_font_height},
         GeoPos::alt_unit::METERS,
         GeoPos::spd_unit::HIDDEN};
 
     Button button_see_qr{
         // {2 * 8, 15 * 16, 12 * 8, 3 * 16},
-        {screen_width/2 - 12 *8 , screen_height - 7 * 16, 12 * 8, 3 * 16},
+        {0, screen_height - 3 * ui::new_font_height, 12 * ui::new_font_width, 2 * ui::new_font_height},
         "See QR"};
 
     Button button_see_map{
         // {16 * 8, 15 * 16, 12 * 8, 3 * 16},
-        {screen_width/2 + 2 * 8, screen_height - 7 * 16, 12 * 8, 3 * 16},
+        {screen_width/2 + 2 * ui::new_font_width, screen_height -3 * ui::new_font_height, 12 * ui::new_font_width, 2 * ui::new_font_height},
         "See on map"};
 
     GeoMapView* geomap_view_{nullptr};

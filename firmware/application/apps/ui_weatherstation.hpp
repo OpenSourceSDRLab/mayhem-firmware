@@ -134,24 +134,24 @@ class WeatherView : public View {
     WeatherRecentEntries recent{};
 
     OptionsField options_temperature{
-        {10 * 8, 0 * 16},
+        {10 * ui::new_font_width, 0 * 16},
         2,
         {{STR_DEGREES_C, 0},
          {STR_DEGREES_F, 1}}};
 
     RFAmpField field_rf_amp{
-        {13 * 8, 0 * 16}};
+        {13 * ui::new_font_width, 0 * 16}};
     LNAGainField field_lna{
-        {15 * 8, 0 * 16}};
+        {15 *ui::new_font_width, 0 * 16}};
     VGAGainField field_vga{
         {18 * 8, 0 * 16}};
     RSSI rssi{
         // {21 * 8, 0, 6 * 8, 4}
-        {21 * 8, 0, 16 * 8, 16}
+        {21 * ui::new_font_width, 0, 4 * 8, ui::new_font_height}
     };
 
     AudioVolumeField field_volume{
-        {screen_width - 2 * 8, 0 * 16}};
+        {screen_width - 2 * ui::new_font_width, 0 * 16}};
 
     RxFrequencyField field_frequency{
         {0 * 8, 0 * 16},
@@ -159,17 +159,18 @@ class WeatherView : public View {
 
     SignalToken signal_token_tick_second{};
 
+    // butto最好设置的大小是字体的二倍
     Button button_clear_list{
-        {0, 16, 7 * 8, 32},
+        {0, ui::new_font_height, 7 * ui::new_font_width, ui::new_font_height*2},
         "Clear"};
 
     Checkbox check_log{
-        {10 * 8, 18},
+        {10 * ui::new_font_width, ui::new_font_height+4},
         3,
         "Log",
         true};
 
-    static constexpr auto header_height = 3 * 16;
+    static constexpr auto header_height = 3 * 24;
 
     std::unique_ptr<WeatherLogger> logger{};
 
@@ -180,11 +181,11 @@ class WeatherView : public View {
         // {"Hum", 4},
         // {"Ch", 3},
         // {"Age", 4},
-        {"  Type  ", 9},
+        {"Type", 6},
         {"Temp", 6},
-        {"  Hum  ", 11},
-        {" Ch ", 5},
-        {"Age", 4},
+        {"Hum", 5},
+        {"Ch", 4},
+        {"Age", 5},
     }};
     WeatherRecentEntriesView recent_entries_view{columns, recent};
 

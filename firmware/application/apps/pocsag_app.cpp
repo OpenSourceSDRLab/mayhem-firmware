@@ -91,22 +91,28 @@ POCSAGAppView::POCSAGAppView(NavigationView& nav)
     baseband::run_image(portapack::spi_flash::image_tag_pocsag2);
 
     add_children(
-        {&rssi,
-         &audio,
-         &field_rf_amp,
-         &field_lna,
-         &field_vga,
-         &field_frequency,
-         &field_squelch,
-         &field_volume,
-         &image_status,
-         &text_packet_count,
-         &widget_baud,
-         &widget_bits,
-         &widget_frames,
-         &button_filter_last,
-         &button_config,
-         &console});
+        {
+            &rssi,
+            &audio,
+            &field_rf_amp,
+            &field_lna,
+            &field_vga,
+            &field_frequency,
+            &field_squelch,
+            &field_volume,
+            &image_status,
+            &text_packet_count,
+
+            
+            // &widget_bits,
+            // 这里是一个竖线
+            &widget_frames,
+            &widget_baud,
+
+            &button_filter_last,
+            &button_config,
+            &console
+        });
 
     // No app settings, use fallbacks from pmem.
     if (!app_settings_.loaded()) {
@@ -336,8 +342,8 @@ void BaudIndicator::paint(Painter& painter) {
         bot = (r % 10) + '0';
     }
 
-    painter.draw_char(p, *Theme::getInstance()->bg_darkest_small, top);
-    painter.draw_char({p.x(), p.y() + 8}, *Theme::getInstance()->bg_darkest_small, bot);
+    painter.draw_char_source(p, *Theme::getInstance()->bg_darkest_small, top);
+    painter.draw_char_source({p.x(), p.y() + 12}, *Theme::getInstance()->bg_darkest_small, bot);
 }
 
 void BitsIndicator::paint(Painter&) {

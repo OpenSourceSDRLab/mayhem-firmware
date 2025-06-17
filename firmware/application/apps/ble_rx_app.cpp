@@ -169,7 +169,10 @@ void RecentEntriesTable<BleRecentEntries>::draw(
     line += pad_string_with_spaces(db_spacing) + dbStr;
 
     line.resize(target_rect.width() / 8, ' ');
-    painter.draw_string(target_rect.location(), style, line);
+
+    // 这里是绘制MAC接收的地方
+    painter.draw_string_with_fitsize(target_rect.location(), style, line);
+    // painter.draw_string(target_rect.location(), style, line);
 }
 
 BleRecentEntryDetailView::BleRecentEntryDetailView(NavigationView& nav, const BleRecentEntry& entry)

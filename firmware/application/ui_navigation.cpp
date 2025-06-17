@@ -134,9 +134,13 @@ const NavigationView::AppList NavigationView::appList = {
     {"ert", "ERT Meter", RX, Color::green(), &bitmap_icon_ert, new ViewFactory<ERTAppView>()},
     {"pocsag", "POCSAG", RX, Color::green(), &bitmap_icon_pocsag, new ViewFactory<POCSAGAppView>()},
     {"radiosonde", "Radiosnde", RX, Color::green(), &bitmap_icon_sonde, new ViewFactory<SondeView>()},
-    {"search", "Search", RX, Color::yellow(), &bitmap_icon_search, new ViewFactory<SearchView>()},
     {"subghzd", "SubGhzD", RX, Color::yellow(), &bitmap_icon_remote, new ViewFactory<SubGhzDView>()},
     {"weather", "Weather", RX, Color::green(), &bitmap_icon_thermometer, new ViewFactory<WeatherView>()},
+    // todo
+    //显示错误无法修改UI
+    {"search", "Search", RX, Color::yellow(), &bitmap_icon_search, new ViewFactory<SearchView>()},
+    
+    
     /* TX ********************************************************************/
     {"aprstx", "APRS TX", TX, ui::Color::green(), &bitmap_icon_aprs, new ViewFactory<APRSTXView>()},
     {"bht", "BHT Xy/EP", TX, ui::Color::green(), &bitmap_icon_bht, new ViewFactory<BHTView>()},
@@ -806,10 +810,10 @@ void add_external_items(NavigationView& nav, app_location_t location, BtnGridVie
                           nullptr,
                           [&nav]() {
                               nav.display_modal(
-                                  "Notice",
-                                  "Can't read external apps\n"
-                                  "Check SD card\n"
-                                  "Update SD card content\n");
+                                  " Notice",
+                                  " Can't read external apps\n"
+                                  " Check SD card\n"
+                                  " Update SD card content\n");
                           }},
                          error_tile_pos);
     } else {
@@ -995,8 +999,9 @@ SystemView::SystemView(
 
         this->status_view.set_back_enabled(!this->navigation_view.is_top());
         this->status_view.set_title_image_enabled(this->navigation_view.is_top());
-        // 这里是设置改变上述图标
+        // 这里是设置图标让其更好适配显示
         this->status_view.set_title(new_view.title());
+        this->status_view.title.boom_tag = false;
         this->status_view.set_dirty();
     };
 
@@ -1009,6 +1014,7 @@ SystemView::SystemView(
 
     status_view.set_back_enabled(false);
     status_view.set_title_image_enabled(true);
+    status_view.title.boom_tag = true;
     status_view.set_dirty();
 }
 
@@ -1219,12 +1225,21 @@ void ModalMessageView::paint(Painter& painter) {
     // f change for suit the full screen
     int start_offset_x = ui::screen_width;
     int start_offset_y = ui::screen_height;
+
     for (size_t i = 0; i < lines.size(); ++i) {
         // (Coord)(((compact) ? 8 * 3 : start_offset_y/2) + (i * 16))
         // 其中*16表示字体的高度
+        // 字体的宽度位12 * 24
+        // 建议起始地址是往前3个字节会好一点
+        // 居中显示会好看一点？？
+        int tmp_offset_x = 0;
+        // 默认字体是最新的字体
+        tmp_offset_x = (ui::screen_width - ui::new_font_width * lines[0].length())/2;
+        if(tmp_offset_x < 0)
+            tmp_offset_x = 0;
         painter.draw_string(
             {
-                start_offset_x/6, (Coord)(((compact) ? 8 * 3 : start_offset_y/3) + (i * ui::new_font_height))
+                tmp_offset_x  , (Coord)(((compact) ? ui::new_font_height * 3 : start_offset_y/3) + (i * ui::new_font_height))
             },
             style(),
             lines[i]);

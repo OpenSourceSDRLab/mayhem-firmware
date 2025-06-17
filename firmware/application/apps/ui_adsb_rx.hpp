@@ -396,12 +396,12 @@ class ADSBRxView : public View {
 
     /* Recent Entries */
     const RecentEntriesColumns columns{
-        {{"ICAO/Call", 9},
+        {{"ICAO/Cal", 8},
          {"Lvl", 3},
          {"Spd", 3},
          {"Amp", 3},
          {"Hit", 3},
-         {"Age", 4}}};
+         {"Age", 3}}};
     AircraftRecentEntries recent{};
     RecentEntriesView<AircraftRecentEntries> recent_entries_view{columns, recent};
 
@@ -418,39 +418,39 @@ class ADSBRxView : public View {
     Labels labels{
         {
             // {0 * 8, 0 * 8}, "LNA:   VGA:   AMP:", Theme::getInstance()->fg_light->foreground
-            {0 * 8, 0 * ui::new_font_height}, "LNA:   VGA:   AMP:", Theme::getInstance()->fg_light->foreground
+            {0 * ui::new_font_width, 0 * ui::new_font_height}, "LNA:   VGA:   AMP:", Theme::getInstance()->fg_light->foreground
         }
     };
     LNAGainField field_lna{
-        {4 * 8, 0 * 16}};
+        {4 * ui::new_font_width, 0 * ui::new_font_height}};
 
     VGAGainField field_vga{
-        {11 * 8, 0 * 16}};
+        {11 * ui::new_font_width, 0 * ui::new_font_height}};
 
     RFAmpField field_rf_amp{
-        {18 * 8, 0 * 16}};
+        {18 * ui::new_font_width, 0 * ui::new_font_height}};
 
     // 类似进度跳的面板
     RSSI rssi{
         // {20 * 8, 4, 7 * 8, 8},
-         {20 * 8, ui::new_font_height/4, 7 * 8, ui::new_font_height/2},
+         {20 * ui::new_font_width, ui::new_font_height/4, 4 * ui::new_font_width, ui::new_font_height/2},
     };
 
     AudioVolumeField field_volume{
-        {screen_width - 2 * 8, 0 * 16}};
+        {screen_width - 2 * ui::new_font_width, 0 * 16}};
     
 
     // 第二行开始位置
     ActivityDot status_frame{
         // {27 * 8 + 2, 5, 2, 2},
-        {27 * 8 + 2, ui::new_font_height/4+1, 2, 2},
+        {27 * ui::new_font_width + 2, ui::new_font_height/4+1, 2, 2},
         Theme::getInstance()->bg_darkest->foreground,
     };
     
 
     ActivityDot status_good_frame{
         // {27 * 8 + 2, 9, 2, 2},
-        {27 * 8 + 2, ui::new_font_height + 1, 2, 2},
+        {27 * ui::new_font_width + 2, ui::new_font_height + 1, 2, 2},
         Theme::getInstance()->fg_green->foreground,
     };
 

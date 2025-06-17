@@ -198,6 +198,7 @@ class FieldString {
     }
 };
 
+// 计算器布局
 class FrequencyKeypadView : public View {
    public:
     std::function<void(rf::Frequency)> on_changed{};
@@ -215,7 +216,10 @@ class FrequencyKeypadView : public View {
 
    private:
     int16_t focused_button = 0;
-    static constexpr int button_w = 240 / 3;
+    // static constexpr int button_w = ui::screen_width / 3;
+    static constexpr int button_w = 106;
+    // static constexpr int button_h =  (ui::screen_height - 16 - ui::new_font_height*2)/4 ;
+    
     static constexpr int button_h = 48;
 
     static constexpr int mhz_digits = 4;
@@ -225,19 +229,20 @@ class FrequencyKeypadView : public View {
     static constexpr int submhz_base = pow(10, 6 - submhz_digits);
     static constexpr int text_digits = mhz_digits + 1 + submhz_digits;
 
+    // 第一栏目是字帖
     Text text_value{
-        {0, 4, screen_width, 16}};
+        {0, 0 , screen_width, ui::new_font_height},true};
 
     std::array<Button, 12> buttons{};
 
     Button button_save{
-        {0, button_h * 5, 60, button_h},
+        {0, ui::screen_height - button_h-16, 80, button_h},
         "Save"};
     Button button_load{
-        {60, button_h * 5, 60, button_h},
+        {80, ui::screen_height - button_h-16, 80, button_h},
         "Load"};
     Button button_close{
-        {128, button_h * 5, 112, button_h},
+        {160, ui::screen_height - button_h-16, 160, button_h},
         "Done"};
 
     /* TODO: Template arg required in enum?! */
