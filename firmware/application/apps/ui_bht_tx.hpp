@@ -50,46 +50,61 @@ class XylosView : public View {
 
    private:
     Labels labels{
-        {{8 * 8, 1 * 8}, "Header:", Theme::getInstance()->fg_light->foreground},
-        {{4 * 8, 3 * 8}, "City code:", Theme::getInstance()->fg_light->foreground},
-        {{7 * 8, 5 * 8}, "Family:", Theme::getInstance()->fg_light->foreground},
-        {{2 * 8, 7 * 8 + 2}, "Subfamily:", Theme::getInstance()->fg_light->foreground},
-        {{2 * 8, 11 * 8}, "Receiver ID:", Theme::getInstance()->fg_light->foreground},
-        {{2 * 8, 14 * 8}, "Relay:", Theme::getInstance()->fg_light->foreground}};
+            {{8 * 8, 1 * 8}, "Header:", Theme::getInstance()->fg_light->foreground,false},
+            {{4 * 8, 3 * 8}, "City code:", Theme::getInstance()->fg_light->foreground,false},
+            {{7 * 8, 5 * 8}, "Family:", Theme::getInstance()->fg_light->foreground,false},
+            {{2 * 8, 7 * 8 + 2}, "Subfamily:", Theme::getInstance()->fg_light->foreground,false},
+            {{2 * 8, 11 * 8}, "Receiver ID:", Theme::getInstance()->fg_light->foreground,false},
+            {{2 * 8, 14 * 8}, "Relay:", Theme::getInstance()->fg_light->foreground,false}};
 
     NumberField field_header_a{
         {16 * 8, 1 * 8},
         2,
         {0, 99},
         1,
-        '0'};
+        '0',
+        false,
+        false
+    };
     NumberField field_header_b{
         {18 * 8, 1 * 8},
         2,
         {0, 99},
         1,
-        '0'};
+        '0',
+        false,
+        false
+    };
 
     NumberField field_city{
         {16 * 8, 3 * 8},
         2,
         {0, XY_MAX_CITY},
         1,
-        ' '};
+        ' ',
+        false,
+        false
+    };
 
     NumberField field_family{
         {16 * 8, 5 * 8},
         1,
         {0, 9},
         1,
-        ' '};
+        ' ',
+        false,
+        false
+    };
 
     NumberField field_subfamily{
         {16 * 8, 7 * 8 + 2},
         1,
         {0, 9},
         1,
-        ' '};
+        ' '
+        ,
+        false,
+        false};
 
     Checkbox checkbox_wcsubfamily{
         // { 20 * 8, 6 * 8 + 6},
@@ -102,7 +117,11 @@ class XylosView : public View {
         2,
         {0, 99},
         1,
-        '0'};
+        '0',
+        false,
+        false
+    };
+
     Checkbox checkbox_wcid{
         {ui::screen_width - 10 * 8, 10 * 8 + 4},
         3,
@@ -131,16 +150,18 @@ class EPARView : public View {
 
    private:
     Labels labels{
-        {{4 * 8, 1 * 8}, "City code:", Theme::getInstance()->fg_light->foreground},
-        {{8 * 8, 3 * 8}, "Group:", Theme::getInstance()->fg_light->foreground},
-        {{8 * 8, 7 * 8}, "Relay:", Theme::getInstance()->fg_light->foreground}};
+        {{4 * 8, 1 * 8}, "City code:", Theme::getInstance()->fg_light->foreground,false},
+        {{8 * 8, 3 * 8}, "Group:", Theme::getInstance()->fg_light->foreground,false},
+        {{8 * 8, 7 * 8}, "Relay:", Theme::getInstance()->fg_light->foreground,false}
+    };
 
     NumberField field_city{
         {16 * 8, 1 * 8},
         3,
         {0, EPAR_MAX_CITY},
         1,
-        '0'};
+        '0',false,false
+        };
 
     OptionsField field_group{
         {16 * 8, 3 * 8},
@@ -190,9 +211,11 @@ class BHTView : public View {
 
     tx_modes tx_mode = IDLE;
 
-    Rect view_rect = {0, 3 * 8, screen_width, 176};
+    Rect view_rect = {0, ui::new_font_height, screen_width, 176};
 
+    // 标签页1
     XylosView view_xylos{view_rect};
+    // 标签页2
     EPARView view_EPAR{view_rect};
 
     TabView tab_view{
@@ -202,6 +225,7 @@ class BHTView : public View {
     Labels labels{
         {{29 * 8, 14 * 16 + 4}, "s", Theme::getInstance()->fg_light->foreground}};
 
+    
     Checkbox checkbox_scan{
         {1 * 8, 25 * 8},
         4,

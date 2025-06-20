@@ -143,7 +143,7 @@ void EncodersConfigView::on_type_change(size_t index) {
         }
 
         add_child(symfield.get());
-        pos += Point{8, 0};
+        pos += Point{ui::new_font_width, 0};
     }
 
     // cut the S, cuz sync bit isn't in symfield for user to chage/edit.

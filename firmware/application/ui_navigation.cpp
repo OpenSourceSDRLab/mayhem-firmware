@@ -150,7 +150,10 @@ const NavigationView::AppList NavigationView::appList = {
     {"rdstx", "RDS", TX, ui::Color::green(), &bitmap_icon_rds, new ViewFactory<RDSView>()},
     {"soundbrd", "Soundbrd", TX, ui::Color::green(), &bitmap_icon_soundboard, new ViewFactory<SoundBoardView>()},
     {"touchtune", "TouchTune", TX, ui::Color::green(), &bitmap_icon_touchtunes, new ViewFactory<TouchTunesView>()},
+    
+    // todo
     {"signalgen", "SignalGen", TX, Color::green(), &bitmap_icon_cwgen, new ViewFactory<SigGenView>()},
+    
     /* TRX ********************************************************************/
     {"microphone", "Mic", TRX, Color::green(), &bitmap_icon_microphone, new ViewFactory<MicTXView>()},
     /* UTILITIES *************************************************************/

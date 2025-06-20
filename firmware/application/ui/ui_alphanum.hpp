@@ -35,6 +35,8 @@
 
 namespace ui {
 
+// 这里是Text Entry框体入口
+// 会有两个类共同操控此函数
 class AlphanumView : public TextEntryView {
    public:
     AlphanumView(NavigationView& nav, std::string& str, size_t max_length, uint8_t enter_mode);
@@ -81,33 +83,38 @@ class AlphanumView : public TextEntryView {
     std::array<Button, 29> buttons{};
 
     NewButton button_shift{
-        {192, 214, screen_width / 5, 38},
+        {192 + 64, 10 * ui::new_font_height - 26, screen_width / 5, 38},
         {},
         &bitmap_icon_shift,
         Theme::getInstance()->bg_dark->background,
-        /*vcenter*/ true};
+        /*vcenter*/ true
+    };
+
 
     Labels labels{
-        {{1 * 8, 33 * 8}, "Raw:", Theme::getInstance()->fg_light->foreground},
-        {{1 * 8, 35 * 8}, "AKA:", Theme::getInstance()->fg_light->foreground}};
+        {{1 * ui::new_font_width, 13 * ui::new_font_height}, "Raw:", Theme::getInstance()->fg_light->foreground},
+        {{1 * ui::new_font_width, 14 * ui::new_font_height}, "AKA:", Theme::getInstance()->fg_light->foreground}};
 
     NumberField field_raw{
-        {5 * 8, 33 * 8},
+        {5 * ui::new_font_width, 13 * ui::new_font_height},
         3,
         {1, 255},
         1,
-        '0'};
+        '0'
+    };
 
     Text text_raw_to_char{
-        {5 * 8, 35 * 8, 4 * 8, 16},
-        "0"};
+        {5 * ui::new_font_width, 14 * ui::new_font_height, 4 * ui::new_font_width, ui::new_font_height},
+        "0",
+        true
+    };
 
     Button button_delete{
-        {9 * 8, 32 * 8 - 3, 7 * 8, 3 * 16 + 3},
+        {7 * ui::new_font_width, 16 * ui::new_font_height, 7 * ui::new_font_width, 2* ui::new_font_height},
         "<DEL"};
 
     Button button_mode{
-        {16 * 8, 32 * 8 - 3, 6 * 8, 3 * 16 + 3},
+        {14 * ui::new_font_width, 16* ui::new_font_height, 6 * ui::new_font_width, 2* ui::new_font_height},
         ""};
 };
 

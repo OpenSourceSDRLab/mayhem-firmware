@@ -34,20 +34,23 @@ namespace ui {
 /* FrequencyField ********************************************************/
 
 FrequencyField::FrequencyField(
-    const Point parent_pos)
+    const Point parent_pos,bool boom_tag)
     : Widget{{parent_pos, {8 * 10, 16}}},
       length_{11},
-      range_{rf::tuning_range} {
+      range_{rf::tuning_range},
+      boom_tag{boom_tag} {
     initial_switch_config_ = get_switches_long_press_config();
     set_focusable(true);
 }
 
 FrequencyField::FrequencyField(
     const Point parent_pos,
-    const rf::FrequencyRange range)
+    const rf::FrequencyRange range,
+    bool boom_tag)
     : Widget{{parent_pos, {8 * 10, 16}}},
       length_{11},
-      range_{range} {
+      range_{range},
+      boom_tag{boom_tag} {
     initial_switch_config_ = get_switches_long_press_config();
     set_focusable(true);
 }
@@ -104,16 +107,34 @@ void FrequencyField::paint(Painter& painter) {
     const auto str_value = to_string_short_freq(value_);
     const auto paint_style = has_focus() ? style().invert() : style();
 
-    painter.draw_string(
-        screen_pos(),
-        paint_style,
-        str_value);
+    if(this->boom_tag == true)
+    {
+        painter.draw_string_with_fitsize(screen_pos(),paint_style,str_value,1);
+        if (digit_mode_) {
+            auto p = screen_pos();
+            p += {digit_ * ui::new_font_width, 0};
+            
+            painter.draw_char(p, *Theme::getInstance()->option_active, str_value[digit_]);
+        }
+        // painter.draw_string(
+        // screen_pos(),
+        // paint_style,
+        // str_value);
 
-    // Highlight current digit in digit_mode.
-    if (digit_mode_) {
-        auto p = screen_pos();
-        p += {digit_ * char_width, 0};
-        painter.draw_char(p, *Theme::getInstance()->option_active, str_value[digit_]);
+        // // Highlight current digit in digit_mode.
+        // if (digit_mode_) {
+        //     auto p = screen_pos();
+        //     p += {digit_ * char_width, 0};
+        //     painter.draw_char(p, *Theme::getInstance()->option_active, str_value[digit_]);
+        // }
+    }
+    else{
+         painter.draw_string_with_fitsize(screen_pos(),paint_style,str_value,0);
+        if (digit_mode_) {
+            auto p = screen_pos();
+            p += {digit_ * 8, 0};
+            painter.draw_char_source(p, *Theme::getInstance()->option_active, str_value[digit_]);
+        }
     }
 }
 

@@ -368,14 +368,14 @@ void Rectangle::paint(Painter& painter) {
 Text::Text(
     Rect parent_rect,
     std::string text,bool boom_tag)
-    : Widget{parent_rect},text{std::move(text)} 
+    : Widget{parent_rect},text{std::move(text)},boom_tag{boom_tag}
 {
-        this->boom_tag = boom_tag;
+    
 }
 
-Text::Text(Rect parent_rect,bool boom_tag): Widget{parent_rect}
+Text::Text(Rect parent_rect,bool boom_tag): Widget{parent_rect},boom_tag{boom_tag}
 {
-        this->boom_tag = boom_tag;
+
 }
 
 
@@ -441,9 +441,10 @@ void Text::paint(Painter& painter) {
 
 /* Labels ****************************************************************/
 
-Labels::Labels(
-    std::initializer_list<Label> labels)
-    : labels_{labels} {
+Labels::Labels(std::initializer_list<Label> labels)
+    : labels_{labels} 
+{
+
 }
 
 void Labels::set_labels(std::initializer_list<Label> labels) {
@@ -452,13 +453,23 @@ void Labels::set_labels(std::initializer_list<Label> labels) {
 }
 
 void Labels::paint(Painter& painter) {
+
     for (auto& label : labels_) {
-        painter.draw_string(
-            label.pos + screen_pos(),
-            style().font,
-            label.color,
-            style().background,
-            label.text);
+        if(label.boom_tag == false)
+        {
+            painter.draw_string_with_fitsize(label.pos + screen_pos(), style(), label.text,0);
+        }
+        else
+        {
+            painter.draw_string_with_fitsize(label.pos + screen_pos(), style(), label.text,1);
+            // painter.draw_string(
+            // label.pos + screen_pos(),
+            // style().font,
+            // label.color,
+            // style().background,
+            // label.text);
+        }
+        
     }
 }
 
@@ -843,10 +854,12 @@ Checkbox::Checkbox(
     Point parent_pos,
     size_t length,
     std::string text,
-    bool small)
+    bool small,
+    bool boom_tag)
     : Widget{},
       text_{text},
-      small_{small} {
+      small_{small},
+      boom_tag{boom_tag} {
     if (!small_)
         set_parent_rect({parent_pos, {static_cast<ui::Dim>((8 * length) + 24), 24}});
     else
@@ -910,13 +923,13 @@ void Checkbox::paint(Painter& painter) {
             portapack::display.draw_line({x + 1, y + 1}, {x + 24 - 2, y + 24 - 2}, Theme::getInstance()->fg_red->foreground);
             portapack::display.draw_line({x + 24 - 2, y + 1}, {x + 1, y + 24 - 2}, Theme::getInstance()->fg_red->foreground);
         }
-
-        painter.draw_string(
-            {static_cast<Coord>(x + 24 + 4),
-             static_cast<Coord>(y + (24 - label_r.height()) / 2)},
-            paint_style,
-            text_);
-    } else {
+        // painter.draw_string(
+        //     {static_cast<Coord>(x + 24 + 4),
+        //      static_cast<Coord>(y + (24 - label_r.height()) / 2)},
+        //     paint_style,
+        //     text_);
+    } 
+    else {
         painter.draw_rectangle({{r.location()}, {16, 16}}, style().foreground);
 
         painter.fill_rectangle({x + 1, y + 1, 16 - 2, 16 - 2}, style().background);
@@ -934,11 +947,32 @@ void Checkbox::paint(Painter& painter) {
             portapack::display.draw_line({x + 16 - 2, y + 1}, {x + 1, y + 16 - 2}, Theme::getInstance()->fg_red->foreground);
         }
 
-        painter.draw_string(
-            {static_cast<Coord>(x + 16 + 2),
-             static_cast<Coord>(y + (16 - label_r.height()) / 2)},
+        // painter.draw_string(
+        //     {static_cast<Coord>(x + 16 + 2),
+        //      static_cast<Coord>(y + (16 - label_r.height()) / 2)},
+        //     paint_style,
+        //     text_);
+    }
+
+    if(this->boom_tag == true)
+    {
+        painter.draw_string_with_fitsize(
+            {
+                static_cast<Coord>(x + 24 + 4),
+                static_cast<Coord>(y + (24 - label_r.height()) / 2)
+            },
             paint_style,
-            text_);
+            text_,1);
+    }
+    else
+    {
+        painter.draw_string_with_fitsize(
+            {
+                static_cast<Coord>(x + 16 + 4),
+                static_cast<Coord>(y + (16 - label_r.height()) / 2)
+            },
+            paint_style,
+            text_,0);
     }
 }
 
@@ -980,10 +1014,13 @@ bool Checkbox::on_touch(const TouchEvent event) {
 Button::Button(
     Rect parent_rect,
     std::string text,
-    bool instant_exec)
+    bool instant_exec,
+    bool boom_tag)
     : Widget{parent_rect},
       text_{text},
-      instant_exec_{instant_exec} {
+      instant_exec_{instant_exec},
+      boom_tag{boom_tag}
+{
     set_focusable(true);
 }
 
@@ -1028,13 +1065,24 @@ void Button::paint(Painter& painter) {
         paint_style.background);
     
     // button默认使用大字
-    
+    // button 按键的渲染文字也是使用原始与扩大后的布局
     int button_string_len = text_.length();
-    int offset_x = r.size().width() / 2 - button_string_len*ui::new_font_width / 2; 
-    painter.draw_string(
-        {r.location().x() + offset_x, r.location().y() + (r.size().height() - ui::new_font_height) / 2},
-        paint_style,
-        text_);
+    if(this->boom_tag == true)
+    {
+        int offset_x = r.size().width() / 2 - button_string_len*ui::new_font_width / 2;
+        
+        painter.draw_string_with_fitsize({r.location().x() + offset_x, r.location().y() + (r.size().height() - ui::new_font_height) / 2},
+            paint_style,
+            text_,1);
+    }
+    else
+    {
+        int offset_x = r.size().width() / 2 - button_string_len * 8/ 2;
+        painter.draw_string_with_fitsize({r.location().x() + offset_x, r.location().y() + (r.size().height() - 16) / 2},
+            paint_style,
+            text_,0);
+    }
+    
    
 
     
@@ -2015,7 +2063,7 @@ TextEdit::TextEdit(
     size_t max_length,
     Point position,
     uint32_t length)
-    : Widget{{position, {8 * static_cast<int>(length), 16}}},
+    : Widget{{position, {ui::new_font_width, ui::new_font_height}}},
       text_{str},
       max_length_{std::max<size_t>(max_length, str.length())},
       char_count_{std::max<uint32_t>(length, 1)},
@@ -2088,12 +2136,14 @@ void TextEdit::paint(Painter& painter) {
         auto c = (i + offset < text_.length()) ? text_[i + offset] : ' ';
 
         painter.draw_char(
-            {rect.location().x() + (static_cast<int>(i) * char_width), rect.location().y()},
+            // {rect.location().x() + (static_cast<int>(i) * char_width), rect.location().y()},
+            {rect.location().x() + (static_cast<int>(i) * ui::new_font_width), rect.location().y()},
             text_style, c);
     }
 
     // Determine cursor position on screen (either the cursor position or the last char).
-    int32_t cursor_x = char_width * (offset > 0 ? char_count_ - 1 : cursor_pos_);
+    // int32_t cursor_x = char_width * (offset > 0 ? char_count_ - 1 : cursor_pos_);
+    int32_t cursor_x = ui::new_font_width * (offset > 0 ? char_count_ - 1 : cursor_pos_);
     Point cursor_point{screen_pos().x() + cursor_x, screen_pos().y()};
     auto cursor_style = text_style.invert();
 
@@ -2102,7 +2152,8 @@ void TextEdit::paint(Painter& painter) {
         painter.draw_char(cursor_point, cursor_style, text_[cursor_pos_]);
 
     // Draw the cursor.
-    Rect cursor_box{cursor_point, {char_width, char_height}};
+    Rect cursor_box{cursor_point, {ui::new_font_width, ui::new_font_height}};
+
     painter.draw_rectangle(cursor_box, cursor_style.background);
 }
 
@@ -2365,13 +2416,15 @@ NumberField::NumberField(
     range_t range,
     int32_t step,
     char fill_char,
-    bool can_loop)
+    bool can_loop,
+    bool boom_tag)
     : Widget{{parent_pos, {8 * length, 16}}},
       range{range},
       step{step},
       length_{length},
       fill_char{fill_char},
-      can_loop{can_loop} {
+      can_loop{can_loop},
+      boom_tag{boom_tag}{
     set_focusable(true);
 }
 
@@ -2420,10 +2473,18 @@ void NumberField::paint(Painter& painter) {
 
     const auto paint_style = has_focus() ? style().invert() : style();
 
-    painter.draw_string(
-        screen_pos(),
-        paint_style,
-        text);
+    if(this->boom_tag == true)
+    {
+        painter.draw_string_with_fitsize(screen_pos(),paint_style,text,1);
+    }
+    else
+    {
+        painter.draw_string_with_fitsize(screen_pos(),paint_style,text,0);
+    }
+    // painter.draw_string(
+    //     screen_pos(),
+    //     paint_style,
+    //     text);
 }
 
 bool NumberField::on_key(const KeyEvent key) {
@@ -2633,9 +2694,11 @@ void SymField::paint(Painter& painter) {
                 paint_style.background = Theme::getInstance()->fg_blue->foreground;
             }
         }
+        painter.draw_char_source(p, paint_style, c);
+        p += {8, 0};
 
-        painter.draw_char(p, paint_style, c);
-        p += {ui::new_font_width, 0};
+        // painter.draw_char(p, paint_style, c);
+        // p += {ui::new_font_width, 0};
     }
 }
 

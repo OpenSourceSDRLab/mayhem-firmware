@@ -114,12 +114,16 @@ int Painter::draw_char(Point p, const Style& style, char c, uint8_t zoom_level) 
     }
     else
     {
-        const auto glyph = style.font.glyph(c);
-        uint16_t output[32];
-        convert_8x16_to_12x16(glyph.pixels(), output);
-        display.draw_glyph_v2(p, ui::Size(12,16), style.foreground, style.background,output);
         return p.x()* zoom_level;
     }
+    // else
+    // {
+    //     const auto glyph = style.font.glyph(c);
+    //     uint16_t output[32];
+    //     convert_8x16_to_12x16(glyph.pixels(), output);
+    //     display.draw_glyph_v2(p, ui::Size(12,16), style.foreground, style.background,output);
+    //     return p.x()* zoom_level;
+    // }
 
     
     // 原始部分
@@ -201,8 +205,8 @@ int Painter::draw_string(
         } else {
             if (c == '\x1B') {
                 escape = true;
-            } else {
-
+            } 
+            else {
                 if( c >= 0x20 && c<=0x7E)
                 {
                     int tt_width = 12;
@@ -216,15 +220,15 @@ int Painter::draw_string(
                     p += Point(tt_width,0);
                     width+=tt_width;
                 }
-                else
-                {
-                    const auto glyph = font.glyph(c);
-                    uint16_t output[32];
-                    convert_8x16_to_12x16(glyph.pixels(), output);
-                    display.draw_glyph_v2(p, ui::Size(12,16), foreground, background,output);
-                    p += Point(12,0);
-                    width+=12;
-                }
+                // else
+                // {
+                //     const auto glyph = font.glyph(c);
+                //     uint16_t output[32];
+                //     convert_8x16_to_12x16(glyph.pixels(), output);
+                //     display.draw_glyph_v2(p, ui::Size(12,16), foreground, background,output);
+                //     p += Point(12,0);
+                //     width+=12;
+                // }
 
                 // const auto glyph = font.glyph(c);
                 // // uint8_t output[48];

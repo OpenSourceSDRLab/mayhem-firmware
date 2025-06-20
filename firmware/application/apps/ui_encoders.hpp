@@ -66,16 +66,16 @@ class EncodersConfigView : public View {
     void on_type_change(size_t index);
 
     Labels labels{
-        {{1 * 8, 0}, "Type:", Theme::getInstance()->fg_light->foreground},
-        {{17 * 8, 0}, "Repeat:", Theme::getInstance()->fg_light->foreground},
-        {{1 * 8, 2 * 8}, "Clk:", Theme::getInstance()->fg_light->foreground},
-        {{10 * 8, 2 * 8}, "kHz", Theme::getInstance()->fg_light->foreground},
-        {{17 * 8, 2 * 8}, "Step:", Theme::getInstance()->fg_light->foreground},
-        {{1 * 8, 4 * 8}, "Frame:", Theme::getInstance()->fg_light->foreground},
-        {{13 * 8, 4 * 8}, "us", Theme::getInstance()->fg_light->foreground},
-        {{17 * 8, 4 * 8}, "Step:", Theme::getInstance()->fg_light->foreground},
-        {{2 * 8, 7 * 8}, "Symbols:", Theme::getInstance()->fg_light->foreground},
-        {{1 * 8, 14 * 8}, "Waveform:", Theme::getInstance()->fg_light->foreground}};
+        {{1 * 8, 0}, "Type:", Theme::getInstance()->fg_light->foreground,false},
+        {{17 * 8, 0}, "Repeat:", Theme::getInstance()->fg_light->foreground,false},
+        {{1 * 8, 2 * 8}, "Clk:", Theme::getInstance()->fg_light->foreground,false},
+        {{10 * 8, 2 * 8}, "kHz", Theme::getInstance()->fg_light->foreground,false},
+        {{17 * 8, 2 * 8}, "Step:", Theme::getInstance()->fg_light->foreground,false},
+        {{1 * 8, 4 * 8}, "Frame:", Theme::getInstance()->fg_light->foreground,false},
+        {{13 * 8, 4 * 8}, "us", Theme::getInstance()->fg_light->foreground,false},
+        {{17 * 8, 4 * 8}, "Step:", Theme::getInstance()->fg_light->foreground,false},
+        {{2 * 8, 7 * 8}, "Symbols:", Theme::getInstance()->fg_light->foreground,false},
+        {{1 * 8, 14 * 8}, "Waveform:", Theme::getInstance()->fg_light->foreground,false}};
 
     OptionsField options_enctype{// Options are loaded at runtime
                                  {6 * 8, 0},
@@ -87,14 +87,15 @@ class EncodersConfigView : public View {
         4,
         {1, 1000},
         1,
-        ' '};
+        ' ',false,false
+    };
 
     NumberField field_repeat_min{
         {24 * 8, 0},
         2,
         {1, 99},
         1,
-        ' '};
+        ' ',false,false};
 
     OptionsField field_clk_step{
         {22 * 8, 2 * 8},
@@ -108,7 +109,7 @@ class EncodersConfigView : public View {
         5,
         {300, 99999},
         100,
-        ' '};
+        ' ',false,false};
 
     OptionsField field_frameduration_step{
         {22 * 8, 4 * 8},
@@ -122,7 +123,9 @@ class EncodersConfigView : public View {
 
     Text text_format{
         {2 * 8, 11 * 8, 24 * 8, 16},
-        ""};
+        "",
+        true
+    };
 
     Waveform waveform{
         {0, 17 * 8, screen_width, 32},
@@ -138,21 +141,21 @@ class EncodersScanView : public View {
     EncodersScanView(NavigationView& nav, Rect parent_rect);
 
     NumberField field_length{
-        {8 * 8, 0},
+        {ui::new_font_width * 8, 0},
         2,
         {3, 24},
         1,
         ' '};
 
     NumberField bit_length_10{
-        {12 * 8, 2 * 8},
+        {12 * ui::new_font_width, 1*ui::new_font_height},
         2,
         {1, 88},
         1,
         ' '};
 
     NumberField bit_length{
-        {14 * 8, 2 * 8},
+        {14 *ui::new_font_width, 1*ui::new_font_height},
         1,
         {0, 9},
         1,
@@ -162,9 +165,9 @@ class EncodersScanView : public View {
 
    private:
     Labels labels{
-        {{1 * 8, 0 * 8}, "Length:", Theme::getInstance()->fg_light->foreground},
-        {{1 * 8, 2 * 8}, "Bit length:", Theme::getInstance()->fg_light->foreground},
-        {{16 * 8, 2 * 8}, "us", Theme::getInstance()->fg_light->foreground},
+        {{1 * ui::new_font_width, 0 * 8}, "Length:", Theme::getInstance()->fg_light->foreground},
+        {{1 * ui::new_font_width, 1 * ui::new_font_height}, "Bit length:", Theme::getInstance()->fg_light->foreground},
+        {{16 * ui::new_font_width, 1 * ui::new_font_height}, "us", Theme::getInstance()->fg_light->foreground},
     };
 };
 

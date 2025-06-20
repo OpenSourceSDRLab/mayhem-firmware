@@ -80,47 +80,71 @@ class TransmitterView : public View {
     bool transmitting_{false};
 
     FrequencyField field_frequency{
-        {0, 1 * 8}};
+        // {0, 1 * ui::new_font_height}
+        {0, 2 * ui::new_font_height}
 
-    Text text_gain{
-        {0, 3 * 8, 5 * 8, 1 * 16},
-        "Gain:"};
-
-    NumberField field_gain{
-        {5 * 8, 3 * 8},
-        2,
-        {max2837::tx::gain_db_range.minimum, max2837::tx::gain_db_range.maximum},
-        max2837::tx::gain_db_step,
-        ' '};
+    };
 
     Text text_bw{
-        {18 * 8, 1 * 8, 3 * 8, 1 * 16},
-        "kHz"};
+        // {18 * ui::new_font_width , 1 * ui::new_font_height, 3 * ui::new_font_width, 1 * ui::new_font_height},
+        {18 * ui::new_font_width , 2 * ui::new_font_height , 4 * ui::new_font_width, 1 * ui::new_font_height},
+        "kHz",
+        true
+    };
+
     NumberField field_bw{
-        {15 * 8, 1 * 8},
+        // {15 * ui::new_font_width , 1 * ui::new_font_height},
+        {15 * ui::new_font_width , 2 * ui::new_font_height},
         3,
         {1, 150},
         1,
-        ' '};
+        ' '
+    };
 
-    Text text_amp{
-        {11 * 8, 3 * 8, 5 * 8, 1 * 16},
-        "Amp:"};
-
-    NumberField field_amp{
-        {16 * 8, 3 * 8},
-        2,
-        {0, 14},
-        14,
-        ' '};
+    FrequencyStepView field_frequency_step{
+        // {10 * ui::new_font_width - 4, 1 * ui::new_font_height},
+        {10 * ui::new_font_width - 4, 2 * ui::new_font_height},
+    };
 
     Button button_start{
         // {21 * 8, 1 * 8, 9 * 8, 32},
-        { ui::screen_width - 9*8, 1 * 8, 9 * 8, 32},
+        { ui::screen_width - 7*ui::new_font_width, 5 * ui::new_font_height, 7 * ui::new_font_width, 2*ui::new_font_height},
         "START"};
+    // 第一列结束
 
-    FrequencyStepView field_frequency_step{
-        {10 * 8 - 4, 1 * 8},
+
+        
+    Text text_gain{
+        // {0, 3 * ui::new_font_height, 5 * ui::new_font_width, 1 * ui::new_font_height},
+        { 0, 6 *ui::new_font_height, 5 * ui::new_font_width, 1 * ui::new_font_height},
+        "Gain:",
+        true
+    };
+
+    NumberField field_gain{
+        // {5 * ui::new_font_width , 3 * ui::new_font_height},
+        {5 * ui::new_font_width , 6 *ui::new_font_height},
+        2,
+        {max2837::tx::gain_db_range.minimum, max2837::tx::gain_db_range.maximum},
+        max2837::tx::gain_db_step,
+        ' '
+    };
+
+    
+    Text text_amp{
+        // {11 * ui::new_font_width, 3 * ui::new_font_height, 5 * ui::new_font_width, 1 * ui::new_font_height},
+        {11 * ui::new_font_width, 6 *ui::new_font_height, 5 * ui::new_font_width, 1 * ui::new_font_height},
+        "Amp:",
+        true
+    };
+
+    NumberField field_amp{
+        // {16 * ui::new_font_width, 3 * ui::new_font_height},
+        {16 * ui::new_font_width, 6 *ui::new_font_height},
+        2,
+        {0, 14},
+        14,
+        ' '
     };
 
     void on_target_frequency_changed(rf::Frequency f);
@@ -140,21 +164,27 @@ class TransmitterView2 : public View {
    private:
     Text text_labels{
         {},  // Set in ctor.
-        {}};
+        {},
+        false
+    };
 
     NumberField field_gain{
         {},  // Set in ctor.
         2,
         {max2837::tx::gain_db_range.minimum, max2837::tx::gain_db_range.maximum},
         max2837::tx::gain_db_step,
-        ' '};
+        ' ',
+        false,false
+    };
 
     NumberField field_amp{
         {},  // Set in ctor.
         2,
         {0, 14},
         14,
-        ' '};
+        ' ',
+        false,false
+    };
 
     void update_gainlevel_styles();
 };

@@ -51,9 +51,9 @@ class FrequencyField : public Widget {
     std::function<void(void)> on_show_options{};
 
     using range_t = rf::FrequencyRange;
-
-    FrequencyField(Point parent_pos);
-    FrequencyField(Point parent_pos, rf::FrequencyRange range);
+    bool boom_tag;
+    FrequencyField(Point parent_pos,bool boom_tag=true);
+    FrequencyField(Point parent_pos, rf::FrequencyRange range,bool boom_tag=true);
     ~FrequencyField();
 
     rf::Frequency value() const;
@@ -268,12 +268,8 @@ class FrequencyKeypadView : public View {
 
 class FrequencyStepView : public OptionsField {
    public:
-    FrequencyStepView(
-        Point parent_pos)
-        : OptionsField{
-              parent_pos,
-              5,
-              {}} {
+    FrequencyStepView(Point parent_pos): OptionsField{parent_pos,5,{},false,true} 
+    {
         options_t options;
         for (const auto& step : freqman_steps) {
             options.emplace_back(step.first, step.second);

@@ -90,6 +90,7 @@ APRSTXView::APRSTXView(NavigationView& nav) {
                   &tx_view
     });
 
+    //
     button_set.on_select = [this, &nav](Button&) {
         text_prompt(
             nav,

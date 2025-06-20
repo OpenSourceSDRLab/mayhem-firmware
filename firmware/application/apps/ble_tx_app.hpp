@@ -184,65 +184,92 @@ class BLETxView : public View {
     static constexpr auto header_height = 10 * 16;
     static constexpr auto switch_button_height = 6 * 16;
 
+    // 第1行开始
+
+    // 采用小字布局
     Button button_open{
         {0 * 8, 0 * 16, 10 * 8, 2 * 16},
-        "Open file"};
+        "Open file",
+        false,
+        false
+    };
 
+    // 注意button占用两行，这是第1行
     Text text_filename{
-        {11 * 8, 0 * 16, 12 * 8, 16},
-        "-"};
+        {12 * 8 , 0 * 16, 16 * 8, 16},
+        "-",
+        false
+    };
 
+    // 注意button占用两行，这是第2行
     ProgressBar progressbar{
-        {11 * 8, 1 * 16, 9 * 8, 16}};
+        {12 * 8 , 1 * 16, 14 * 8, 16}};
 
     Checkbox check_rand_mac{
-        {21 * 8, 1 * 16},
+        {ui::screen_width - 10*8 , 1 * 16},
         6,
         "?? Mac",
-        true};
+        true,
+        false};
 
+    // 第1行结束
+
+    // 第2行开始
     TxFrequencyField field_frequency{
         {0 * 8, 2 * 16},
-        nav_};
+        nav_,
+        false};
 
     TransmitterView2 tx_view{
+        // {11 * 8, 2 * 16},
         {11 * 8, 2 * 16},
         /*short_ui*/ true};
 
     Checkbox check_loop{
-        {21 * 8, 2 * 16},
+        {ui::screen_width - 8*10, 2 * 16},
         4,
         "Loop",
-        true};
+        true,
+        false
+    };
 
     ImageButton button_play{
         {screen_width - 2 * 8, 2 * 16, 2 * 8, 1 * 16},
         &bitmap_play,
         Theme::getInstance()->fg_green->foreground,
-        Theme::getInstance()->fg_green->background};
+        Theme::getInstance()->fg_green->background
+    };
+    // 第2行结束
+
+    // 第3行开始 -- 字体可以逐步大一点
 
     Labels label_speed{
-        {{0 * 8, 6 * 8}, "Speed:", Theme::getInstance()->fg_light->foreground}};
+        {{0 * 8, 4 * 16}, "Speed:", Theme::getInstance()->fg_light->foreground}};
 
     OptionsField options_speed{
-        {7 * 8, 6 * 8},
+        {7 * ui::new_font_width, 4 * 16},
         3,
         {{"1 ", 1},     // 16ms
          {"2 ", 2},     // 32ms
          {"3 ", 3},     // 48ms
          {"4 ", 6},     // 100ms
-         {"5 ", 12}}};  // 200ms
+         {"5 ", 12}},
+         false,
+         true
+    };  // 200ms
 
     OptionsField options_channel{
-        {11 * 8, 6 * 8},
+        {11 * ui::new_font_width, 4 * 16},
         5,
         {{"Ch.37 ", 37},
          {"Ch.38", 38},
          {"Ch.39", 39},
-         {"Auto", 40}}};
+         {"Auto", 40}},
+        false,true     
+    };
 
     OptionsField options_adv_type{
-        {17 * 8, 6 * 8},
+        {17 * ui::new_font_width, 4 * 16},
         14,
         {{"DISCOVERY ", PKT_TYPE_DISCOVERY},
          {"ADV_IND", PKT_TYPE_ADV_IND},
@@ -251,62 +278,77 @@ class BLETxView : public View {
          {"ADV_SCAN_IND", PKT_TYPE_ADV_SCAN_IND},
          {"SCAN_REQ", PKT_TYPE_SCAN_REQ},
          {"SCAN_RSP", PKT_TYPE_SCAN_RSP},
-         {"CONNECT_REQ", PKT_TYPE_CONNECT_REQ}}};
+         {"CONNECT_REQ", PKT_TYPE_CONNECT_REQ}},
+         false,true 
+    
+    };
+    // 第3行结束
 
+    //第4行开始
     Labels label_marked_data{
-        {{0 * 8, 4 * 16}, "Marked Data:", Theme::getInstance()->fg_light->foreground}};
+        {{0 * 8, 4 * 16 + ui::new_font_height * 1}, "Marked Data:", Theme::getInstance()->fg_light->foreground}};
 
     OptionsField marked_data_sequence{
-        {12 * 8, 8 * 8},
+        // {12 * 8, 8 * 8},
+        {12 * ui::new_font_width , 4 * 16 + ui::new_font_height * 1},
         8,
         {{"Ascend", 0},
          {"Descend", 1},
-         {"Random", 2}}};
+         {"Random", 2}},
+        false,
+        true
+    };
+    //第4行结束
+
 
     Labels label_packet_index{
-        {{0 * 8, 12 * 8}, "Packet Index:", Theme::getInstance()->fg_light->foreground}};
+        {{0 * 8, 4 * 16 + ui::new_font_height * 3}, "Packet Index:", Theme::getInstance()->fg_light->foreground}};
 
     Text text_packet_index{
-        {13 * 8, 6 * 16, 12 * 8, 16},
-        "-"};
+        {13 * ui::new_font_width , 4 * 16 + ui::new_font_height * 3 , 12 * ui::new_font_width, ui::new_font_height},
+        "-",true};
 
     Labels label_packets_sent{
-        {{0 * 8, 14 * 8}, "Repeat Count:", Theme::getInstance()->fg_light->foreground}};
+        {{0 * 8, 4 * 16 + ui::new_font_height * 4}, "Repeat Count:", Theme::getInstance()->fg_light->foreground}};
 
     Text text_packets_sent{
-        {13 * 8, 7 * 16, 12 * 8, 16},
-        "-"};
+        {13 * ui::new_font_width , 4 * 16 + ui::new_font_height * 4, 12 * ui::new_font_width, ui::new_font_height},
+        "-",true};
 
     Labels label_mac_address{
-        {{0 * 8, 16 * 8}, "Mac Address:", Theme::getInstance()->fg_light->foreground}};
+        {{0 * 8, 4 * 16 + ui::new_font_height * 5}, "Mac Address:", Theme::getInstance()->fg_light->foreground}};
 
     Text text_mac_address{
-        {12 * 8, 8 * 16, 20 * 8, 16},
-        "-"};
+        {12 * ui::new_font_width, 4 * 16 + ui::new_font_height * 5, 20 * ui::new_font_width, ui::new_font_height},
+        "-",true};
+
 
     Labels label_data_packet{
-        {{0 * 8, 9 * 16}, "Packet Data:", Theme::getInstance()->fg_light->foreground}};
+        {{0 * 8, 4 * 16 + ui::new_font_height * 6}, "Packet Data:", Theme::getInstance()->fg_light->foreground}};
 
     Console console{
-        {0, 9 * 18, screen_width, screen_height - 80}};
+        {0, 4 * 16 + ui::new_font_height * 7, screen_width, ui::new_font_height*4}};
+
 
     TextViewer dataEditView{
-        {0, 9 * 18, screen_width, screen_height - 80}};
+        {0, 4 * 16 + ui::new_font_height * 7, screen_width, ui::new_font_height*4}};
+
 
     Button button_clear_marked{
         // {1 * 8, 14 * 16, 13 * 8, 3 * 8},
-        {ui::screen_width/8*1, 14 * 16, 13 * 8, 3 * 8},
-        "Clear Marked"};
+        { 0 , ui::screen_height - ui::new_font_height * 5, 13 * ui::new_font_width, ui::new_font_height},
+        "Clear Marked"
+    };
 
     Button button_save_packet{
         // {1 * 8, 16 * 16, 13 * 8, 2 * 16},
-        {ui::screen_width/8*1, 16 * 16, 13 * 8, 2 * 16},
+        {0 , ui::screen_height - ui::new_font_height *3, 13 * ui::new_font_width, ui::new_font_height*2},
         "Save Packet"};
 
     Button button_switch{
         // {16 * 8, 16 * 16, 13 * 8, 2 * 16},
 
-        {ui::screen_width/8*5, 16 * 16, 13 * 8, 2 * 16},
+        {ui::screen_width/2, ui::screen_height - ui::new_font_height *3, 13 * ui::new_font_width, ui::new_font_height*2},
         "Switch to Rx"};
 
     std::string str_log{""};

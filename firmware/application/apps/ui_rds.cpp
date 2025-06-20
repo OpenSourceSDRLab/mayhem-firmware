@@ -209,8 +209,8 @@ RDSView::RDSView(
         &view_radiotext,
         &view_datetime,
         &view_audio,
-
-        // &tx_view,
+        
+        &tx_view,
     });
 
     check_TP.set_value(true);

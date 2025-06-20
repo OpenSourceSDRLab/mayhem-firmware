@@ -207,12 +207,13 @@ class Rectangle : public Widget {
 
 class Text : public Widget {
    public:
-    Text(bool boom_tag = false)
-        : text{""} {
-            this->boom_tag = boom_tag;
+   bool boom_tag;
+    Text(bool boom_tag = false):boom_tag{boom_tag},text{""}
+    {
+
     }
 
-    bool boom_tag;
+    
 
     Text(Rect parent_rect, std::string text,bool boom_tag = false);
     Text(Rect parent_rect,bool boom_tag = false);
@@ -237,6 +238,7 @@ class Labels : public Widget {
         Point pos;
         std::string text;
         ui::Color color;
+        bool boom_tag = true;
     };
 
     Labels(const Labels&) = delete;
@@ -379,14 +381,17 @@ class Console : public Widget {
 
 class Checkbox : public Widget {
    public:
+
+    bool boom_tag;
+
     std::function<void(Checkbox&, bool)> on_select{};
 
-    Checkbox(Point parent_pos, size_t length, std::string text, bool small);
+    Checkbox(Point parent_pos, size_t length, std::string text, bool small,bool boom_tag =true);
     Checkbox(
         Point parent_pos,
         size_t length,
         std::string text)
-        : Checkbox{parent_pos, length, text, false} {
+        : Checkbox{parent_pos, length, text, false,true} {
     }
 
     Checkbox()
@@ -424,12 +429,13 @@ class Button : public Widget {
     std::function<void(Button&)> on_touch_press{};    // Executed when touching, before on_select.
     std::function<bool(Button&, KeyEvent)> on_dir{};
     std::function<void(Button&)> on_highlight{};
+    bool boom_tag;
 
-    Button(Rect parent_rect, std::string text, bool instant_exec);  // instant_exec: Execute on_select when you touching instead of releasing
+    Button(Rect parent_rect, std::string text, bool instant_exec,bool boom_tag = true);  // instant_exec: Execute on_select when you touching instead of releasing
     Button(
         Rect parent_rect,
         std::string text)
-        : Button{parent_rect, text, false} {
+        : Button{parent_rect, text, false,true} {
     }
 
     Button()
@@ -773,6 +779,7 @@ class TextEdit : public Widget {
     bool insert_mode_;
 };
 
+
 class TextField : public Text {
    public:
     std::function<void(TextField&)> on_select{};
@@ -851,11 +858,11 @@ class NumberField : public Widget {
     bool boom_tag;
     using range_t = std::pair<int32_t, int32_t>;
 
-    NumberField(Point parent_pos, int length, range_t range, int32_t step, char fill_char, bool can_loop);
+    NumberField(Point parent_pos, int length, range_t range, int32_t step, char fill_char, bool can_loop=false,bool boom_tag=true);
 
-    NumberField(Point parent_pos, int length, range_t range, int32_t step, char fill_char)
-        : NumberField{parent_pos, length, range, step, fill_char, false} {
-    }
+    // NumberField(Point parent_pos, int length, range_t range, int32_t step, char fill_char)
+    //     : NumberField{parent_pos, length, range, step, fill_char, false,true} {
+    // }
 
     NumberField()
         : NumberField{{0, 0}, 1, {0, 1}, 1, ' ', false} {
@@ -1056,6 +1063,7 @@ class OptionTabView : public View {
         {2 * 8, 0 * 16},
         20,
         "",
+        true,
         false};
 };
 

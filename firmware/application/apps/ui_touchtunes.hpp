@@ -147,76 +147,86 @@ class TouchTunesView : public View {
 
     
 
-    const std::array<remote_layout_t, 32> remote_layout{{{{FIT_OFFSET +12 * 8, 0}, "PAUSE"},
-                                                         {{FIT_OFFSET +21 * 8, 0}, "POWER"},
+    const std::array<remote_layout_t, 32> remote_layout{{
+                                                            {{ui::screen_width - (ui::new_font_width*7)*2 , 0}, "PAUSE"},
+                                                            {{ui::screen_width - (ui::new_font_width*7)*1, 0}, "POWER"},
+                                                         
+                                                            {{0 * ui::new_font_width, 2 *ui::new_font_height + 16}, "1"},
+                                                            {{4 * ui::new_font_width, 2 *ui::new_font_height + 16}, "2"},
+                                                            {{8 * ui::new_font_width, 2 *ui::new_font_height + 16}, "3"},
+                                                            {{14 * ui::new_font_width, 2 *ui::new_font_height + 16}, "P1"},
+                                                            {{18 * ui::new_font_width, 2 *ui::new_font_height + 16}, "P2"},
+                                                            {{22 * ui::new_font_width, 2 *ui::new_font_height + 16}, "P3"},
 
-                                                         {{FIT_OFFSET +14 * 8, 5 * 8}, "P1"},
-                                                         {{FIT_OFFSET +18 * 8, 5 * 8}, "P2"},
-                                                         {{FIT_OFFSET +22 * 8, 5 * 8}, "P3"},
+                                                            {{0 * ui::new_font_width, 4 *ui::new_font_height + 16}, "4"},
+                                                            {{4 * ui::new_font_width, 4 *ui::new_font_height + 16}, "5"},
+                                                            {{8 * ui::new_font_width, 4 *ui::new_font_height + 16}, "6"},
+                                                            {{14 * ui::new_font_width, 4 *ui::new_font_height + 16}, "F1"},
+                                                            {{18 * ui::new_font_width +4, 4 *ui::new_font_height + 16}, "^"},
+                                                            {{22 * ui::new_font_width, 4 *ui::new_font_height + 16}, "F2"},
+                                                        
+                                                            {{0 * ui::new_font_width, 6 *ui::new_font_height + 16 }, "7"},
+                                                            {{4 * ui::new_font_width, 6 *ui::new_font_height + 16}, "8"},
+                                                            {{8 * ui::new_font_width, 6 *ui::new_font_height + 16}, "9"},
+                                                            {{14 * ui::new_font_width, 6 *ui::new_font_height + 16}, "<"},
+                                                            {{18 * ui::new_font_width, 6 *ui::new_font_height + 16}, "OK"},
+                                                            {{22 * ui::new_font_width + 8, 6 *ui::new_font_height + 16}, ">"},
+                                                            
+                                                            {{0 * ui::new_font_width, 8 * ui::new_font_height + 16}, "*"},
+                                                            {{4 * ui::new_font_width, 8 * ui::new_font_height + 16}, "0"},
+                                                            {{8 * ui::new_font_width, 8 * ui::new_font_height + 16}, "#"},
+                                                            {{14 * ui::new_font_width, 8 * ui::new_font_height + 16}, "F3"},
+                                                            {{18 * ui::new_font_width+4, 8 * ui::new_font_height + 16}, "V"},
+                                                            {{22 * ui::new_font_width, 8 * ui::new_font_height + 16}, "F4"},
+                                                            
+                                                            {{14 * ui::new_font_width, 10 * ui::new_font_height + 16}, "+"},
+                                                            {{18 * ui::new_font_width, 10 * ui::new_font_height + 16}, "+"},
+                                                            {{22 * ui::new_font_width, 10 * ui::new_font_height + 16}, "+"},
 
-                                                         {{FIT_OFFSET +14 * 8, 10 * 8}, "F1"},
-                                                         {{FIT_OFFSET +18 * 8 + 4, 10 * 8}, "^"},
-                                                         {{FIT_OFFSET +22 * 8, 10 * 8}, "F2"},
-
-                                                         {{FIT_OFFSET +14 * 8, 14 * 8}, "<"},
-                                                         {{FIT_OFFSET +18 * 8, 14 * 8}, "OK"},
-                                                         {{FIT_OFFSET +23 * 8, 14 * 8}, ">"},
-
-                                                         {{FIT_OFFSET +14 * 8, 18 * 8}, "F3"},
-                                                         {{FIT_OFFSET +18 * 8 + 4, 18 * 8}, "V"},
-                                                         {{FIT_OFFSET +22 * 8, 18 * 8}, "F4"},
-
-                                                         {{FIT_OFFSET +0 * 8, 5 * 8}, "1"},
-                                                         {{FIT_OFFSET +4 * 8, 5 * 8}, "2"},
-                                                         {{FIT_OFFSET +8 * 8, 5 * 8}, "3"},
-                                                         {{FIT_OFFSET +0 * 8, 10 * 8}, "4"},
-                                                         {{FIT_OFFSET +4 * 8, 10 * 8}, "5"},
-                                                         {{FIT_OFFSET +8 * 8, 10 * 8}, "6"},
-                                                         {{FIT_OFFSET +0 * 8, 15 * 8}, "7"},
-                                                         {{FIT_OFFSET +4 * 8, 15 * 8}, "8"},
-                                                         {{FIT_OFFSET +8 * 8, 15 * 8}, "9"},
-                                                         {{FIT_OFFSET +0 * 8, 20 * 8}, "*"},
-                                                         {{FIT_OFFSET +4 * 8, 20 * 8}, "0"},
-                                                         {{FIT_OFFSET +8 * 8, 20 * 8}, "#"},
-
-                                                         {{FIT_OFFSET +13 * 8, 23 * 8}, "+"},
-                                                         {{FIT_OFFSET +18 * 8, 23 * 8}, "+"},
-                                                         {{ FIT_OFFSET +23 * 8, 23 * 8}, "+"},
-
-                                                         {{ FIT_OFFSET +13 * 8, 29 * 8}, "-"},
-                                                         {{FIT_OFFSET +18 * 8, 29 * 8}, "-"},
-                                                         {{FIT_OFFSET +23 * 8, 29 * 8}, "-"}}};
+                                                            {{14 * ui::new_font_width, 14 * ui::new_font_height + 16}, "-"},
+                                                            {{18 * ui::new_font_width, 14 * ui::new_font_height + 16} , "-"},
+                                                            {{22 * ui::new_font_width, 14 * ui::new_font_height + 16}, "-"}}};
+                                                         
+                                                         
+                                                         
+                                                         
+                                                         
 
     Labels labels{
-        {{FIT_OFFSET +2 * 8, 1 * 8}, "PIN:", Theme::getInstance()->fg_light->foreground},
-        {{FIT_OFFSET +13 * 8 + 4, 27 * 8}, "VOL1 VOL2 VOL3", Theme::getInstance()->fg_light->foreground}};
+        {{0 * 8, 0 * ui::new_font_height}, "PIN:", Theme::getInstance()->fg_light->foreground},
+        {{12 * ui::new_font_width, 13 * ui::new_font_height + 8}, "VOL1 VOL2 VOL3", Theme::getInstance()->fg_light->foreground}
+    
+    };
 
-    std::array<Button, 32> buttons{};
-
+    
     NumberField field_pin{
-        {FIT_OFFSET +6 * 8, 1 * 8},
+        {6 * ui::new_font_width, 0 * ui::new_font_height},
         3,
         {0, 255},
         1,
         '0'};
 
+    std::array<Button, 32> buttons{};
+
+    
+
     Checkbox check_scan{
-        {FIT_OFFSET +2 * 8, 25 * 8},
+        {2 * 8, ui::screen_height - 8*ui::new_font_height},
         4,
         "Scan"};
 
     Checkbox check_ew{
-        {FIT_OFFSET +2 * 8, 29 * 8},
+        {2 * 8, ui::screen_height - 6*ui::new_font_height},
         4,
         "EW Mode"};
 
     Text text_status{
-        {FIT_OFFSET +2 * 8, 33 * 8, 128, 16},
-        "Ready"};
+        {2 * 8, ui::screen_height - 4*ui::new_font_height , 128, ui::new_font_height},
+        "Ready",true};
 
     ProgressBar progressbar{
         // {2 * 8, 35 * 8, 208, 16}
-        {2 * 8, 35 * 8, 320-2*8*2, 16}
+        {2 * 8, ui::screen_height - 16 -ui::new_font_height , 320-2*8*2, 16}
     };
 
     MessageHandlerRegistration message_handler_tx_progress{

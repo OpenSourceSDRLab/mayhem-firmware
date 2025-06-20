@@ -98,6 +98,7 @@ uint32_t lcd_read_display_status() {
     return value5 + (value4 << 8) + (value3 << 16) + (value2 << 24);
 }
 
+
 void lcd_init() {
     // LCDs are configured for IM[2:0] = 001
     // 8080-I system, 16-bit parallel bus
@@ -127,7 +128,9 @@ void lcd_init() {
 
     io.lcd_data_write_command_and_data(0x3A, {0x55});
 
-    io.lcd_data_write_command_and_data(0xB1, {0xA0, 0x11});  // Frame rate
+    // 这里的刷新率过低？
+    // io.lcd_data_write_command_and_data(0xB1, {0x40, 0x1F});  // fix 60 fps
+    io.lcd_data_write_command_and_data(0xB1, {0xA0, 0x11});  // Frame rate source is 11fps
 
     io.lcd_data_write_command_and_data(0xB4, {0x02});  // 2 dot inversion
 
@@ -148,6 +151,7 @@ void lcd_init() {
     // Turn on Tearing Effect Line (TE) output signal.
     io.lcd_data_write_command_and_data(0x35, {0b00000000});
 }
+
 
 void lcd_set(const uint_fast8_t command, const uint_fast16_t start, const uint_fast16_t end) {
     io.lcd_data_write_command_and_data(command, {static_cast<uint8_t>(start >> 8), static_cast<uint8_t>(start & 0xff),

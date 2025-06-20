@@ -55,8 +55,11 @@ static const Style* get_style_for_gain(uint8_t tot_gain) {
 
 void TransmitterView::paint(Painter& painter) {
     size_t c;
-    Point pos = {0, screen_pos().y()};
+    
+    int draw_offset_y = ui::screen_height - 7 * ui::new_font_height; 
+    // Point pos = {0, screen_pos().y()};
 
+    Point pos = {0, draw_offset_y};
     // for (c = 0; c < 20; c++) 
     // 这里的逻辑是前一部分绘制上面一行
     // 即10对应240
@@ -72,7 +75,8 @@ void TransmitterView::paint(Painter& painter) {
         if (c != 12)
             pos += {24, 0};
         else
-            pos = {0, screen_pos().y() + 32 + 8};
+            // pos = {0, screen_pos().y() + 32 + 8};
+            pos = {0, draw_offset_y + 6*ui::new_font_height + 16};
     }
 }
 
@@ -136,7 +140,9 @@ TransmitterView::TransmitterView(
     const uint32_t channel_bandwidth,
     const bool lock)
     : lock_{lock} {
-    set_parent_rect({0, y, screen_width, 6 * 8});
+    // set_parent_rect({0, y, screen_width, 6 * 8});
+
+    set_parent_rect({0, y, screen_width, 6 * ui::new_font_height});
 
     add_children({
         &field_frequency,

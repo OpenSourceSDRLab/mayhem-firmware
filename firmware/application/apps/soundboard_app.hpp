@@ -96,21 +96,26 @@ class SoundBoardView : public View {
 
     Labels labels{
         {{24 * 8, 180}, "Vol:", Theme::getInstance()->fg_light->foreground},
-        {{0, 180}, "Key:", Theme::getInstance()->fg_light->foreground}};
-
+        {{0, 180}, "Key:", Theme::getInstance()->fg_light->foreground}
+        // {{24 * 8, 0}, "Vol:", Theme::getInstance()->fg_light->foreground},
+        // {{0, 0}, "Key:", Theme::getInstance()->fg_light->foreground}
     
+    };
+
 
     Button button_prev_page{
-        {17 * 10, 25 * 8, 10 * 3, 2 * 14},
+        {ui::screen_width - ui::new_font_width * 7, 26 * 8, 10 * 3, 2 * 14},
         "<="};
     
     Button button_next_page{
         // {30 * 7, 25 * 8, 10 * 3, 2 * 14},
-        {ui::screen_width - 10 * 3, 25 * 8, 10 * 3, 2 * 14},
+        {ui::screen_width - ui::new_font_width * 3, 26 * 8, 10 * 3, 2 * 14},
         "=>"};
 
     Text page_info{
-        {0, 29 * 8, screen_width, 16}};
+        {0, 29 * 8, screen_width, ui::new_font_height}
+        ,true
+    };
 
     MenuView menu_view{
         {0, 0, screen_width, 175},
@@ -118,8 +123,9 @@ class SoundBoardView : public View {
 
     Text text_empty{
         // {7 * 8, 12 * 8, 16 * 8, 16},
-        {7 * 8 + ui::screen_width/8 , 12 * 8, 16 * 8, 16},
+        {2*8 , 12 * 8, 16 * ui::new_font_width, ui::new_font_height},
         "Empty directory !",
+        true
     };
 
     /*Text text_title {
@@ -131,28 +137,37 @@ class SoundBoardView : public View {
         };*/
 
     OptionsField options_tone_key{
-        {4 * 8, 180},
+        {4 * ui::new_font_width, 180},
         18,
-        {}};
+        {},
+        false,true
+    };
 
     AudioVolumeField field_volume{
-        {screen_width - 2 * 8, 180}};
+        {screen_width - 3 * ui::new_font_width, 180}};
+    
     Text text_volume_disabled{
-        {screen_width - 2 * 8, 180, 3 * 8, 16},
+        {screen_width - 3 * ui::new_font_width, 180, 3 * ui::new_font_width, ui::new_font_height},
         "--"};
 
     Checkbox check_loop{
         {0, 25 * 8 + 4},
         4,
-        "Loop"};
+        "Loop",
+        false,
+        true
+    };
 
     Checkbox check_random{
-        {10 * 7, 25 * 8 + 4},
+        {10 * 10, 25 * 8 + 4},
         6,
-        "Random"};
+        "Random",
+        false,
+        true
+    };
 
     ProgressBar progressbar{
-        {0 * 8, 31 * 8 + 2, screen_width, 4}};
+        {0 * 8, 180-10, screen_width, 8}};
 
     TransmitterView tx_view{
         16 * 16,

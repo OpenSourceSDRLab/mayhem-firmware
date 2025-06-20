@@ -196,8 +196,19 @@ TouchTunesView::TouchTunesView(
         buttons[n].on_select = button_fn;
         buttons[n].id = n;
         buttons[n].set_text(entry.text);
-        buttons[n].set_parent_rect({entry.position + Point(8, 0),
-                                    {(Dim)(entry.text.length() + 2) * 8, 4 * 8}});
+        if(entry.text.length() > 4)
+        {
+            buttons[n].set_parent_rect({entry.position + Point(8, 0),
+                                    {(Dim)(entry.text.length()+2)*ui::new_font_width , ui::new_font_height * 2}});
+        }
+        else
+        {
+            buttons[n].set_parent_rect({entry.position + Point(8, 0),
+                                    {(Dim)(entry.text.length()+2)*ui::new_font_width , ui::new_font_height * 2}});
+        }
+
+        // buttons[n].set_parent_rect({entry.position + Point(8, 0),
+        //                             {(Dim)(entry.text.length() + 2) * 8, 4 * 8}});
         add_child(&buttons[n]);
         n++;
     }

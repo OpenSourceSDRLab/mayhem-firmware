@@ -837,7 +837,7 @@ class SetTouchscreenThresholdView : public View {
         4,
         {1, 1023},
         1,
-        ' ',
+        ' '
     };
 
     Button button_autodetect{
@@ -893,7 +893,7 @@ class SetMenuColorView : public View {
         3,
         {8, 248},
         8,
-        ' ',
+        ' '
     };
 
     NumberField field_green_level{

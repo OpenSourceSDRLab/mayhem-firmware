@@ -55,8 +55,9 @@ class TextEntryView : public View {
 
     TextEdit text_input;
     Button button_ok{
-        {22 * 8, 32 * 8 - 3, 8 * 8, 3 * 16 + 3},
-        "OK"};
+        {ui::screen_width -7 * ui::new_font_width , 16* ui::new_font_height , 7 * ui::new_font_width, 2*ui::new_font_height},
+        "OK"
+        };
 };
 
 // Show the TextEntry view to receive keyboard input.
