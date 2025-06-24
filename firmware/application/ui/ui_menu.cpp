@@ -56,10 +56,15 @@ void MenuItemView::paint(Painter& painter) {
     ui::Color final_bg_color = (highlighted() && (parent()->has_focus() || keep_highlight)) ? item->color : paint_style.background;
 
     if (final_item_color.v == final_bg_color.v) final_item_color = paint_style.foreground;
-
+    
+    // 多渲染一点查看具体效果
     painter.fill_rectangle(
-        r,
+        {r.left(),r.top(),r.width(),32},
         final_bg_color);
+
+    // painter.fill_rectangle(
+    //     r,
+    //     final_bg_color);
 
     if (item->bitmap) {
         painter.draw_bitmap(
@@ -77,7 +82,7 @@ void MenuItemView::paint(Painter& painter) {
         .foreground = final_item_color};
 
     painter.draw_string(
-        {r.location().x() + offset_x, r.location().y() + (r.size().height() - font_height) / 2},
+        {r.location().x() + offset_x, r.location().y() + (r.size().height() - 16) / 2},
         text_style,
         item->text);
 }

@@ -260,24 +260,34 @@ class TextEditorView : public View {
 
     TextViewer viewer{
         /* 272 = screen_height - 16 (top bar) - 32 (bottom controls) */
-        {0, 0, screen_width, 272}};
+        // {0, 0, screen_width, 272}
+        {0, 16, screen_width, ui::screen_height - 16 -64}
+    };
 
     TextEditorMenu menu{};
 
+
     NewButton button_menu{
-        {26 * 8, 34 * 8, 4 * 8, 4 * 8},
+        // {26 * 8, 34 * 8, 4 * 8, 4 * 8},
+        {ui::screen_width - 4*8 , ui::screen_height - 4*8*2 , 4 * 8, 4 * 8},
         {},
         &bitmap_icon_controls,
         Theme::getInstance()->bg_dark->background,
         /*vcenter*/ true};
 
     Text text_position{
-        {0 * 8, 34 * 8, 26 * 8, 2 * 8},
-        ""};
+        // {0 * 8, 34 * 8, 26 * 8, 2 * 8},
+        {0 * 8, ui::screen_height - 4*8*2 , ui::screen_width - 32, 32},
+        "",
+        true
+    };
 
     Text text_size{
-        {0 * 8, 36 * 8, 26 * 8, 2 * 8},
-        ""};
+        // {0 * 8, 36 * 8, 26 * 8, 2 * 8},
+        {0 * 8, ui::screen_height - 4*8*2 , ui::screen_width - 32, 32},
+        "",
+        true 
+    };
 };
 
 }  // namespace ui

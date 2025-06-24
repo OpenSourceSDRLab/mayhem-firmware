@@ -170,35 +170,41 @@ class RegistersView : public View {
     bool on_encoder(const EncoderEvent delta) override;
 
    private:
-    Text text_title{};
+    Text text_title{false};
 
     RegistersWidget registers_widget;
 
     Button button_update{
-        {16, 280, 96, 24},
-        "Update"};
+        {16, ui::screen_height - ui::new_font_height * 3, 96, ui::new_font_height * 2},
+        "Update"
+    };
 
     Button button_done{
-        {128, 280, 96, 24},
-        "Done"};
+        {ui::screen_width - 96 - 48, ui::screen_height - ui::new_font_height * 3, 96, ui::new_font_height * 2},
+        "Done"
+    };
 
     Button button_write{
-        {144, 248, 80, 20},
+        {ui::screen_width - 80, ui::screen_height - ui::new_font_height * 6, 80, ui::new_font_height * 2},
         "Write"};
 
     Labels labels{
-        {{1 * 8, 248}, "Reg:", Theme::getInstance()->fg_light->foreground},
-        {{8 * 8, 248}, "Data:", Theme::getInstance()->fg_light->foreground}};
+        {{1 * 8, ui::screen_height - ui::new_font_height * 6}, "Reg:", Theme::getInstance()->fg_light->foreground},
+        {{8 * ui::new_font_width, ui::screen_height - ui::new_font_height * 6}, "Data:", Theme::getInstance()->fg_light->foreground}};
 
     SymField field_write_reg_num{
-        {5 * 8, 248},
+        {5 * ui::new_font_width, ui::screen_height - ui::new_font_height * 6},
         2,
-        SymField::Type::Hex};
+        SymField::Type::Hex,
+        false,true    
+    };
 
     SymField field_write_data_val{
-        {13 * 8, 248},
+        {13 * ui::new_font_width, ui::screen_height - ui::new_font_height * 6},
         4,
-        SymField::Type::Hex};
+        SymField::Type::Hex,
+        false,true
+    };
 };
 
 class ControlsSwitchesWidget : public Widget {
@@ -242,25 +248,28 @@ class DebugControlsView : public View {
 
    private:
     Labels labels{
-        {{8 * 8, 1 * 16}, "Controls State", Theme::getInstance()->bg_darkest->foreground},
-        {{0 * 8, 11 * 16}, "Dial:", Theme::getInstance()->fg_medium->foreground},
-        {{0 * 8, 14 * 16}, "Long-Press Mode:", Theme::getInstance()->fg_medium->foreground}};
-
+        {{8 * 8, 1 * ui::new_font_height}, "Controls State", Theme::getInstance()->bg_darkest->foreground},
+        {{0 * 8, 11 * ui::new_font_height}, "Dial:", Theme::getInstance()->fg_medium->foreground},
+        {{0 * 8, 14 * ui::new_font_height}, "Long-Press Mode:", Theme::getInstance()->fg_medium->foreground}};
+    
+    // 按键组
     ControlsSwitchesWidget switches_widget{
         {80, 80, 80, 112},
     };
 
     OptionsField options_switches_mode{
-        {17 * 8, 14 * 16},
+        {17 *ui::new_font_width, 14 * ui::new_font_height},
         8,
         {
             {"Disabled", 0},
             {"Enabled", 0xFF},  // all KeyEvent bits to long-press mode
-        }};
+        },false,true
+    };
 
     Button button_done{
-        {72, 264, 96, 24},
-        "Done"};
+        {ui::screen_width - 96, ui::screen_height - 24*2 , 96, 24},
+        "Done"
+    };
 };
 
 class DebugMemoryDumpView : public View {
@@ -271,48 +280,57 @@ class DebugMemoryDumpView : public View {
 
    private:
     Button button_dump{
-        {72, 4 * 16, 96, 24},
+        {64, 4 * ui::new_font_height, 96, ui::new_font_height * 2},
         "Dump"};
 
     Button button_read{
-        {16, 11 * 16, 96, 24},
+        {64, 11 * ui::new_font_height, 96, ui::new_font_height * 2},
         "Read"};
 
     Button button_write{
-        {128, 11 * 16, 96, 24},
+        {160, 11 * ui::new_font_height, 96, ui::new_font_height * 2},
         "Write"};
 
     Button button_done{
-        {128, screen_height - 80, 96, 24},
+        {160, screen_height - ui::new_font_height * 2*2, 96, ui::new_font_height * 2},
         "Done"};
 
     Labels labels{
-        {{5 * 8, 1 * 16}, "Dump Range to File", Theme::getInstance()->fg_yellow->foreground},
-        {{0 * 8, 2 * 16}, "Starting Address: 0x", Theme::getInstance()->fg_light->foreground},
-        {{0 * 8, 3 * 16}, "Byte Count:       0x", Theme::getInstance()->fg_light->foreground},
-        {{3 * 8, 8 * 16}, "Read/Write Single Word", Theme::getInstance()->fg_yellow->foreground},
-        {{0 * 8, 9 * 16}, "Memory Address:   0x", Theme::getInstance()->fg_light->foreground},
-        {{0 * 8, 10 * 16}, "Data Value:       0x", Theme::getInstance()->fg_light->foreground}};
+        {{5 * 8, 1 * ui::new_font_height}, "Dump Range to File", Theme::getInstance()->fg_yellow->foreground},
+        {{0 * 8, 2 * ui::new_font_height}, "Starting Address: 0x", Theme::getInstance()->fg_light->foreground,false},
+        {{0 * 8, 3 * ui::new_font_height}, "Byte Count:       0x", Theme::getInstance()->fg_light->foreground,false},
+        {{3 * 8, 8 * ui::new_font_height}, "Read/Write Single Word", Theme::getInstance()->fg_yellow->foreground},
+        {{0 * 8, 9 * ui::new_font_height}, "Memory Address:   0x", Theme::getInstance()->fg_light->foreground,false},
+        {{0 * 8, 10 * ui::new_font_height}, "Data Value:       0x", Theme::getInstance()->fg_light->foreground,false}
+    };
 
     SymField field_starting_address{
-        {20 * 8, 2 * 16},
+        {20 * ui::new_font_width, 2 * ui::new_font_height},
         8,
-        SymField::Type::Hex};
+        SymField::Type::Hex,
+        false,false
+    };
 
     SymField field_byte_count{
-        {20 * 8, 3 * 16},
+        {20 * ui::new_font_width, 3 * ui::new_font_height},
         8,
-        SymField::Type::Hex};
+        SymField::Type::Hex,
+        false,false
+    };
 
     SymField field_rw_address{
-        {20 * 8, 9 * 16},
+        {20 * ui::new_font_width, 9 * ui::new_font_height},
         8,
-        SymField::Type::Hex};
+        SymField::Type::Hex,
+        false,false
+    };
 
     SymField field_data_value{
-        {20 * 8, 10 * 16},
+        {20 * ui::new_font_width, 10 * ui::new_font_height},
         8,
-        SymField::Type::Hex};
+        SymField::Type::Hex,
+        false,false
+    };
 };
 
 class DebugPmemView : public View {

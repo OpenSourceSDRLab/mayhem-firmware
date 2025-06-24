@@ -288,9 +288,11 @@ FileManBaseView::FileManBaseView(
     std::string filter)
     : nav_{nav},
       extension_filter{filter} {
-    add_children({&labels,
-                  &text_current,
-                  &button_exit});
+    add_children({
+        &labels,
+        &text_current,
+        &button_exit
+    });
 
     button_exit.on_select = [this](Button&) {
         nav_.pop();

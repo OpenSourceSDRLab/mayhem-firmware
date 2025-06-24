@@ -759,7 +759,7 @@ AppSettingsView::AppSettingsView(
     add_children({&labels,
                   &menu_view});
 
-    menu_view.set_parent_rect({0, 3 * 8, screen_width, 33 * 8});
+    menu_view.set_parent_rect({0, 3 * ui::new_font_height, screen_width, 16 * ui::new_font_height});
 
     ensure_directory(settings_dir);
 
@@ -1080,7 +1080,7 @@ void SetBatteryView::focus() {
 
 SettingsMenuView::SettingsMenuView(NavigationView& nav)
     : nav_(nav) {
-    set_max_rows(2);  // allow wider buttons
+    set_max_rows(3);  // allow wider buttons
 }
 
 void SettingsMenuView::on_populate() {
@@ -1103,10 +1103,12 @@ void SettingsMenuView::on_populate() {
         {"Freq. Correct", ui::Color::dark_cyan(), &bitmap_icon_options_radio, [this]() { nav_.push<SetFrequencyCorrectionView>(); }},
         {"P.Memory Mgmt", ui::Color::dark_cyan(), &bitmap_icon_memory, [this]() { nav_.push<SetPersistentMemoryView>(); }},
         {"Radio", ui::Color::dark_cyan(), &bitmap_icon_options_radio, [this]() { nav_.push<SetRadioView>(); }},
+
         {"SD Card", ui::Color::dark_cyan(), &bitmap_icon_sdcard, [this]() { nav_.push<SetSDCardView>(); }},
         {"User Interface", ui::Color::dark_cyan(), &bitmap_icon_options_ui, [this]() { nav_.push<SetUIView>(); }},
         {"Display", ui::Color::dark_cyan(), &bitmap_icon_brightness, [this]() { nav_.push<SetDisplayView>(); }},
         {"Menu Color", ui::Color::dark_cyan(), &bitmap_icon_brightness, [this]() { nav_.push<SetMenuColorView>(); }},
+        
         {"Theme", ui::Color::dark_cyan(), &bitmap_icon_setup, [this]() { nav_.push<SetThemeView>(); }},
     });
 

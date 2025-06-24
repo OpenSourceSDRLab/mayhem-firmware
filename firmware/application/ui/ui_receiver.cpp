@@ -466,15 +466,32 @@ void FrequencyOptionsView::on_reference_ppm_correction_changed(int32_t v) {
 
 /* RFAmpField ************************************************************/
 
-RFAmpField::RFAmpField(
-    Point parent_pos)
+// RFAmpField::RFAmpField(
+//     Point parent_pos)
+//     : NumberField{
+//           parent_pos,
+//           1,
+//           {0, 1},
+//           1,
+//           ' ',
+//       }
+// {
+//     set_value(receiver_model.rf_amp());
+
+//     on_change = [](int32_t v) {
+//         receiver_model.set_rf_amp(v);
+//     };
+// }
+
+RFAmpField::RFAmpField(Point parent_pos,bool can_loop,bool boom_tag)
     : NumberField{
           parent_pos,
           1,
           {0, 1},
           1,
-          ' ',
-      } {
+          ' ',can_loop,boom_tag
+    }
+{
     set_value(receiver_model.rf_amp());
 
     on_change = [](int32_t v) {
@@ -498,14 +515,30 @@ RadioGainOptionsView::RadioGainOptionsView(
 
 /* LNAGainField **********************************************************/
 
+// LNAGainField::LNAGainField(
+//     Point parent_pos)
+//     : NumberField{
+//           parent_pos,
+//           2,
+//           {max283x::lna::gain_db_range.minimum, max283x::lna::gain_db_range.maximum},
+//           max283x::lna::gain_db_step,
+//           ' ',
+//       } {
+//     set_value(receiver_model.lna());
+
+//     on_change = [](int32_t v) {
+//         receiver_model.set_lna(v);
+//     };
+// }
+
 LNAGainField::LNAGainField(
-    Point parent_pos)
+    Point parent_pos,bool can_loop,bool boom_tag)
     : NumberField{
           parent_pos,
           2,
           {max283x::lna::gain_db_range.minimum, max283x::lna::gain_db_range.maximum},
           max283x::lna::gain_db_step,
-          ' ',
+          ' ',can_loop,boom_tag
       } {
     set_value(receiver_model.lna());
 
@@ -513,6 +546,7 @@ LNAGainField::LNAGainField(
         receiver_model.set_lna(v);
     };
 }
+
 
 void LNAGainField::on_focus() {
     if (on_show_options) {
@@ -523,13 +557,13 @@ void LNAGainField::on_focus() {
 /* VGAGainField **********************************************************/
 
 VGAGainField::VGAGainField(
-    Point parent_pos)
+    Point parent_pos,bool can_loop,bool boom_tag)
     : NumberField{
           parent_pos,
           2,
           {max283x::vga::gain_db_range.minimum, max283x::vga::gain_db_range.maximum},
           max283x::vga::gain_db_step,
-          ' ',
+          ' ',can_loop,boom_tag
       } {
     set_value(receiver_model.vga());
 
@@ -546,14 +580,13 @@ void VGAGainField::on_focus() {
 
 /* AudioVolumeField *******************************************************/
 
-AudioVolumeField::AudioVolumeField(
-    Point parent_pos)
+AudioVolumeField::AudioVolumeField(Point parent_pos,bool can_loop,bool boom_tag)
     : NumberField{
           parent_pos,
           /* length */ 2,
           /* range */ {0, 99},
           /* step */ 1,
-          /* fill char */ ' '} {
+          /* fill char */ ' ',can_loop,boom_tag} {
     set_value(receiver_model.normalized_headphone_volume());
 
     on_change = [](int32_t v) {

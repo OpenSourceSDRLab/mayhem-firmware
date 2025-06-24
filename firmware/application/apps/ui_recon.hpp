@@ -219,184 +219,222 @@ class ReconView : public View {
     std::unique_ptr<RecordView> record_view{};
 
     Labels labels{
+        // 第1行
         {{0 * 8, 0 * 16}, "LNA:   VGA:   AMP:  VOL:     ", Theme::getInstance()->fg_light->foreground},
-        {{40 + 3 * 8, 8 * 16}, "START       END", Theme::getInstance()->fg_light->foreground},
-        {{0 * 8, (22 * 8)}, "                S:          ", Theme::getInstance()->fg_light->foreground},
-        {{0 * 8, (24 * 8) + 4}, "NBLCKS:x      W,L:      ,     ", Theme::getInstance()->fg_light->foreground},
-        {{0 * 8, (26 * 8) + 4}, "MODE:     ,      SQUELCH:    ", Theme::getInstance()->fg_light->foreground}};
+        // 第9行
+        {{0, 8 * ui::new_font_height}, "START       END", Theme::getInstance()->fg_light->foreground},
+        // 第12行
+        {{0 * 8, (11 * ui::new_font_height)}, "                S:          ", Theme::getInstance()->fg_light->foreground,false},
+        {{0 * 8, (12 * ui::new_font_height)}, "NBLCKS:x      W,L:      ,     ", Theme::getInstance()->fg_light->foreground,false},
+        {{0 * 8, (13 * ui::new_font_height)}, "MODE:     ,        SQUELCH:    ", Theme::getInstance()->fg_light->foreground,false}
+    };
 
+    // 第1行开始
     LNAGainField field_lna{
-        {4 * 8, 0 * 16}};
+        {4 * ui::new_font_width, 0 * 16}};
 
     VGAGainField field_vga{
-        {11 * 8, 0 * 16}};
+        {11 * ui::new_font_width, 0 * 16}};
 
     RFAmpField field_rf_amp{
-        {18 * 8, 0 * 16}};
+        {18 * ui::new_font_width, 0 * 16}};
 
     AudioVolumeField field_volume{
-        {24 * 8, 0 * 16}};
+        {24 * ui::new_font_width, 0 * 16}};
+    // 第1行结束
 
+    // 第2行开始
     Text file_name{
         // show file used
-        {0, 1 * 16, screen_width, 16},
+        {0, 1 * ui::new_font_height, screen_width, ui::new_font_height},true
     };
 
+    // 第3行开始
     Text desc_cycle{
-        {0, 2 * 16, screen_width, 16},
+        {0, 2 * ui::new_font_height, screen_width, ui::new_font_height},false 
     };
 
+    // 第4行开始
     RSSI rssi{
-        {0 * 16, 3 * 16 + 2, screen_width - 8 * 8 + 4, 12},
+        {0 * 16, 3 * ui::new_font_height , screen_width/2, 24},
     };
+    Button button_scanner_mode{
+        {screen_width - 7 * ui::new_font_width, 3 * ui::new_font_height, 7 * ui::new_font_width,  ui::new_font_height+ 8 },
+        "RECON"};
 
+    // 第5行开始
     ButtonWithEncoder text_cycle{
-        {0, 4 * 16, 4 * 8, 16},
-        ""};
+        {0, 4 * ui::new_font_height, 4 * ui::new_font_width, ui::new_font_height},
+        "",true};
 
     // "/XXX -XXX db" =>  12 chars max
     Text text_max{
-        {4 * 8, 4 * 16, 12 * 8, 16},
+        {4 * ui::new_font_width, 4 * ui::new_font_height, 12 * ui::new_font_width, ui::new_font_height},true
     };
 
     // "XX/XX" =>  5 chars max
     Text text_nb_locks{
-        {16 * 8, 4 * 16, 5 * 8, 16},
+        {16 * ui::new_font_width, 4 * ui::new_font_height, 5 * ui::new_font_width, ui::new_font_height},true
     };
 
-    Text big_display{
-        // Show frequency in text mode
-        {0, 5 * 16, 21 * 8, 16},
+
+    Button button_loop_config{
+        {screen_width - 7 * ui::new_font_width, 5 *  ui::new_font_height, 7 * ui::new_font_width,  ui::new_font_height+ 8},
+        "[LOOP]"
     };
 
     Text freq_stats{
         // Show frequency stats in text mode
-        {0, 6 * 16, 21 * 8, 16},
+        {0, 6 * ui::new_font_height, 21 *8, ui::new_font_height},false
     };
 
-    // TIMER: 9999
+    // 第6行开始
+    Text big_display{
+        // Show frequency in text mode
+        {0, 5 * ui::new_font_height , 21 * 8, ui::new_font_height},false
+    };
+
+    Button button_config{
+        {screen_width - 7 * ui::new_font_width, 7 *  ui::new_font_height, 7 * ui::new_font_width,  ui::new_font_height + 8},
+        "CONFIG"
+    };
+
+    // 第7行开始
+   
+    
+    // 第8行开始
     Text text_timer{
         // Show frequency stats in text mode
-        {0, 7 * 16, 11 * 8, 16},
+        {0, 7 * ui::new_font_height, 11 * ui::new_font_width, ui::new_font_height},true
     };
 
     // T: Senn. 32.000k
     Text text_ctcss{
-        {14 * 8, 7 * 16, 8 * 8, 1 * 8},
-        ""};
+        {14 * ui::new_font_width , 7 * ui::new_font_height, 8 * ui::new_font_width, ui::new_font_height},
+        "",true};
 
-    // Button can be RECON or SCANNER
-    Button button_scanner_mode{
-        {screen_width - 7 * 8, 3 * 16, 7 * 8, 28},
-        "RECON"};
-
-    Button button_loop_config{
-        {screen_width - 7 * 8, 5 * 16, 7 * 8, 28},
-        "[LOOP]"};
-
-    Button button_config{
-        {screen_width - 7 * 8, 7 * 16, 7 * 8, 28},
-        "CONFIG"};
-
+    //第10行开始
     ButtonWithEncoder button_manual_start{
-        {FIT_OFFSET+ 0 * 8, 9 * 16, 11 * 8, 28},
-        ""};
+        {0 * ui::new_font_width, 9 * ui::new_font_height, 7 * 8 * 2, 16},
+        "",false,false};
 
     ButtonWithEncoder button_manual_end{
-        {FIT_OFFSET+12 * 8 - 6, 9 * 16, 11 * 8, 28},
-        ""};
+        {15  * 8 , 9 * ui::new_font_height, 7 * 8 * 2, 16},
+        "",false,false};
 
+    Button button_manual_recon{
+        {ui::screen_width - 7 * 8, 9 * ui::new_font_height, 7 * 8  , ui::new_font_height},
+        "SEARCH",false,false};
+    
+    //第12行开始
     OptionsField field_recon_match_mode{
-        {0 * 8, 11 * 16},
+        {0 * 8, 11 * ui::new_font_height},
         16,  // CONTINUOUS MATCH MODE / SPARSE TIMED MATCH MODE
         {
             {"MATCH:CONTINOUS", 0},
-            {"MATCH:SPARSE", 1}}};
+            {"MATCH:SPARSE", 1}},false,false
+        };
 
     OptionsField step_mode{
-        {18 * 8, 11 * 16},
+        {18 * 8, 11 * ui::new_font_height},
         12,
-        {}};
+        {},false,false 
+    };
 
-    Button button_manual_recon{
-        {23 * 8, 9 * 16, 7 * 8, 28},
-        "SEARCH"};
-
+    //13
     NumberField field_nblocks{
-        {8 * 8, 24 * 8 + 4},
+        {8 *8, 12 * ui::new_font_height},
+        // {8 *8, 1000000},
         2,
         {1, 99},
         1,
-        ' ',
+        ' ',false,false 
     };
 
     NumberField field_wait{
-        {19 * 8, 24 * 8 + 4},
+        {19 * 8, 12 *ui::new_font_height},
+        // {19 * 8, 1000000},
         5,
         {-RECON_MAX_LOCK_DURATION, RECON_MAX_LOCK_DURATION},
         STATS_UPDATE_INTERVAL,
-        ' ',
+        ' ',false,false 
     };
 
     NumberField field_lock_wait{
-        {25 * 8, 24 * 8 + 4},
+        {25 *8, 12 * ui::new_font_height},
+        // {25 *8, 1000000},
         4,
         {STATS_UPDATE_INTERVAL, RECON_MAX_LOCK_DURATION},
         STATS_UPDATE_INTERVAL,
-        ' ',
+        ' ',false,false 
     };
 
+    //14
     OptionsField field_mode{
-        {6 * 8, (26 * 8) + 4},
+        {6 * 8, 13*ui::new_font_height},
+        // {6 * 8, 100000},
         4,
         {}};
 
     OptionsField field_bw{
-        {11 * 8, (26 * 8) + 4},
+        {11 * 8, 13*ui::new_font_height},
+        // {6 * 8, 100000},
         6,
         {}};
 
     NumberField field_squelch{
-        {26 * 8, (26 * 8) + 4},
+        {30 * 8, 13*ui::new_font_height},
+        //  {6 * 8, 100000},
         3,
         {-90, 20},
         1,
-        ' ',
+        ' ',false,false 
     };
 
+    // 按键组
     ButtonWithEncoder button_pause{
-        {FIT_OFFSET + 0, (15 * 16) - 4, 72, 28},
-        "PAUSE"};
+        {0, ui::screen_height - 4*ui::new_font_height, 12 * 8 ,ui::new_font_height},
+        "PAUSE",false,false
+    };
 
     Button button_audio_app{
-        {FIT_OFFSET + 84, (15 * 16) - 4, 72, 28},
-        "AUDIO"};
+        {16 *8 , ui::screen_height - 4*ui::new_font_height, 8* 8, ui::new_font_height},
+        "AUDIO",false,false
+    };
 
     ButtonWithEncoder button_add{
-        {FIT_OFFSET + 168, (15 * 16) - 4, 72, 28},
-        "<STORE>"};
+        {26 *8 , ui::screen_height - 4*ui::new_font_height , 12 * 8 , ui::new_font_height},
+        "<STORE>",false,false
+    };
+
 
     Button button_dir{
-        { FIT_OFFSET + 0, (35 * 8) - 4, 34, 28},
-        "FW>"};
+        {0, ui::screen_height - 2*ui::new_font_height, 6* 8, ui::new_font_height},
+        "FW>",false,false
+    };
 
     Button button_restart{
-        { FIT_OFFSET+ 38, (35 * 8) - 4, 34, 28},
-        "RST"};
+        {8*8,  ui::screen_height - 2*ui::new_font_height, 6* 8, ui::new_font_height},
+        "RST",false,false
+    };
 
     Button button_mic_app{
-        { FIT_OFFSET+ 84, (35 * 8) - 4, 72, 28},
-        "MIC TX"};
+        {16*8,  ui::screen_height - 2*ui::new_font_height, 12*8, ui::new_font_height},
+        "MIC TX",false,false
+    };
 
     ButtonWithEncoder button_remove{
-        {FIT_OFFSET+168, (35 * 8) - 4, 72, 28},
-        "<REMOVE>"};
+        {26*8,  ui::screen_height - 2*ui::new_font_height , 12*8, ui::new_font_height},
+        "<REMOVE>",false,false
+    };
+
 
     ProgressBar progressbar{
-        {0 * 8, screen_height / 2 - 16, screen_width, 32}};
+        {0 * 8, screen_height-48, screen_width, 32}};
 
     TransmitterView2 tx_view{
-        {11 * 8, 2 * 16},
+        // {11 * ui::new_font_width, 2 * ui::new_font_height},
+        {11 * ui::new_font_width, 10000},
         /*short_ui*/ true};
 
     MessageHandlerRegistration message_handler_coded_squelch{

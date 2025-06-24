@@ -220,37 +220,6 @@ int Painter::draw_string(
                     p += Point(tt_width,0);
                     width+=tt_width;
                 }
-                // else
-                // {
-                //     const auto glyph = font.glyph(c);
-                //     uint16_t output[32];
-                //     convert_8x16_to_12x16(glyph.pixels(), output);
-                //     display.draw_glyph_v2(p, ui::Size(12,16), foreground, background,output);
-                //     p += Point(12,0);
-                //     width+=12;
-                // }
-
-                // const auto glyph = font.glyph(c);
-                // // uint8_t output[48];
-                // // enlarge_8x16_to_16x24_saturated(glyph.pixels(), output);
-
-                // // uint8_t output[32];
-                // // enlarge_8x16_to_16x16_clean(glyph.pixels(), output);
-                // // // enlarge_8x16_to_centered_16x16(glyph.pixels(), output);
-                // // // enlarge_8x16_to_16x16_smooth(glyph.pixels(), output);
-                // // Glyph n_glyph(16,16,output);
-                // // uint8_t output[24];
-                // // // uint16_t output[24];
-                // // enlarge_8x16_to_8x24(glyph.pixels(), output);
-                // // enlarge_8x16_to_12x16_spaced(glyph.pixels(), output);
-
-                // uint16_t output[16];
-                // convert_8x16_to_10x22(glyph.pixels(), output);
-                // display.draw_glyph_v2(p, ui::Size(10,22), pen, background,output);
-                // p += Point(10,0);
-                // width+=10;
-                // Glyph n_glyph(12,16,output);
-                // const auto advance = n_glyph.advance();
 
                 // 原始部分
                 // display.draw_glyph(p, glyph, pen, background);

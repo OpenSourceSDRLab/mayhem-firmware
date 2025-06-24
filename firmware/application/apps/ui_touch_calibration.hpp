@@ -112,30 +112,35 @@ class TouchCalibrationView : public View {
 
     Text label_calibrate{
         {2 * 8, 5 * 16, 26 * 8, 1 * 16},
-        "Touch targets to calibrate"};
+        "Touch targets to calibrate",false
+    };
 
     Text label_calibrate_2{
         {1 * 8, 6 * 16, 28 * 8, 1 * 16},
-        "(hold position using stylus)"};
+        "(hold position using stylus)",false
+    };
 
     Text label_verify{
         {28, 5 * 16, 23 * 8, 1 * 16},
-        "Touch targets to verify"};
+        "Touch targets to verify",false
+    };
 
     Text label_success{
         {32, 5 * 16, 22 * 8, 1 * 16},
-        "Apply new calibration?"};
+        "Apply new calibration?",false
+    };
 
     Text label_failure{
         {16, 5 * 16, 26 * 8, 1 * 16},
-        "Calibration failed. Retry?"};
+        "Calibration failed. Retry?",false
+    };
 
     Button button_cancel{
-        {40, 200, 64, 24},
+        {40, ui::screen_height - ui::new_font_height *3, 8*ui::new_font_width, ui::new_font_height *2},
         "Cancel"};
 
     Button button_ok{
-        {136, 200, 64, 24},
+        {136, ui::screen_height - ui::new_font_height *3, 8*ui::new_font_width, ui::new_font_height *2},
         "OK"};
 
     void on_frame_sync();

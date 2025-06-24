@@ -276,6 +276,16 @@ class FrequencyStepView : public OptionsField {
         }
         set_options(options);
     }
+
+    FrequencyStepView(Point parent_pos,bool bool1,bool bool2=false): OptionsField{parent_pos,5,{},bool1,bool2} 
+    {
+        options_t options;
+        for (const auto& step : freqman_steps) {
+            options.emplace_back(step.first, step.second);
+        }
+        set_options(options);
+    }
+
 };
 
 class FrequencyOptionsView : public View {
@@ -319,7 +329,8 @@ class FrequencyOptionsView : public View {
 
 class RFAmpField : public NumberField {
    public:
-    RFAmpField(Point parent_pos);
+    // RFAmpField(Point parent_pos);
+    RFAmpField(Point parent_pos,bool can_loop=false,bool boom_tag=true);
 };
 
 class RadioGainOptionsView : public View {
@@ -340,7 +351,7 @@ class LNAGainField : public NumberField {
    public:
     std::function<void(void)> on_show_options{};
 
-    LNAGainField(Point parent_pos);
+    LNAGainField(Point parent_pos,bool can_loop=false,bool boom_tag=true);
 
     void on_focus() override;
 };
@@ -349,14 +360,15 @@ class VGAGainField : public NumberField {
    public:
     std::function<void(void)> on_show_options{};
 
-    VGAGainField(Point parent_pos);
+    VGAGainField(Point parent_pos,bool can_loop=false,bool boom_tag=true);
 
     void on_focus() override;
 };
 
 class AudioVolumeField : public NumberField {
    public:
-    AudioVolumeField(Point parent_pos);
+    // AudioVolumeField(Point parent_pos);
+    AudioVolumeField(Point parent_pos,bool can_loop=false,bool boom_tag=true);
 };
 
 } /* namespace ui */

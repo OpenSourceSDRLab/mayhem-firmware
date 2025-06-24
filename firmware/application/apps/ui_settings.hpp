@@ -66,14 +66,15 @@ class SetDateTimeView : public View {
     std::vector<option_t> month_options = {{"Jan", 1}, {"Feb", 2}, {"Mar", 3}, {"Apr", 4}, {"May", 5}, {"Jun", 6}, {"Jul", 7}, {"Aug", 8}, {"Sep", 9}, {"Oct", 10}, {"Nov", 11}, {"Dec", 12}};
 
     Labels labels{
-        {{1 * 8, 1 * 16}, "Adjust the RTC clock date &", Theme::getInstance()->fg_light->foreground},
-        {{1 * 8, 2 * 16}, "time. If clock resets after", Theme::getInstance()->fg_light->foreground},
-        {{1 * 8, 3 * 16}, "reboot, coin batt. is dead. ", Theme::getInstance()->fg_light->foreground},
-        {{1 * 8, 5 * 16 - 2}, "YYYY-MM-DD HH:MM:SS  DoW DoY", Theme::getInstance()->fg_medium->foreground},
-        {{5 * 8, 6 * 16}, "-  -     :  :", Theme::getInstance()->fg_light->foreground},
-        {{1 * 8, 11 * 16}, "DST adds 1 hour to RTC time.", Theme::getInstance()->fg_light->foreground},
-        {{0 * 8, 12 * 16}, "Start: 0:00 on Nth  DDD in", Theme::getInstance()->fg_light->foreground},
-        {{0 * 8, 13 * 16}, "End:   1:00 on Nth  DDD in", Theme::getInstance()->fg_light->foreground}};
+        {{1 * 8, 1 * 16}, "Adjust the RTC clock date &", Theme::getInstance()->fg_light->foreground,false},
+        {{1 * 8, 2 * 16}, "time. If clock resets after", Theme::getInstance()->fg_light->foreground,false},
+        {{1 * 8, 3 * 16}, "reboot, coin batt. is dead. ", Theme::getInstance()->fg_light->foreground,false},
+        {{1 * 8, 5 * 16 - 2}, "YYYY-MM-DD HH:MM:SS  DoW DoY", Theme::getInstance()->fg_medium->foreground,false},
+        {{5 * 8, 6 * 16}, "-  -     :  :", Theme::getInstance()->fg_light->foreground,false},
+        {{1 * 8, 11 * 16}, "DST adds 1 hour to RTC time.", Theme::getInstance()->fg_light->foreground,false},
+        {{0 * 8, 12 * 16}, "Start: 0:00 on Nth  DDD in", Theme::getInstance()->fg_light->foreground,false},
+        {{0 * 8, 13 * 16}, "End:   1:00 on Nth  DDD in", Theme::getInstance()->fg_light->foreground,false}
+    };
 
     NumberField field_year{
         {1 * 8, 6 * 16},
@@ -81,7 +82,7 @@ class SetDateTimeView : public View {
         {2015, 2099},
         1,
         '0',
-        true,
+        true,false
     };
     NumberField field_month{
         {6 * 8, 6 * 16},
@@ -89,7 +90,7 @@ class SetDateTimeView : public View {
         {1, 12},
         1,
         '0',
-        true,
+        true,false
     };
     NumberField field_day{
         {9 * 8, 6 * 16},
@@ -97,7 +98,7 @@ class SetDateTimeView : public View {
         {1, 31},
         1,
         '0',
-        true,
+        true,false
     };
 
     NumberField field_hour{
@@ -106,7 +107,7 @@ class SetDateTimeView : public View {
         {0, 23},
         1,
         '0',
-        true,
+        true,false
     };
     NumberField field_minute{
         {15 * 8, 6 * 16},
@@ -114,7 +115,7 @@ class SetDateTimeView : public View {
         {0, 59},
         1,
         '0',
-        true,
+        true,false
     };
     NumberField field_second{
         {18 * 8, 6 * 16},
@@ -122,58 +123,68 @@ class SetDateTimeView : public View {
         {0, 59},
         1,
         '0',
-        true,
+        true,false
     };
     Text text_weekday{
         {22 * 8, 6 * 16, 3 * 8, 16},
-        ""};
+        "",false
+    };
     Text text_day_of_year{
         {26 * 8, 6 * 16, 3 * 8, 16},
-        ""};
+        "",false
+    };
     Text text_in_dst_range{
         {17 * 8, 7 * 16, 3 * 8, 16},
-        ""};
+        "",false
+    };
 
     Checkbox checkbox_dst_enable{
         {2 * 8, 9 * 16},
         23,
-        "Enable Daylight Savings"};
+        "Enable Daylight Savings",true,false
+    };
 
     OptionsField options_dst_start_which{
         {15 * 8, 12 * 16},
         4,
-        {}};
+        {},false,false
+    };
 
     OptionsField options_dst_start_weekday{
         {20 * 8, 12 * 16},
         3,
-        {}};
+        {},false,false
+    };
 
     OptionsField options_dst_start_month{
         {27 * 8, 12 * 16},
         3,
-        {}};
+        {},false,false
+    };
 
     OptionsField options_dst_end_which{
         {15 * 8, 13 * 16},
         4,
-        {}};
+        {},false,false
+    };
 
     OptionsField options_dst_end_weekday{
         {20 * 8, 13 * 16},
         3,
-        {}};
+        {},false,false
+    };
 
     OptionsField options_dst_end_month{
         {27 * 8, 13 * 16},
         3,
-        {}};
+        {},false,false
+    };
 
     Button button_save{
-        {2 * 8, 16 * 16, 12 * 8, 32},
+        {0, ui::screen_height - 3*ui::new_font_height, 12 * 8, 2*ui::new_font_height},
         "Save"};
     Button button_cancel{
-        {16 * 8, 16 * 16, 12 * 8, 32},
+        {ui::screen_width - 12 *8, ui::screen_height - 3*ui::new_font_height, 12 * 8, 2*ui::new_font_height},
         "Cancel"};
 
     void form_init(const SetDateTimeModel& model);
@@ -200,19 +211,22 @@ class SetRadioView : public View {
 
     Text label_source{
         {1 * 8, 1 * 16, 17 * 8, 16},
-        "Reference Source:"};
+        "Reference Source:",false
+    };
 
     Text value_source{
         {18 * 8, 1 * 16, 11 * 8, 16},
-        ""};
+        "",false
+    };
 
     Text value_source_frequency{
         {18 * 8, 2 * 16, 11 * 8, 16},
-        ""};
+        "",false
+    };
 
     Labels labels_correction{
-        {{2 * 8, 3 * 16}, "Frequency correction:", Theme::getInstance()->fg_light->foreground},
-        {{6 * 8, 4 * 16}, "PPM", Theme::getInstance()->fg_light->foreground},
+        {{2 * 8, 3 * 16}, "Frequency correction:", Theme::getInstance()->fg_light->foreground,false},
+        {{6 * 8, 4 * 16}, "PPM", Theme::getInstance()->fg_light->foreground,false},
     };
 
     NumberField field_ppm{
@@ -220,43 +234,49 @@ class SetRadioView : public View {
         3,
         {-50, 50},
         1,
-        '0',
+        '0',false,false
     };
 
     Checkbox check_clkout{
         {18, (6 * 16 - 4)},
         13,
-        "Enable CLKOUT"};
+        "Enable CLKOUT",true,false
+    };
 
     SymField field_clkout_freq{
         {20 * 8, 6 * 16},
         5,
-        SymField::Type::Dec};
+        SymField::Type::Dec,false,false
+    };
 
     Labels labels_clkout_khz{
-        {{26 * 8, 6 * 16}, "kHz", Theme::getInstance()->fg_light->foreground}};
+        {{26 * 8, 6 * 16}, "kHz", Theme::getInstance()->fg_light->foreground,false}
+    };
 
     Labels labels_bias{
-        {{4 * 8 + 4, 8 * 16}, "CAUTION: Ensure that all", Theme::getInstance()->error_dark->foreground},
-        {{5 * 8 + 0, 9 * 16}, "devices attached to the", Theme::getInstance()->error_dark->foreground},
-        {{6 * 8 + 0, 10 * 16}, "antenna connector can", Theme::getInstance()->error_dark->foreground},
-        {{6 * 8 + 4, 11 * 16}, "accept a DC voltage!", Theme::getInstance()->error_dark->foreground}};
+        {{4 * 8 + 4, 8 * 16}, "CAUTION: Ensure that all", Theme::getInstance()->error_dark->foreground,false},
+        {{5 * 8 + 0, 9 * 16}, "devices attached to the", Theme::getInstance()->error_dark->foreground,false},
+        {{6 * 8 + 0, 10 * 16}, "antenna connector can", Theme::getInstance()->error_dark->foreground,false},
+        {{6 * 8 + 4, 11 * 16}, "accept a DC voltage!", Theme::getInstance()->error_dark->foreground,false}
+    };
 
     Checkbox check_bias{
         {18, 12 * 16},
         5,
-        "Enable DC bias voltage"};
+        "Enable DC bias voltage",true,false
+    };
 
     Checkbox disable_external_tcxo{
         {18, 14 * 16},
         5,
-        "Disable external TCXO"};
+        "Disable external TCXO",true,false};
 
     Button button_save{
-        {2 * 8, 16 * 16, 12 * 8, 32},
+        {0, ui::screen_height - 3*ui::new_font_height, 12 * 8, 2*ui::new_font_height},
         "Save"};
+
     Button button_cancel{
-        {16 * 8, 16 * 16, 12 * 8, 32},
+        {ui::screen_width - 12*8, ui::screen_height - 3*ui::new_font_height, 12 * 8, 2*ui::new_font_height},
         "Cancel",
     };
 
@@ -278,12 +298,15 @@ class SetUIView : public View {
     Checkbox checkbox_disable_touchscreen{
         {3 * 8, 1 * 16},
         20,
-        "Disable touchscreen"};
+        "Disable touchscreen",true,false
+    };
 
     Checkbox checkbox_bloff{
         {3 * 8, 3 * 16},
         20,
-        "Backlight off after:"};
+        "Backlight off after:",true,false
+    };
+
     OptionsField options_bloff{
         {60, 4 * 16 + 8},
         20,
@@ -296,31 +319,37 @@ class SetUIView : public View {
             {"5 minutes", backlight_timeout_t::Timeout300Sec},
             {"10 minutes", backlight_timeout_t::Timeout600Sec},
             {"1 hour", backlight_timeout_t::Timeout3600Sec},
-        }};
+        },false,false
+    };
 
     Checkbox checkbox_showsplash{
         {3 * 8, 6 * 16},
         20,
-        "Show splash"};
+        "Show splash",true,false
+    };
 
     Checkbox checkbox_showclock{
         {3 * 8, 8 * 16},
         20,
-        "Show clock with:"};
+        "Show clock with:",true,false
+    };
 
     OptionsField options_clockformat{
         {60, 9 * 16 + 8},
         20,
         {{"time only", 0},
-         {"time and date", 1}}};
+         {"time and date", 1}},
+         false,false
+    };
 
     Checkbox checkbox_guireturnflag{
         {3 * 8, 11 * 16},
         20,
-        "Back button in menu"};
+        "Back button in menu",true,false
+    };
 
     Labels labels{
-        {{3 * 8, 13 * 16}, "Show/Hide Status Icons", Theme::getInstance()->fg_light->foreground},
+        {{3 * 8, 13 * 16}, "Show/Hide Status Icons", Theme::getInstance()->fg_light->foreground,false},
     };
 
     ImageToggle toggle_camera{
@@ -372,11 +401,11 @@ class SetUIView : public View {
         &bitmap_sd_card_ok};
 
     Button button_save{
-        {2 * 8, 16 * 16, 12 * 8, 32},
+        {0, ui::screen_height - ui::new_font_height * 3, 12 * 8, ui::new_font_height * 2},
         "Save"};
 
     Button button_cancel{
-        {16 * 8, 16 * 16, 12 * 8, 32},
+        {ui::screen_width - 12 * 8, ui::screen_height - ui::new_font_height * 3 , 12 * 8, ui::new_font_height * 2},
         "Cancel"};
 };
 
@@ -391,28 +420,32 @@ class SetSDCardView : public View {
    private:
     Labels labels{
         // 01234567890123456789012345678
-        {{1 * 8, 120 - 48}, "    HIGH SPEED SDCARD IO     ", Theme::getInstance()->fg_light->foreground},
-        {{1 * 8, 120 - 32}, "   May or may not work !!    ", Theme::getInstance()->fg_light->foreground}};
+        {{1 * 8, 120 - 48}, "    HIGH SPEED SDCARD IO     ", Theme::getInstance()->fg_light->foreground,false},
+        {{1 * 8, 120 - 32}, "   May or may not work !!    ", Theme::getInstance()->fg_light->foreground,false}
+    };
 
     Checkbox checkbox_sdcard_speed{
         {2 * 8, 120},
         20,
-        "enable high speed IO"};
+        "enable high speed IO",true,false
+    };
 
     Button button_test_sdcard_high_speed{
         {2 * 8, 152, 27 * 8, 32},
-        "TEST BUTTON (NO PMEM SAVE)"};
+        "TEST BUTTON (NO PMEM SAVE)",false,false
+    };
 
     Text text_sdcard_test_status{
         {2 * 8, 198, 28 * 8, 16},
-        ""};
+        "",false
+    };
 
     Button button_save{
-        {2 * 8, 16 * 16, 12 * 8, 32},
+        {0, ui::screen_height - ui::new_font_height*3 , 12 * 8, ui::new_font_height*2},
         "Save"};
 
     Button button_cancel{
-        {16 * 8, 16 * 16, 12 * 8, 32},
+        {ui::screen_width - 12*8, ui::screen_height - ui::new_font_height*3, 12 * 8, ui::new_font_height*2},
         "Cancel"};
 };
 
@@ -426,22 +459,24 @@ class SetConverterSettingsView : public View {
 
    private:
     Labels labels{
-        {{1 * 8, 1 * 16}, "Options for working with", Theme::getInstance()->fg_light->foreground},
-        {{1 * 8, 2 * 16}, "up/down converter hardware", Theme::getInstance()->fg_light->foreground},
-        {{1 * 8, 3 * 16}, "like a Ham It Up.", Theme::getInstance()->fg_light->foreground},
-        {{2 * 8, 9 * 16 - 2}, "Conversion frequency:", Theme::getInstance()->fg_light->foreground},
-        {{18 * 8, 10 * 16}, "MHz", Theme::getInstance()->fg_light->foreground},
+        {{1 * 8, 1 * 16}, "Options for working with", Theme::getInstance()->fg_light->foreground,false},
+        {{1 * 8, 2 * 16}, "up/down converter hardware", Theme::getInstance()->fg_light->foreground,false},
+        {{1 * 8, 3 * 16}, "like a Ham It Up.", Theme::getInstance()->fg_light->foreground,false},
+        {{2 * 8, 9 * 16 - 2}, "Conversion frequency:", Theme::getInstance()->fg_light->foreground,false},
+        {{18 * 8, 10 * 16}, "MHz", Theme::getInstance()->fg_light->foreground,false},
     };
 
     Checkbox check_show_converter{
         {2 * 8, 5 * 16},
         19,
-        "Show converter icon"};
+        "Show converter icon",true,false
+    };
 
     Checkbox check_converter{
         {2 * 8, 7 * 16},
         16,
-        "Enable converter"};
+        "Enable converter",true,false
+    };
 
     OptionsField opt_converter_mode{
         {5 * 8, 10 * 16},
@@ -449,13 +484,16 @@ class SetConverterSettingsView : public View {
         {
             {" + ", 0},  // up converter
             {" - ", 1},  // down converter
-        }};
+        },
+        false,false
+    };
 
     FrequencyField field_converter_freq{
-        {8 * 8, 10 * 16}};
+        {8 * 8, 10 * 16},false
+    };
 
     Button button_return{
-        {16 * 8, 16 * 16, 12 * 8, 32},
+        {16 * 8, ui::screen_height - 3*ui::new_font_height, 8 * ui::new_font_width, 2*ui::new_font_height},
         "Return",
     };
 };
@@ -470,35 +508,41 @@ class SetFrequencyCorrectionView : public View {
 
    private:
     Labels labels{
-        {{1 * 8, 1 * 16}, "Frequency correction allows", Theme::getInstance()->fg_light->foreground},
-        {{1 * 8, 2 * 16}, "RX and TX frequencies to be", Theme::getInstance()->fg_light->foreground},
-        {{1 * 8, 3 * 16}, "adjusted for all apps.", Theme::getInstance()->fg_light->foreground},
-        {{2 * 8, 6 * 16}, "RX Adjustment Frequency", Theme::getInstance()->fg_light->foreground},
-        {{18 * 8, 7 * 16}, "MHz", Theme::getInstance()->fg_light->foreground},
-        {{2 * 8, 9 * 16}, "TX Adjustment Frequency", Theme::getInstance()->fg_light->foreground},
-        {{18 * 8, 10 * 16}, "MHz", Theme::getInstance()->fg_light->foreground},
+        {{1 * 8, 1 * 16}, "Frequency correction allows", Theme::getInstance()->fg_light->foreground,false},
+        {{1 * 8, 2 * 16}, "RX and TX frequencies to be", Theme::getInstance()->fg_light->foreground,false},
+        {{1 * 8, 3 * 16}, "adjusted for all apps.", Theme::getInstance()->fg_light->foreground,false},
+        {{2 * 8, 6 * 16}, "RX Adjustment Frequency", Theme::getInstance()->fg_light->foreground,false},
+        {{18 * 8, 7 * 16}, "MHz", Theme::getInstance()->fg_light->foreground,false},
+        {{2 * 8, 9 * 16}, "TX Adjustment Frequency", Theme::getInstance()->fg_light->foreground,false},
+        {{18 * 8, 10 * 16}, "MHz", Theme::getInstance()->fg_light->foreground,false},
     };
 
     OptionsField opt_rx_correction_mode{
         {5 * 8, 7 * 16},
         3,
         {{" + ", 0},
-         {" - ", 1}}};
+         {" - ", 1}}
+        ,false,false
+    };
 
     FrequencyField field_rx_correction{
-        {8 * 8, 7 * 16}};
+        {8 * 8, 7 * 16},false
+    };
 
     OptionsField opt_tx_correction_mode{
         {5 * 8, 10 * 16},
         3,
         {{" + ", 0},
-         {" - ", 1}}};
+         {" - ", 1}}
+        ,false,false
+    };
 
     FrequencyField field_tx_correction{
-        {8 * 8, 10 * 16}};
+        {8 * 8, 10 * 16},false
+    };
 
     Button button_return{
-        {16 * 8, 16 * 16, 12 * 8, 32},
+        {ui::screen_width - 12*8 , ui::screen_height - 3*ui::new_font_height, 12 * 8, 2*ui::new_font_height},
         "Return",
     };
 };
@@ -513,34 +557,34 @@ class SetAudioView : public View {
 
    private:
     Labels labels{
-        {{1 * 8, 1 * 16}, "Controls the volume of the", Theme::getInstance()->fg_light->foreground},
-        {{1 * 8, 2 * 16}, "tone when transmitting in", Theme::getInstance()->fg_light->foreground},
-        {{1 * 8, 3 * 16}, "Soundboard or Mic apps:", Theme::getInstance()->fg_light->foreground},
-        {{2 * 8, 5 * 16}, "Tone key mix:   %", Theme::getInstance()->fg_light->foreground},
-        {{1 * 8, 8 * 16}, "Controls whether apps should", Theme::getInstance()->fg_light->foreground},
-        {{1 * 8, 9 * 16}, "beep on speaker & headphone", Theme::getInstance()->fg_light->foreground},
-        {{1 * 8, 10 * 16}, "when a packet is received", Theme::getInstance()->fg_light->foreground},
-        {{1 * 8, 11 * 16}, "(not all apps support this):", Theme::getInstance()->fg_light->foreground},
+        {{0, 1 * ui::new_font_height}, "Controls the volume of the", Theme::getInstance()->fg_light->foreground,false},
+        {{0, 2 * ui::new_font_height}, "tone when transmitting in", Theme::getInstance()->fg_light->foreground,false},
+        {{0, 3 * ui::new_font_height}, "Soundboard or Mic apps:", Theme::getInstance()->fg_light->foreground,false},
+        {{0, 5 * ui::new_font_height}, "Tone key mix:      %", Theme::getInstance()->fg_light->foreground,false},
+        {{0, 8 * ui::new_font_height}, "Controls whether apps should", Theme::getInstance()->fg_light->foreground,false},
+        {{0, 9 * ui::new_font_height}, "beep on speaker & headphone", Theme::getInstance()->fg_light->foreground,false},
+        {{0, 10 * ui::new_font_height}, "when a packet is received", Theme::getInstance()->fg_light->foreground,false},
+        {{0, 11 * ui::new_font_height}, "(not all apps support this):", Theme::getInstance()->fg_light->foreground,false},
     };
 
     NumberField field_tone_mix{
-        {16 * 8, 5 * 16},
+        {16 * 8, 5 * ui::new_font_height},
         2,
         {10, 99},
         1,
-        '0'};
+        '0',false,false};
 
     Checkbox checkbox_beep_on_packets{
-        {3 * 8, 13 * 16},
+        {3 * 8, 13 * ui::new_font_height},
         16,
         "Beep on RX packets"};
 
     Button button_save{
-        {2 * 8, 16 * 16, 12 * 8, 32},
+        {2 * 8, 16 * ui::new_font_height, 12 * 8, 32},
         "Save"};
 
     Button button_cancel{
-        {16 * 8, 16 * 16, 12 * 8, 32},
+        {24 * 8, 16 * ui::new_font_height, 12 * 8, 32},
         "Cancel",
     };
 };
@@ -559,13 +603,13 @@ class SetEncoderDialView : public View {
 
    private:
     Labels labels{
-        {{0 * 8, 0 * 16}, "Sensitivity to dial rotation", Theme::getInstance()->fg_light->foreground},
-        {{0 * 8, 1 * 16}, "position (x steps per 360):", Theme::getInstance()->fg_light->foreground},
-        {{1 * 8, 3 * 16}, "Sensitivity:", Theme::getInstance()->fg_light->foreground},
-        {{0 * 8, 7 * 16}, "Rotation rate (default 1", Theme::getInstance()->fg_light->foreground},
-        {{0 * 8, 8 * 16}, "means no rate dependency):", Theme::getInstance()->fg_light->foreground},
-        {{2 * 8, 10 * 16}, "Rate multiplier:", Theme::getInstance()->fg_light->foreground},
-        {{4 * 8, 14 * 16}, "Direction:", Theme::getInstance()->fg_light->foreground},
+        {{0 * 8, 0 * 16}, "Sensitivity to dial rotation", Theme::getInstance()->fg_light->foreground,false},
+        {{0 * 8, 1 * 16}, "position (x steps per 360):", Theme::getInstance()->fg_light->foreground,false},
+        {{1 * 8, 3 * 16}, "Sensitivity:", Theme::getInstance()->fg_light->foreground,false},
+        {{0 * 8, 7 * 16}, "Rotation rate (default 1", Theme::getInstance()->fg_light->foreground,false},
+        {{0 * 8, 8 * 16}, "means no rate dependency):", Theme::getInstance()->fg_light->foreground,false},
+        {{2 * 8, 10 * 16}, "Rate multiplier:", Theme::getInstance()->fg_light->foreground,false},
+        {{4 * 8, 14 * 16}, "Direction:", Theme::getInstance()->fg_light->foreground,false},
 
     };
 
@@ -574,43 +618,53 @@ class SetEncoderDialView : public View {
         6,
         {{"LOW", encoder_dial_sensitivity::DIAL_SENSITIVITY_LOW},
          {"NORMAL", encoder_dial_sensitivity::DIAL_SENSITIVITY_NORMAL},
-         {"HIGH", encoder_dial_sensitivity::DIAL_SENSITIVITY_HIGH}}};
+         {"HIGH", encoder_dial_sensitivity::DIAL_SENSITIVITY_HIGH}}
+        ,false,false
+    };
 
     NumberField field_encoder_rate_multiplier{
         {20 * 8, 10 * 16},
         2,
         {1, 15},
         1,
-        ' '};
+        ' ',false,false
+    };
 
     OptionsField field_encoder_dial_direction{
         {18 * 8, 14 * 16},
         7,
         {{"NORMAL", false},
-         {"REVERSE", true}}};
+         {"REVERSE", true}}
+        ,false,false
+    };
 
     Button button_dial_sensitivity_plus{
         {20 * 8, 2 * 16, 16, 16},
-        "+"};
+        "+",false
+    };
 
     Button button_dial_sensitivity_minus{
         {20 * 8, 4 * 16, 16, 16},
-        "-"};
+        "-",false
+    };
 
     Button button_rate_multiplier_plus{
         {20 * 8, 9 * 16, 16, 16},
-        "+"};
+        "+",false
+    };
 
     Button button_rate_multiplier_minus{
         {20 * 8, 11 * 16, 16, 16},
-        "-"};
+        "-",false
+    };
+
 
     Button button_save{
-        {2 * 8, 16 * 16, 12 * 8, 32},
+        {0, ui::screen_height - 3*ui::new_font_height, 12 * 8, ui::new_font_height*2},
         "Save"};
 
     Button button_cancel{
-        {16 * 8, 16 * 16, 12 * 8, 32},
+        {ui::screen_width - 12*8, ui::screen_height - 3*ui::new_font_height, 12 * 8, ui::new_font_height*2},
         "Cancel",
     };
 };
@@ -623,37 +677,43 @@ class SetButtonsView : public View {
 
    private:
     Labels labels{
-        {{1 * 8, 1 * 16}, "Adjusts response time when a", Theme::getInstance()->fg_light->foreground},
-        {{1 * 8, 2 * 16}, "button is held down.", Theme::getInstance()->fg_light->foreground},
-        {{2 * 8, 5 * 16}, "Repeat delay:", Theme::getInstance()->fg_light->foreground},
-        {{2 * 8, 7 * 16}, "Repeat speed:", Theme::getInstance()->fg_light->foreground},
-        {{2 * 8, 9 * 16}, "Long press delay:", Theme::getInstance()->fg_light->foreground},
+        {{1 * 8, 1 * 16}, "Adjusts response time when a", Theme::getInstance()->fg_light->foreground,false},
+        {{1 * 8, 2 * 16}, "button is held down.", Theme::getInstance()->fg_light->foreground,false},
+        {{2 * 8, 5 * 16}, "Repeat delay:", Theme::getInstance()->fg_light->foreground,false},
+        {{2 * 8, 7 * 16}, "Repeat speed:", Theme::getInstance()->fg_light->foreground,false},
+        {{2 * 8, 9 * 16}, "Long press delay:", Theme::getInstance()->fg_light->foreground,false},
     };
 
     OptionsField field_repeat_delay{
         {20 * 8, 5 * 16},
         6,
         {{"NORMAL", false},
-         {"FAST", true}}};
+         {"FAST", true}}
+        ,false,false
+    };
 
     OptionsField field_repeat_speed{
         {20 * 8, 7 * 16},
         6,
         {{"NORMAL", false},
-         {"FAST", true}}};
+         {"FAST", true}}
+        ,false,false
+    };
 
     OptionsField field_long_press_delay{
         {20 * 8, 9 * 16},
         6,
         {{"NORMAL", false},
-         {"FAST", true}}};
+         {"FAST", true}}
+        ,false,false
+    };
 
     Button button_save{
-        {2 * 8, 16 * 16, 12 * 8, 32},
+        {0, ui::screen_height - ui::new_font_height*3, 12 * 8, ui::new_font_height*2},
         "Save"};
 
     Button button_cancel{
-        {16 * 8, 16 * 16, 12 * 8, 32},
+        {ui::screen_width - 12*8, ui::screen_height - ui::new_font_height*3, 12 * 8, ui::new_font_height*2},
         "Cancel",
     };
 };
@@ -668,35 +728,42 @@ class SetPersistentMemoryView : public View {
 
    private:
     Labels labels{
-        {{1 * 8, 1 * 16}, "Save persistent memory on SD", Theme::getInstance()->fg_light->foreground},
-        {{1 * 8, 2 * 16}, "card. Needed when device has", Theme::getInstance()->fg_light->foreground},
-        {{1 * 8, 3 * 16}, "dead/missing coin battery.", Theme::getInstance()->fg_light->foreground},
+        {{1 * 8, 1 * 16}, "Save persistent memory on SD", Theme::getInstance()->fg_light->foreground,false},
+        {{1 * 8, 2 * 16}, "card. Needed when device has", Theme::getInstance()->fg_light->foreground,false},
+        {{1 * 8, 3 * 16}, "dead/missing coin battery.", Theme::getInstance()->fg_light->foreground,false},
     };
 
     Text text_pmem_status{
         {1 * 8, 4 * 16 + 8, 28 * 8, 16},
-        ""};
+        "",false
+    };
 
     Checkbox check_use_sdcard_for_pmem{
         {2 * 8, 6 * 16},
         21,
-        "Use SD card for P.Mem"};
+        "Use SD card for P.Mem",true,false
+    };
 
     Button button_save_mem_to_file{
         {1 * 8, 8 * 16, 28 * 8, 2 * 16},
-        "Save P.Mem to SD card"};
+        "Save P.Mem to SD card",false,false
+    };
 
     Button button_load_mem_from_file{
         {1 * 8, 10 * 16 + 2, 28 * 8, 2 * 16},
-        "Load P.Mem from SD Card"};
+        "Load P.Mem from SD Card"
+        ,false,false
+    };
 
     Button button_load_mem_defaults{
         {1 * 8, 12 * 16 + 4, 28 * 8, 2 * 16},
-        "Reset P.Mem to defaults"};
+        "Reset P.Mem to defaults"
+        ,false,false
+    };
 
     Button button_return{
-        {16 * 8, 16 * 16, 12 * 8, 32},
-        "Return",
+        {ui::screen_width - 12*8 , ui::screen_height - ui::new_font_height *3 , 12 * 8, ui::new_font_height *2},
+        "Return"
     };
 };
 
@@ -710,10 +777,10 @@ class AppSettingsView : public View {
     NavigationView& nav_;
 
     Labels labels{
-        {{0, 4}, "Select file to edit:", Theme::getInstance()->bg_darkest->foreground}};
+        {{0, 0}, "Select file to edit:", Theme::getInstance()->bg_darkest->foreground}};
 
     MenuView menu_view{
-        {0, 2 * 8, screen_width, 26 * 8},
+        {0, 2 * ui::new_font_height, screen_width, 13 * ui::new_font_height},
         true};
 };
 
@@ -727,9 +794,9 @@ class SetConfigModeView : public View {
 
    private:
     Labels labels{
-        {{1 * 8, 1 * 16}, "Controls whether firmware", Theme::getInstance()->fg_light->foreground},
-        {{1 * 8, 2 * 16}, "will enter Config Mode", Theme::getInstance()->fg_light->foreground},
-        {{1 * 8, 3 * 16}, "after a boot failure.", Theme::getInstance()->fg_light->foreground},
+        {{1 * 8, 1 * 16}, "Controls whether firmware", Theme::getInstance()->fg_light->foreground,false},
+        {{1 * 8, 2 * 16}, "will enter Config Mode", Theme::getInstance()->fg_light->foreground,false},
+        {{1 * 8, 3 * 16}, "after a boot failure.", Theme::getInstance()->fg_light->foreground,false},
     };
 
     Checkbox checkbox_config_mode_enabled{
@@ -738,11 +805,11 @@ class SetConfigModeView : public View {
         "Config Mode enable"};
 
     Button button_save{
-        {2 * 8, 16 * 16, 12 * 8, 32},
+        {0, ui::screen_height - 3*ui::new_font_height, 8 * ui::new_font_width, 2*ui::new_font_height},
         "Save"};
 
     Button button_cancel{
-        {16 * 8, 16 * 16, 12 * 8, 32},
+        {ui::screen_width - 8 * ui::new_font_width , ui::screen_height - 3*ui::new_font_height, 8 * ui::new_font_width, 2*ui::new_font_height},
         "Cancel",
     };
 };
@@ -758,12 +825,11 @@ class SetDisplayView : public View {
 
    private:
     Labels labels{
-        {{1 * 8, 1 * 16}, "Limits screen brightness", Theme::getInstance()->fg_light->foreground},
-        {{1 * 8, 2 * 16}, "(has a small performance", Theme::getInstance()->fg_light->foreground},
-        {{1 * 8, 3 * 16}, "impact when enabled).", Theme::getInstance()->fg_light->foreground},
-        {{2 * 8, 8 * 16}, "Brightness:", Theme::getInstance()->fg_light->foreground},
-        {{2 * 8, 10 * 16}, "REBOOT TO APPLY SCREEN TYPE", Theme::getInstance()->fg_light->foreground},
-
+        {{1 * 8, 1 * 16}, "Limits screen brightness", Theme::getInstance()->fg_light->foreground,false},
+        {{1 * 8, 2 * 16}, "(has a small performance", Theme::getInstance()->fg_light->foreground,false},
+        {{1 * 8, 3 * 16}, "impact when enabled).", Theme::getInstance()->fg_light->foreground,false},
+        {{2 * 8, 8 * 16}, "Brightness:", Theme::getInstance()->fg_light->foreground,false},
+        {{2 * 8, 10 * 16}, "REBOOT TO APPLY SCREEN TYPE", Theme::getInstance()->fg_light->foreground,false},
     };
 
     OptionsField field_fake_brightness{
@@ -776,21 +842,22 @@ class SetDisplayView : public View {
     Checkbox checkbox_brightness_switch{
         {1 * 8, 5 * 16},
         16,
-        "Enable brightness adjust"};
+        "Enable brightness adjust",true,false
+    };
 
     Checkbox checkbox_ips_screen_switch{
         {1 * 8, 12 * 16},
         23,
-        "IPS Screen"};
+        "IPS Screen",true,false};
 
-    Button button_save{
-        {2 * 8, 16 * 16, 12 * 8, 32},
+
+   Button button_save{
+        {0, ui::screen_height - ui::new_font_height * 3, 12 * 8, ui::new_font_height * 2},
         "Save"};
 
     Button button_cancel{
-        {16 * 8, 16 * 16, 12 * 8, 32},
-        "Cancel",
-    };
+        {ui::screen_width - 12 * 8, ui::screen_height - ui::new_font_height * 3 , 12 * 8, ui::new_font_height * 2},
+        "Cancel"};
 };
 
 using portapack::persistent_memory::touchscreen_threshold;
@@ -811,20 +878,22 @@ class SetTouchscreenThresholdView : public View {
     uint32_t time_start_auto_detect = 0;
 
     Labels labels{
-        {{1 * 8, 1 * 16}, "Set touchscreen sensitivity", Theme::getInstance()->fg_light->foreground},
-        {{1 * 8, 2 * 16}, "Or press auto detect button", Theme::getInstance()->fg_light->foreground},
-        {{1 * 8, 3 * 16}, "FOLLOW INSTRUCTIONS", Theme::getInstance()->fg_light->foreground},
-        {{1 * 8, 4 * 16}, "REBOOT TO APPLY", Theme::getInstance()->fg_light->foreground},
-        {{1 * 8, 11 * 16}, "Threshold:", Theme::getInstance()->fg_light->foreground},
+        {{1 * 8, 1 * 16}, "Set touchscreen sensitivity", Theme::getInstance()->fg_light->foreground,false},
+        {{1 * 8, 2 * 16}, "Or press auto detect button", Theme::getInstance()->fg_light->foreground,false},
+        {{1 * 8, 3 * 16}, "FOLLOW INSTRUCTIONS", Theme::getInstance()->fg_light->foreground,false},
+        {{1 * 8, 4 * 16}, "REBOOT TO APPLY", Theme::getInstance()->fg_light->foreground,false},
+        {{1 * 8, 11 * 16}, "Threshold:", Theme::getInstance()->fg_light->foreground,false},
     };
 
     Text text_hint{
         {1 * 8, 7 * 16, screen_width - 2 * 8, 1 * 16},
-        "DON'T TOUCH SCREEN"};
+        "DON'T TOUCH SCREEN",false
+    };
 
     Text text_wait_timer{
         {1 * 8, 8 * 16, screen_width - 2 * 8, 1 * 16},
-        "ETA 00:00"};
+        "ETA 00:00",false
+    };
 
     void on_frame_sync();
 
@@ -837,23 +906,23 @@ class SetTouchscreenThresholdView : public View {
         4,
         {1, 1023},
         1,
-        ' '
+        ' ',false,false
     };
 
     Button button_autodetect{
-        {2 * 8, 13 * 16, 12 * 8, 32},
+        {2 * 8, ui::screen_height - 6 *ui::new_font_height , 12 * ui::new_font_width, ui::new_font_height * 2},
         "Auto Detect"};
     Button button_reset{
-        {16 * 8, 13 * 16, 12 * 8, 32},
+        {ui::screen_width -12 * ui::new_font_width , ui::screen_height - 6 *ui::new_font_height , 12 * ui::new_font_width, ui::new_font_height * 2},
         "Reset",
     };
 
     Button button_save{
-        {2 * 8, 16 * 16, 12 * 8, 32},
+        {2 * 8, ui::screen_height - 3 *ui::new_font_height, 12 * ui::new_font_width, ui::new_font_height * 2},
         "Save"};
 
     Button button_cancel{
-        {16 * 8, 16 * 16, 12 * 8, 32},
+        {ui::screen_width -12 * ui::new_font_width, ui::screen_height - 3 *ui::new_font_height, 12 * ui::new_font_width, ui::new_font_height * 2},
         "Cancel",
     };
 
@@ -876,10 +945,10 @@ class SetMenuColorView : public View {
     void paint_sample();
 
     Labels labels{
-        {{3 * 8, 1 * 16}, "Menu Button Color Scheme", Theme::getInstance()->fg_light->foreground},
-        {{2 * 8, 8 * 16}, "Red Level:", Theme::getInstance()->fg_light->foreground},
-        {{2 * 8, 9 * 16}, "Green Level:", Theme::getInstance()->fg_light->foreground},
-        {{2 * 8, 10 * 16}, "Blue Level:", Theme::getInstance()->fg_light->foreground},
+        {{3 * 8, 1 * 16}, "Menu Button Color Scheme", Theme::getInstance()->fg_light->foreground,false},
+        {{2 * 8, 8 * 16}, "Red Level:", Theme::getInstance()->fg_light->foreground,false},
+        {{2 * 8, 9 * 16}, "Green Level:", Theme::getInstance()->fg_light->foreground,false},
+        {{2 * 8, 10 * 16}, "Blue Level:", Theme::getInstance()->fg_light->foreground,false},
     };
 
     NewButton button_sample{
@@ -893,7 +962,7 @@ class SetMenuColorView : public View {
         3,
         {8, 248},
         8,
-        ' '
+        ' ',false,false
     };
 
     NumberField field_green_level{
@@ -901,7 +970,7 @@ class SetMenuColorView : public View {
         3,
         {8, 248},
         8,
-        ' ',
+        ' ',false,false
     };
 
     NumberField field_blue_level{
@@ -909,22 +978,21 @@ class SetMenuColorView : public View {
         3,
         {8, 248},
         8,
-        ' ',
+        ' ',false,false
     };
 
     Button button_reset{
-        {2 * 8, 13 * 16, 12 * 8, 32},
+        {0, ui::screen_height - ui::new_font_height * 5, 12 * 8, ui::new_font_height * 2},
         "Reset",
     };
 
     Button button_save{
-        {2 * 8, 16 * 16, 12 * 8, 32},
+        {0, ui::screen_height - ui::new_font_height * 3, 12 * 8, ui::new_font_height * 2},
         "Save"};
 
     Button button_cancel{
-        {16 * 8, 16 * 16, 12 * 8, 32},
-        "Cancel",
-    };
+        {ui::screen_width - 12 * 8, ui::screen_height - ui::new_font_height * 3 , 12 * 8, ui::new_font_height * 2},
+        "Cancel"};
 };
 
 class SetThemeView : public View {
@@ -938,12 +1006,11 @@ class SetThemeView : public View {
    private:
     int32_t selected = 0;
     Labels labels{
-        {{1 * 8, 1 * 16}, "Select a theme.", Theme::getInstance()->fg_light->foreground},
-        {{1 * 8, 2 * 16}, "Restart PP to fully apply!", Theme::getInstance()->fg_light->foreground}};
+        {{1 * 8, 1 * 16}, "Select a theme.", Theme::getInstance()->fg_light->foreground,false },
+        {{1 * 8, 2 * 16}, "Restart PP to fully apply!", Theme::getInstance()->fg_light->foreground,false}
+    };
 
-    Button button_save{
-        {2 * 8, 16 * 16, 12 * 8, 32},
-        "Save"};
+
 
     OptionsField options{
         {0 * 8, 4 * 16},
@@ -955,17 +1022,24 @@ class SetThemeView : public View {
             {"Green", 3},
             {"Red", 4},
         },
-        true};
+        true,false
+    };
 
     Checkbox checkbox_menuset{
         {2 * 8, 6 * 16},
         23,
-        "Set Menu color too"};
+        "Set Menu color too",
+        true,false
+    };
+
+    Button button_save{
+        {0, ui::screen_height - ui::new_font_height * 3, 12 * 8, ui::new_font_height * 2},
+        "Save"};
 
     Button button_cancel{
-        {16 * 8, 16 * 16, 12 * 8, 32},
-        "Cancel",
-    };
+        {ui::screen_width - 12 * 8, ui::screen_height - ui::new_font_height * 3 , 12 * 8, ui::new_font_height * 2},
+        "Cancel"};
+
 };
 
 class SetBatteryView : public View {
@@ -979,37 +1053,40 @@ class SetBatteryView : public View {
    private:
     int32_t selected = 0;
     Labels labels{
-        {{1 * 8, 1 * 16}, "Override batt calculation", Theme::getInstance()->fg_light->foreground},
-        {{1 * 8, 2 * 16}, "method to voltage based", Theme::getInstance()->fg_light->foreground},
-        /**/
-        {{1 * 8, 6 * 16}, "Display a hint to remind you", Theme::getInstance()->fg_light->foreground},
-        {{1 * 8, 7 * 16}, "when you charge", Theme::getInstance()->fg_light->foreground}};
+        {{1 * 8, 1 * 16}, "Override batt calculation", Theme::getInstance()->fg_light->foreground,false},
+        {{1 * 8, 2 * 16}, "method to voltage based", Theme::getInstance()->fg_light->foreground,false},
+        {{1 * 8, 6 * 16}, "Display a hint to remind you", Theme::getInstance()->fg_light->foreground,false},
+        {{1 * 8, 7 * 16}, "when you charge", Theme::getInstance()->fg_light->foreground,false}
+    };
 
-    Labels labels2{{{1 * 8, 11 * 16}, "Reset IC's learned params.", Theme::getInstance()->fg_light->foreground}};
-
-    Button button_save{
-        {2 * 8, 16 * 16, 12 * 8, 32},
-        "Save"};
+    Labels labels2{{{1 * 8, 11 * 16}, "Reset IC's learned params.", Theme::getInstance()->fg_light->foreground,false}};
 
     Checkbox checkbox_overridebatt{
         {2 * 8, 4 * 16},
         23,
-        "Override"};
+        "Override",
+        true,false
+    };
 
     Checkbox checkbox_battery_charge_hint{
         {2 * 8, 9 * 16},
         23,
-        "Charge hint"};
-
-    Button button_cancel{
-        {16 * 8, 16 * 16, 12 * 8, 32},
-        "Cancel",
+        "Charge hint",
+        true,false
     };
 
     Button button_reset{
-        {2 * 8, 13 * 16, 12 * 8, 32},
+        {0, ui::screen_height - ui::new_font_height * 5, 12 * 8, ui::new_font_height * 2},
         "Reset",
     };
+
+    Button button_save{
+        {0, ui::screen_height - ui::new_font_height * 3, 12 * 8, ui::new_font_height * 2},
+        "Save"};
+
+    Button button_cancel{
+        {ui::screen_width - 12 * 8, ui::screen_height - ui::new_font_height * 3 , 12 * 8, ui::new_font_height * 2},
+        "Cancel"};
 };
 
 class SettingsMenuView : public BtnGridView {

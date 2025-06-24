@@ -47,7 +47,7 @@ class CaptureAppView : public View {
     std::string title() const override { return "Capture"; };
 
    private:
-    static constexpr ui::Dim header_height = 3 * 16;
+    static constexpr ui::Dim header_height = 3 * 24;
 
     uint32_t capture_rate{500000};
     uint32_t file_format{0};
@@ -65,56 +65,71 @@ class CaptureAppView : public View {
         }};
 
     Labels labels{
-        {{0 * 8, 1 * 16}, "Rate:", Theme::getInstance()->fg_light->foreground},
-        {{11 * 8, 1 * 16}, "Format:", Theme::getInstance()->fg_light->foreground},
+        {{0 * 8, 1 * ui::new_font_height}, "Rate:", Theme::getInstance()->fg_light->foreground,false},
+        {{11 * 8, 1 * ui::new_font_height}, "Format:", Theme::getInstance()->fg_light->foreground,false},
     };
 
     RSSI rssi{
         // {24 * 8, 0, 6 * 8, 4}
-        {24 * 8, 0, 12 * 8, 8}
+        {24 * 8, 0, 6*8, 12}
 
     };
 
     Channel channel{
         // {24 * 8, 5, 6 * 8, 4}
-        {24 * 8, 9, 12 * 8, 6}
+        {24 * 8, 12, 6*8, 12}
     };
 
     RxFrequencyField field_frequency{
         {0 * 8, 0 * 16},
-        nav_};
+        nav_,false
+    };
 
     FrequencyStepView field_frequency_step{
-        {10 * 8, 0 * 16}};
+        {10 * 8, 0 * 16},false,false
+    };
 
     RFAmpField field_rf_amp{
-        {16 * 8, 0 * 16}};
+        {16 * 8, 0 * 16},false,false
+    };
 
     LNAGainField field_lna{
-        {18 * 8, 0 * 16}};
+        {18 * 8, 0 * 16},false,false
+    };
 
     VGAGainField field_vga{
-        {21 * 8, 0 * 16}};
+        {21 * 8, 0 * 16},false,false
+    };
+
 
     OptionsField option_bandwidth{
-        {5 * 8, 1 * 16},
+        {5 * 8, 1 * ui::new_font_height},
         5,
-        {}};
+        {},
+        false,false
+    };
 
     OptionsField option_format{
-        {18 * 8, 1 * 16},
+        {18 * 8, 1 * ui::new_font_height},
         3,
-        {{"C16", RecordView::FileType::RawS16},
-         {"C8", RecordView::FileType::RawS8}}};
+        {
+            {"C16", RecordView::FileType::RawS16},
+            {"C8", RecordView::FileType::RawS8}
+        },
+        false,false
+    };
 
     Checkbox check_trim{
-        {23 * 8, 1 * 16},
+        {23 * 8, 1 * ui::new_font_height},
         4,
         "Trim",
-        /*small*/ true};
+        /*small*/ 
+        true,
+        false
+    };
 
     RecordView record_view{
-        {0 * 8, 2 * 16, screen_width, 1 * 16},
+        {0 * 8, 2 * ui::new_font_height, screen_width, 1 * ui::new_font_height},
         u"BBD_????.*",
         captures_dir,
         RecordView::FileType::RawS16,

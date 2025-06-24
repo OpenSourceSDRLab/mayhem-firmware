@@ -63,7 +63,7 @@ class PlaylistView : public View {
 
     // More header == less spectrum view.
     // static constexpr ui::Dim header_height = 6 * 16;
-    static constexpr ui::Dim header_height = 6 *32;
+    static constexpr ui::Dim header_height = 8 * 24;
 
     struct playlist_entry {
         std::filesystem::path path{};
@@ -114,81 +114,94 @@ class PlaylistView : public View {
     void handle_replay_thread_done(uint32_t return_code);
 
     Text text_filename{
-        {0 * 8, 0 * ui::new_font_height, screen_width, ui::new_font_height}};
+        {0 * 8, 0 * ui::new_font_height, screen_width, ui::new_font_height},
+        true
+    };
 
     FrequencyField field_frequency{
-        {0 * 8, 1 * ui::new_font_height}};
+        {0 * 8, 1 * ui::new_font_height}
+    };
 
     Text text_sample_rate{
-        {10 * 8, 1 * ui::new_font_height, 7 * 8, ui::new_font_height}};
+        {10 * ui::new_font_width, 1 * ui::new_font_height, 7 * ui::new_font_width, ui::new_font_height},
+        true
+    };
 
     ProgressBar progressbar_track{
-        {18 * 8, 1 * ui::new_font_height, 12 * 8, 8 + 1}};
+        {ui::screen_width - 18 *8, 1 * ui::new_font_height,  18 * 8, ui::new_font_height}
+    };
 
     // (-1) to overlap with progressbar_track so there's
     // only 1 pixel between them instead of 2.
     ProgressBar progressbar_transmit{
-        {18 * 8, 3 * 8 - 1, 12 * 8, 8}};
+        {ui::screen_width - 18 *8, 2 * ui::new_font_height, 18 * 8, ui::new_font_height}
+    };
 
     Text text_duration{
-        {0 * 8, 2 * ui::new_font_height, 5 * 8, ui::new_font_height}};
+        {0 * 8, 2 * ui::new_font_height, 5 * 8, ui::new_font_height},
+        true
+    };
 
     // TODO: delay duration field.
 
     TransmitterView2 tx_view{
-        {11 * 8, 2 * ui::new_font_height},
+        {11 * 8, 3 * ui::new_font_height},
         /*short_ui*/ true};
 
     Checkbox check_loop{
-        {21 * 8, 2 * ui::new_font_height},
+        {21 * 8, 3 * ui::new_font_height},
         4,
         "Loop",
-        true};
+        true,false
+    };
 
     ImageButton button_play{
-        {screen_width - 2 * 8, 2 * ui::new_font_height, 2 * 8, 1 * ui::new_font_height},
+        {screen_width - 2 * 8, 3 * ui::new_font_height, 2 * 8, 1 * ui::new_font_height},
         &bitmap_play,
         Theme::getInstance()->fg_green->foreground,
         Theme::getInstance()->fg_green->background};
 
+
     Text text_track{
-        {0 * 8, 3 * ui::new_font_height, screen_width, ui::new_font_height}};
+        {0 * 8, 4 * ui::new_font_height, screen_width, ui::new_font_height},false
+    };
 
     NewButton button_prev{
-        {2 * 8, 4 * ui::new_font_height, 4 * 8, 2 * ui::new_font_height},
+        {2 * 8, 5 * ui::new_font_height, 4 * 8, 2 * ui::new_font_height},
         "",
         &bitmap_arrow_left,
         Theme::getInstance()->bg_dark->background};
 
     NewButton button_next{
-        {6 * 8, 4 * ui::new_font_height, 4 * 8, 2 * ui::new_font_height},
+        {6 * 8, 5 * ui::new_font_height, 4 * 8, 2 * ui::new_font_height},
         "",
         &bitmap_arrow_right,
         Theme::getInstance()->bg_dark->background};
 
     NewButton button_add{
-        {11 * 8, 4 * ui::new_font_height, 4 * 8, 2 * ui::new_font_height},
+        {15 * 8, 5 * ui::new_font_height, 4 * 8, 2 * ui::new_font_height},
         "",
         &bitmap_icon_new_file,
         Theme::getInstance()->fg_orange->foreground};
 
     NewButton button_delete{
-        {15 * 8, 4 * ui::new_font_height, 4 * 8, 2 * ui::new_font_height},
+        {19 * 8, 5 * ui::new_font_height, 4 * 8, 2 * ui::new_font_height},
         "",
         &bitmap_icon_delete,
         Theme::getInstance()->fg_orange->foreground};
 
     NewButton button_open{
-        {20 * 8, 4 * ui::new_font_height, 4 * 8, 2 * ui::new_font_height},
+        {30 * 8, 5 * ui::new_font_height, 4 * 8, 2 * ui::new_font_height},
         "",
         &bitmap_icon_load,
         Theme::getInstance()->fg_blue->foreground};
 
     NewButton button_save{
-        {24 * 8, 4 * ui::new_font_height, 4 * 8, 2 * ui::new_font_height},
+        {34 * 8, 5 * ui::new_font_height, 4 * 8, 2 * ui::new_font_height},
         "",
         &bitmap_icon_save,
         Theme::getInstance()->fg_blue->foreground};
+
 
     spectrum::WaterfallView waterfall{};
 

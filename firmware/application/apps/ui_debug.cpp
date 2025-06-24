@@ -103,10 +103,12 @@ void RegistersWidget::draw_legend(const Coord left, Painter& painter) {
             left, static_cast<int>((i / config.registers_per_row()) * row_height)};
 
         const auto text = (r >= config.registers_count) ? spaces : to_string_hex(r, config.legend_length());
-        painter.draw_string(
-            pos + offset,
-            style().invert(),
-            text);
+        // painter.draw_string(
+        //     pos + offset,
+        //     style().invert(),
+        //     text);
+        
+        painter.draw_string_with_fitsize(pos+offset,style().invert(),text,0);
     }
 }
 
@@ -124,10 +126,12 @@ void RegistersWidget::draw_values(
             static_cast<int>((i / config.registers_per_row()) * row_height)};
 
         const auto text = (r >= config.registers_count) ? spaces : to_string_hex(reg_read(r), config.value_length());
-        painter.draw_string(
-            pos + offset,
-            style(),
-            text);
+        // painter.draw_string(
+        //     pos + offset,
+        //     style(),
+        //     text);
+        
+        painter.draw_string_with_fitsize(pos+offset,style(),text,0);
     }
 }
 
@@ -262,11 +266,18 @@ void ControlsSwitchesWidget::paint(Painter& painter) {
         {0, 32, 16, 16},   // Left
         {32, 64, 16, 16},  // Down
         {32, 0, 16, 16},   // Up
+
+
+        // {96, 0, 16, 16},   // Dfu
+        {128, 0, 16, 16},   // Dfu
+
         {32, 32, 16, 16},  // Select
-        {96, 0, 16, 16},   // Dfu
+        
+        {128, 64, 16, 16},  // Touch
+
         {16, 96, 16, 16},  // Encoder phase 0
         {48, 96, 16, 16},  // Encoder phase 1
-        {96, 64, 16, 16},  // Touch
+        // {96, 64, 16, 16},  // Touch
     }};
 
     for (const auto r : button_rects) {
@@ -281,8 +292,13 @@ void ControlsSwitchesWidget::paint(Painter& painter) {
         {0 + 1, 32 + 1, 16 - 2, 16 - 2},   // Left
         {32 + 1, 64 + 1, 16 - 2, 16 - 2},  // Down
         {32 + 1, 0 + 1, 16 - 2, 16 - 2},   // Up
+
+        // {96 + 1, 0 + 1, 16 - 2, 16 - 2},   // Dfu
+        {128 + 1, 0 + 1, 16 - 2, 16 - 2},   // Dfu
+
         {32 + 1, 32 + 1, 16 - 2, 16 - 2},  // Select
-        {96 + 1, 0 + 1, 16 - 2, 16 - 2},   // Dfu
+        
+        
         {16 + 1, 96 + 1, 16 - 2, 16 - 2},  // Encoder phase 0
         {48 + 1, 96 + 1, 16 - 2, 16 - 2},  // Encoder phase 1
     }};
@@ -337,7 +353,7 @@ void ControlsSwitchesWidget::paint(Painter& painter) {
         switches_event >>= 1;
     }
 
-    painter.draw_string({5 * 8, 12 * 16}, *Theme::getInstance()->fg_light, to_string_dec_int(last_delta, 3));
+    painter.draw_string({5 * ui::new_font_width, 11 * ui::new_font_height}, *Theme::getInstance()->fg_light, to_string_dec_int(last_delta, 3));
 }
 
 void ControlsSwitchesWidget::on_frame_sync() {
@@ -417,6 +433,7 @@ void DebugMenuView::on_populate() {
     if (portapack::persistent_memory::show_gui_return_icon()) {
         add_items({{"..", ui::Theme::getInstance()->fg_light->foreground, &bitmap_icon_previous, [this]() { nav_.pop(); }}});
     }
+    // 这里是实际添加的组件信息
     add_items({
         {"Buttons Test", ui::Theme::getInstance()->fg_darkcyan->foreground, &bitmap_icon_controls, [this]() { nav_.push<DebugControlsView>(); }},
         {"M0 Stack Dump", ui::Theme::getInstance()->fg_darkcyan->foreground, &bitmap_icon_memory, [this]() { stack_dump(); }},

@@ -334,7 +334,7 @@ class InformationView : public View {
 
    private:
     // static constexpr auto version_string = "v1.4.4"; // This is commented out as we are now setting the version via ENV (VERSION_STRING=v1.0.0)
-    static constexpr auto version_string = "my_test";
+    static constexpr auto version_string = "NEW-UI";
     NavigationView& nav_;
 
     Rectangle backdrop{
@@ -352,7 +352,7 @@ class InformationView : public View {
     };
 
     LiveDateTime ltime{
-        {screen_width - 19 * 8, 0, 19 * 8, ui::new_font_height}};
+        {screen_width - 19 * ui::new_font_width, 0, 19 * ui::new_font_width, ui::new_font_height}};
 };
 
 class SplashScreenView : public View {

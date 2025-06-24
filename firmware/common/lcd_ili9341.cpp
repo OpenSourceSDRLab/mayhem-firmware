@@ -695,11 +695,11 @@ void ILI9341::draw_bitmap_only_char_16(const ui::Point p,const ui::Size size,con
 {
     lcd_start_ram_write(p, size);
     for (int row = 0; row < size.height(); ++row) {
-    uint16_t row_bits = pixels[row];  // 每行的12位像素数据（低位在左）
-    for (int col = 0; col < size.width(); ++col) {
-        bool pixel_on = (row_bits >> col) & 1;
-        io.lcd_write_pixel(pixel_on ? foreground : background);
-    }
+        uint16_t row_bits = pixels[row];  // 每行的12位像素数据（低位在左）
+        for (int col = 0; col < size.width(); ++col) {
+            bool pixel_on = (row_bits >> col) & 1;
+            io.lcd_write_pixel(pixel_on ? foreground : background);
+        }
     }
 
 }
@@ -823,7 +823,6 @@ void ILI9341::draw_glyph_v2(const ui::Point p,ui::Size size,const ui::Color fore
         draw_bitmap_only_char_16(p, size, (const uint16_t*)target, foreground, background);
     }
     else
-    // 大字渲染函数
         draw_bitmap_only_char(p, size, (const uint8_t*)target, foreground, background);
 }
 

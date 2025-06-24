@@ -466,16 +466,17 @@ class ButtonWithEncoder : public Widget {
     std::function<void(ButtonWithEncoder&)> on_touch_press{};    // Executed when touching, before on_select.
     std::function<bool(ButtonWithEncoder&, KeyEvent)> on_dir{};
     std::function<void(ButtonWithEncoder&)> on_highlight{};
+    bool boom_tag;
 
-    ButtonWithEncoder(Rect parent_rect, std::string text, bool instant_exec);  // instant_exec: Execute on_select when you touching instead of releasing
+    ButtonWithEncoder(Rect parent_rect, std::string text, bool instant_exec,bool boom_tag = true);  // instant_exec: Execute on_select when you touching instead of releasing
     ButtonWithEncoder(
         Rect parent_rect,
         std::string text)
-        : ButtonWithEncoder{parent_rect, text, false} {
+        : ButtonWithEncoder{parent_rect, text,false,true} {
     }
 
     ButtonWithEncoder()
-        : ButtonWithEncoder{{}, {}} {
+        : ButtonWithEncoder{{}, {}, false,true} {
     }
 
     std::function<void()> on_change{};
@@ -786,7 +787,9 @@ class TextField : public Text {
     std::function<void(TextField&)> on_change{};
     std::function<void(TextField&, EncoderEvent)> on_encoder_change{};
 
-    TextField(Rect parent_rect, std::string text);
+    // TextField(Rect parent_rect, std::string text);
+
+    TextField(Rect parent_rect, std::string text,bool boom_tag= false);
 
     const std::string& get_text() const;
     void set_text(std::string_view value);
@@ -912,18 +915,19 @@ class SymField : public Widget {
      * be modified. This means that "slots" are not individually highlighted.
      * This makes navigation on Views with SymFields easier because the
      * whole control can be skipped over instead of one "slot" at a time. */
+    bool boom_tag;
 
     SymField(
         Point parent_pos,
         size_t length,
         Type type = Type::Dec,
-        bool explicit_edits = false);
+        bool explicit_edits = false,bool boom_tag = false);
 
     SymField(
         Point parent_pos,
         size_t length,
         std::string symbol_list,
-        bool explicit_edits = false);
+        bool explicit_edits = false,bool boom_tag = false);
 
     SymField(const SymField&) = delete;
     SymField(SymField&&) = delete;

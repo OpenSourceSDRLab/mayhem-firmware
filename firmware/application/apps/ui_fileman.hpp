@@ -116,20 +116,24 @@ class FileManBaseView : public View {
 
     bool show_hidden_files{false};
 
+    // 第一行
     Labels labels{
         {{0, 0}, "Path:", Theme::getInstance()->fg_light->foreground}};
 
     Text text_current{
-        {6 * 8, 0 * 8, 24 * 8, 16},
+        {6 * ui::new_font_width, 0 * 8, 24 * 8, ui::new_font_height},
         "",
+        true
     };
 
+    // 第2行
     MenuView menu_view{
-        {0, 2 * 8, screen_width, 26 * 8},
+        {0, 2 * ui::new_font_height, screen_width, 26 * 8},
         true};
 
+    // 最后一行最右侧
     Button button_exit{
-        {22 * 8, 34 * 8, 8 * 8, 32},
+        {ui::screen_width - 8*8, ui::screen_height-32*2, 8 * 8, 32},
         "Exit"};
 };
 

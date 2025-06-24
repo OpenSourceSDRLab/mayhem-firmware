@@ -62,18 +62,19 @@ class FreqManBaseView : public View {
 
     /* The top section (category) is 20px tall. */
     Labels label_category{
-        {{FIT_OFFSET +0, 2}, "F:", Theme::getInstance()->fg_light->foreground}};
+        {{0, 0}, "F:", Theme::getInstance()->fg_light->foreground}};
 
     OptionsField options_category{
-        {FIT_OFFSET +3 * 8, 2},
+        {3 * ui::new_font_width, 0},
         20 /* length */,
-        {}};
+        {},false,false
+    };
 
     FreqManUIList freqlist_view{
         {  0, 3 * 8, screen_width, 12 * 16 + 2 /* 2 Keeps text out of border. */}};
 
     Button button_exit{
-        {FIT_OFFSET +15 * 8, 17 * 16, 15 * 8, 2 * 16},
+        {ui::screen_width/2, ui::screen_height - 3 * ui::new_font_height , ui::screen_width/2, 2 * ui::new_font_height},
         "Exit"};
 
    protected:
@@ -136,48 +137,55 @@ class FrequencyManagerView : public FreqManBaseView {
     void on_del_entry();
 
     NewButton button_add_category{
-        {FIT_OFFSET +23 * 8, 0 * 16, 7 * 4, 20},
+        {ui::screen_width - 7 * ui::new_font_width *2 , 0 * 16, 7 * ui::new_font_width, ui::new_font_height*2},
         {},
         &bitmap_icon_new_file,
         Theme::getInstance()->bg_darkest->foreground,
         true};
 
     NewButton button_del_category{
-        {FIT_OFFSET +26 * 8 + 4, 0 * 16, 7 * 4, 20},
+        {ui::screen_width - 7 * ui::new_font_width *1, 0 * 16, 7 * ui::new_font_width, ui::new_font_height*2},
         {},
         &bitmap_icon_trash,
         Theme::getInstance()->fg_red->foreground,
         true};
 
-    Button button_edit_entry{
-        { FIT_OFFSET + 0 * 8, 14 * 16 - 4, 15 * 8, 1 * 16 + 4},
-        "Edit"};
 
+
+
+    Button button_edit_entry{
+        { 0 ,ui::screen_height - ui::new_font_height * 6 , ui::screen_width / 2 , ui::new_font_height},
+        "Edit"
+    };
+
+    // 不知道是什么
     Rectangle rect_padding{
         {FIT_OFFSET +15 * 8, 14 * 16 - 4, 15 * 8, 1 * 16 + 4},
         Theme::getInstance()->fg_medium->background};
 
     Button button_edit_freq{
-        { FIT_OFFSET + 0 * 8, 15 * 16, 15 * 8, 2 * 16},
+        { 0 ,  ui::screen_height - ui::new_font_height * 5 , ui::screen_width / 2 , 2 * ui::new_font_height},
         "Frequency"};
 
-    Button button_edit_desc{
-        { FIT_OFFSET +0 * 8, 17 * 16, 15 * 8, 2 * 16},
-        "Description"};
-
     NewButton button_add_entry{
-        {FIT_OFFSET +15 * 8, 15 * 16, 7 * 8 + 4, 2 * 16},
+        {ui::screen_width / 2 , ui::screen_height - ui::new_font_height * 5 , ui::screen_width / 4 , 2 * ui::new_font_height},
         {},
         &bitmap_icon_add,
         Theme::getInstance()->bg_darkest->foreground,
         true};
 
     NewButton button_del_entry{
-        {FIT_OFFSET +22 * 8 + 4, 15 * 16, 7 * 8 + 4, 2 * 16},
+        {ui::screen_width / 4 * 3 , ui::screen_height - ui::new_font_height * 5 , ui::screen_width / 4  , 2 * ui::new_font_height},
         {},
         &bitmap_icon_delete,
         Theme::getInstance()->fg_red->foreground,
         true};
+
+    Button button_edit_desc{
+        { 0,ui::screen_height - ui::new_font_height * 3  , ui::screen_width / 2 , 2 * ui::new_font_height},
+        "Description"};
+
+    
 };
 
 class FrequencyEditView : public View {

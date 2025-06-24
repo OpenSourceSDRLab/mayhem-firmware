@@ -457,11 +457,13 @@ void Labels::paint(Painter& painter) {
     for (auto& label : labels_) {
         if(label.boom_tag == false)
         {
-            painter.draw_string_with_fitsize(label.pos + screen_pos(), style(), label.text,0);
+            Style tmp{style().font,style().background,label.color};
+            painter.draw_string_with_fitsize(label.pos + screen_pos(), tmp, label.text,0);
         }
         else
         {
-            painter.draw_string_with_fitsize(label.pos + screen_pos(), style(), label.text,1);
+            Style tmp{style().font,style().background,label.color};
+            painter.draw_string_with_fitsize(label.pos + screen_pos(), tmp, label.text,1);
             // painter.draw_string(
             // label.pos + screen_pos(),
             // style().font,
@@ -1215,10 +1217,12 @@ bool Button::on_touch(const TouchEvent event) {
 ButtonWithEncoder::ButtonWithEncoder(
     Rect parent_rect,
     std::string text,
-    bool instant_exec)
+    bool instant_exec,
+    bool boom_tag)
     : Widget{parent_rect},
       text_{text},
-      instant_exec_{instant_exec} {
+      instant_exec_{instant_exec},
+      boom_tag{boom_tag}{
     set_focusable(true);
 }
 
@@ -1267,10 +1271,19 @@ void ButtonWithEncoder::paint(Painter& painter) {
         paint_style.background);
 
     const auto label_r = paint_style.font.size_of(text_);
-    painter.draw_string(
+    if(boom_tag == true)
+    {
+        painter.draw_string(
         {r.location().x() + (r.size().width() - label_r.width()) / 2, r.location().y() + (r.size().height() - label_r.height()) / 2},
         paint_style,
         text_);
+    }
+    else
+    {
+        painter.draw_string_with_fitsize({r.location().x() + (r.size().width() - label_r.width()) / 2, r.location().y() + (r.size().height() - label_r.height()) / 2}, paint_style, text_,0);
+    }
+    
+    
 }
 
 void ButtonWithEncoder::on_focus() {
@@ -2226,8 +2239,14 @@ void TextEdit::on_blur() {
 
 /* TextField *************************************************************/
 
-TextField::TextField(Rect parent_rect, std::string text)
-    : Text(parent_rect, std::move(text)) {
+// TextField::TextField(Rect parent_rect, std::string text)
+//     : Text(parent_rect, std::move(text)) {
+//     set_focusable(true);
+// }
+
+TextField::TextField(Rect parent_rect, std::string text,bool boom_tag)
+    : Text(parent_rect, std::move(text),boom_tag) 
+{
     set_focusable(true);
 }
 
@@ -2540,10 +2559,13 @@ SymField::SymField(
     Point parent_pos,
     size_t length,
     Type type,
-    bool explicit_edits)
-    : Widget{{parent_pos, {char_width * (int)length, 16}}},
+    bool explicit_edits,
+    bool boom_tag)
+    : Widget{{parent_pos, {ui::new_font_width * (int)length, ui::new_font_height}}},
       type_{type},
-      explicit_edits_{explicit_edits} {
+      explicit_edits_{explicit_edits},
+      boom_tag{boom_tag}
+       {
     if (length == 0)
         length = 1;
 
@@ -2579,8 +2601,10 @@ SymField::SymField(
     Point parent_pos,
     size_t length,
     std::string symbol_list,
-    bool explicit_edits)
-    : SymField{parent_pos, length, Type::Custom, explicit_edits} {
+    bool explicit_edits,bool boom_tag)
+    : SymField{parent_pos, length, Type::Custom, explicit_edits,boom_tag} 
+
+{
     set_symbol_list(std::move(symbol_list));
 }
 
@@ -2694,8 +2718,17 @@ void SymField::paint(Painter& painter) {
                 paint_style.background = Theme::getInstance()->fg_blue->foreground;
             }
         }
-        painter.draw_char_source(p, paint_style, c);
-        p += {8, 0};
+        if(boom_tag == true)
+        {
+            painter.draw_char(p, paint_style, c);
+            p += {12, 0};
+        }
+        else
+        {
+            painter.draw_char_source(p, paint_style, c);
+            p += {8, 0};
+        }
+       
 
         // painter.draw_char(p, paint_style, c);
         // p += {ui::new_font_width, 0};

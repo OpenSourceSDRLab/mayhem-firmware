@@ -335,7 +335,7 @@ ReconView::ReconView(NavigationView& nav)
     tx_view.hidden(true);
 
     // set record View
-    record_view = std::make_unique<RecordView>(Rect{0, 0, screen_width, 1 * 16},
+    record_view = std::make_unique<RecordView>(Rect{0, 0, screen_width, 1 * ui::new_font_height},
                                                u"AUTO_AUDIO", audio_dir,
                                                RecordView::FileType::WAV, 4096, 4);
     record_view->set_filename_date_frequency(true);
@@ -345,11 +345,32 @@ ReconView::ReconView(NavigationView& nav)
         nav.display_modal("Error", message);
     };
 
-    add_children({&labels,
-                  &field_lna,
-                  &field_vga,
-                  &field_rf_amp,
-                  &field_volume,
+    add_children({
+            &labels,
+            // 
+            &field_lna,
+            &field_vga,
+            &field_rf_amp,
+            &field_volume,
+            // 2
+            &file_name,
+            // 3
+            &desc_cycle,
+            // 4
+            &rssi,
+            //5
+            &text_cycle,
+            &text_max,
+            &text_nb_locks,
+
+            &big_display,
+            &freq_stats,
+            &text_timer,
+            &text_ctcss,
+            &button_manual_start,
+            &button_manual_end,
+            &button_manual_recon,
+            // todo
                   &field_bw,
                   &field_squelch,
                   &field_nblocks,
@@ -358,33 +379,27 @@ ReconView::ReconView(NavigationView& nav)
                   &button_config,
                   &button_scanner_mode,
                   &button_loop_config,
-                  &file_name,
-                  &rssi,
-                  &text_cycle,
-                  &text_max,
-                  &text_nb_locks,
-                  &desc_cycle,
-                  &big_display,
-                  &freq_stats,
-                  &text_timer,
-                  &text_ctcss,
-                  &button_manual_start,
-                  &button_manual_end,
-                  &button_manual_recon,
+                  
+                 
+                  
                   &field_mode,
                   &field_recon_match_mode,
                   &step_mode,
                   &button_pause,
+
+
                   &button_audio_app,
                   &button_add,
                   &button_dir,
                   &button_restart,
                   &button_mic_app,
                   &button_remove,
+
                   record_view.get(),
                   &progressbar,
-                  &tx_view});
-
+                  &tx_view
+        });
+    
     def_step = 0;
     load_persisted_settings();
 
@@ -750,7 +765,7 @@ ReconView::ReconView(NavigationView& nav)
         delete_file(freq_file_path);
     }
 
-    frequency_file_load(); /* do not stop all at start */
+    frequency_file_load(); 
     if (autostart) {
         recon_resume();
     } else {

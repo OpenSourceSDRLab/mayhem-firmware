@@ -188,6 +188,7 @@ class WaterfallView : public View {
             this->audio_spectrum_data = message.data;
             this->audio_spectrum_update = true;
         }};
+        
     MessageHandlerRegistration message_handler_frame_sync{
         Message::ID::DisplayFrameSync,
         [this](const Message* const) {

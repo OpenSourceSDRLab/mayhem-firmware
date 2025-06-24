@@ -100,20 +100,21 @@ class IQTrimView : public View {
     TrimProgressUI progress_ui{};
 
     Labels labels{
-        {{0 * 8, 0 * 16}, "Capture File:", Theme::getInstance()->fg_light->foreground},
-        {{0 * 8, 6 * 16}, "Start  :", Theme::getInstance()->fg_light->foreground},
-        {{0 * 8, 7 * 16}, "End    :", Theme::getInstance()->fg_light->foreground},
-        {{0 * 8, 8 * 16}, "Samples:", Theme::getInstance()->fg_light->foreground},
-        {{0 * 8, 9 * 16}, "Max Pwr:", Theme::getInstance()->fg_light->foreground},
-        {{0 * 8, 10 * 16}, "Cutoff :", Theme::getInstance()->fg_light->foreground},
-        {{12 * 8, 10 * 16}, "%", Theme::getInstance()->fg_light->foreground},
-        {{0 * 8, 12 * 16}, "Amplify:", Theme::getInstance()->fg_light->foreground},
-        {{10 * 8, 12 * 16}, "x", Theme::getInstance()->fg_light->foreground},
+        {{0 * 8, 0 * 16}, "Capture File:", Theme::getInstance()->fg_light->foreground,false},
+        {{0 * 8, 6 * 16}, "Start  :", Theme::getInstance()->fg_light->foreground,false},
+        {{0 * 8, 7 * 16}, "End    :", Theme::getInstance()->fg_light->foreground,false},
+        {{0 * 8, 8 * 16}, "Samples:", Theme::getInstance()->fg_light->foreground,false},
+        {{0 * 8, 9 * 16}, "Max Pwr:", Theme::getInstance()->fg_light->foreground,false},
+        {{0 * 8, 10 * 16}, "Cutoff :", Theme::getInstance()->fg_light->foreground,false},
+        {{12 * 8, 10 * 16}, "%", Theme::getInstance()->fg_light->foreground,false},
+        {{0 * 8, 12 * 16}, "Amplify:", Theme::getInstance()->fg_light->foreground,false},
+        {{10 * 8, 12 * 16}, "x", Theme::getInstance()->fg_light->foreground,false},
     };
 
     TextField field_path{
         {0 * 8, 1 * 16, screen_width, 1 * 16},
-        "Open File..."};
+        "Open File...",false
+    };
 
     Point pos_lines{0 * 8, 4 * 16};
     Dim height_lines{2 * 16};
@@ -123,14 +124,16 @@ class IQTrimView : public View {
         10,
         {0, 0},
         1,
-        ' '};
+        ' ',false,false
+    };
 
     NumberField field_end{
         {9 * 8, 7 * 16},
         10,
         {0, 0},
         1,
-        ' '};
+        ' ',false,false
+    };
 
     Text text_samples{
         {9 * 8, 8 * 16, 10 * 8, 1 * 16},
@@ -138,24 +141,26 @@ class IQTrimView : public View {
 
     Text text_max{
         {9 * 8, 9 * 16, 20 * 8, 1 * 16},
-        "0"};
+        "0",false};
 
     NumberField field_cutoff{
         {9 * 8, 10 * 16},
         3,
         {1, 100},
         1,
-        ' '};
+        ' ',false,false
+    };
 
     NumberField field_amplify{
         {9 * 8, 12 * 16},
         1,
         {1, 9},
         1,
-        ' '};
+        ' ',false,false
+    };
 
     Button button_trim{
-        {20 * 8, 16 * 16, 8 * 8, 2 * 16},
+        {ui::screen_width - 8*8 , 16 * 16, 8 * 8, 2 * 16},
         "Trim"};
 };
 
