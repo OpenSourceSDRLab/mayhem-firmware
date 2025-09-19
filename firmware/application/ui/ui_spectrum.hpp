@@ -30,6 +30,8 @@
 #include "event_m0.hpp"
 
 #include "message.hpp"
+//加上一个debug函数
+#include "usb_serial_asyncmsg.hpp"
 
 #include <cstdint>
 #include <cstddef>

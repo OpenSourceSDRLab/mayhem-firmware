@@ -116,30 +116,44 @@ void MicTXView::configure_baseband() {
 }
 
 void MicTXView::set_tx(bool enable) {
-    if (enable) {
+
+    if (enable) 
+    {
         if (rx_enabled)      // If audio RX is enabled
             rxaudio(false);  // Then turn off audio RX
         transmitting = true;
         configure_baseband();
+
+        
+
         transmitter_model.set_target_frequency(tx_frequency);  // Now, no need: transmitter_model.set_tx_gain(tx_gain), nor (rf_amp);
 
-        /* The max. Power Spectrum Densitiy in WFM with High tone mod level (80%) and high 32kHZ subtone as fmod.  with max fdeviation 150k ,
-         BW aprox = 2 *(150K + 32K) = 364khz, then we just select the minimum TX  LPF 1M75. */
+        // /* The max. Power Spectrum Densitiy in WFM with High tone mod level (80%) and high 32kHZ subtone as fmod.  with max fdeviation 150k ,
+        //  BW aprox = 2 *(150K + 32K) = 364khz, then we just select the minimum TX  LPF 1M75. */
         transmitter_model.set_baseband_bandwidth(1'750'000);
+        
+        // 这里会造成黑屏？
         transmitter_model.enable();
+
         portapack::pin_i2s0_rx_sda.mode(3);  // This is already done in audio::init but gets changed by the CPLD overlay reprogramming
-    } else {
-        if (transmitting && rogerbeep_enabled) {
+    } 
+    else {
+
+        if (transmitting && rogerbeep_enabled) 
+        {
             baseband::request_roger_beep();  // Transmit the roger beep
             transmitting = false;            // Flag the end of the transmission (transmitter will be disabled after the beep)
-        } else {
+        } 
+        else
+        {
+            
             transmitting = false;
             configure_baseband();
             transmitter_model.disable();
 
             if (rx_enabled) {
+                // 这块调用会黑？
                 rxaudio(true);  // Turn back on audio RX
-
                 // TODO FIXME: this isn't working: vu meter isn't going to 0:
                 vumeter.set_value(0);  // Reset  vumeter
                 vumeter.dirty();       // Force to refresh vumeter.
@@ -221,7 +235,8 @@ void MicTXView::rxaudio(bool enable) {
         receiver_model.set_target_frequency(bool_same_F_tx_rx_enabled ? tx_frequency : rx_frequency);
         receiver_model.enable();
         audio::output::start();
-    } else {                                                                    // These incredibly convoluted steps are required for the vumeter to reappear when stopping RX.
+    } 
+    else {                                                                    // These incredibly convoluted steps are required for the vumeter to reappear when stopping RX.
         receiver_model.set_modulation(ReceiverModel::Mode::NarrowbandFMAudio);  // This fixes something with AM RX...
         receiver_model.disable();
         baseband::shutdown();

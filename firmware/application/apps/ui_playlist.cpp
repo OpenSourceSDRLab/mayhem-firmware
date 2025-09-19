@@ -327,6 +327,10 @@ void PlaylistView::stop() {
 void PlaylistView::update_ui() {
 
     if (playlist_db_.empty()) {
+        
+        std::string debug_string = "laylist_db_.empty() is NULL\n";
+        UsbSerialAsyncmsg::asyncmsg(debug_string);
+
         text_filename.set("-");
         text_sample_rate.set("-");
         text_duration.set("-");
@@ -342,6 +346,9 @@ void PlaylistView::update_ui() {
 
     } 
     else {
+
+        std::string debug_string = "laylist_db_.empty() is not NULL\n";
+        UsbSerialAsyncmsg::asyncmsg(debug_string);
         chDbgAssert(!at_end(), "update_ui #1", "current_index_ invalid");
 
         text_filename.set(current()->path.filename().string());
@@ -387,7 +394,6 @@ PlaylistView::PlaylistView(
     NavigationView& nav)
     : nav_(nav) {
     baseband::run_image(portapack::spi_flash::image_tag_replay);
-    
     add_children({
         &text_filename,
         &text_sample_rate,
@@ -405,21 +411,24 @@ PlaylistView::PlaylistView(
         &button_open,
         &button_save,
         &button_next,
-        // 先注释掉瀑布看看效果
         &waterfall,
     });
-    // 从这个地方全部注释看看效果
-    ensure_directory(playlist_dir);
+   
+    // std::string debug_string = "run from PlaylistView(NavigationView& nav)\n";
+    // UsbSerialAsyncmsg::asyncmsg(debug_string);
+    // // 从这个地方全部注释看看效果
+    // ensure_directory(playlist_dir);
 
-    // 这里设置为true就显示正常了
-    // waterfall.show_audio_spectrum_view(false);
-    waterfall.show_audio_spectrum_view(true);
+
+    waterfall.show_audio_spectrum_view(false);
 
     field_frequency.set_value(transmitter_model.target_frequency());
     field_frequency.on_change = [this](rf::Frequency f) {
         if (current())
             current()->metadata.center_frequency = f;
     };
+
+   
 
     field_frequency.on_edit = [this]() {
         auto freq_view = nav_.push<FrequencyKeypadView>(field_frequency.value());
@@ -479,12 +488,17 @@ PlaylistView::PlaylistView(
     };
     // 这里原始有，先将其注释看看效果
     update_ui();
+
 }
 
 PlaylistView::PlaylistView(
     NavigationView& nav,
     const fs::path& path)
     : PlaylistView(nav) {
+    
+    // std::string debug_string = "run from PlaylistView(NavigationView& nav,fs)\n";
+    // UsbSerialAsyncmsg::asyncmsg(debug_string);
+
     auto ext = path.extension();
     if (path_iequal(ext, ppl_ext))
         on_file_changed(path);
@@ -493,6 +507,10 @@ PlaylistView::PlaylistView(
 }
 
 PlaylistView::~PlaylistView() {
+    
+    // std::string debug_string = "~PlaylistView\n";
+    // UsbSerialAsyncmsg::asyncmsg(debug_string);
+
     transmitter_model.disable();
     baseband::shutdown();
 }
@@ -500,10 +518,23 @@ PlaylistView::~PlaylistView() {
 void PlaylistView::set_parent_rect(Rect new_parent_rect) {
     View::set_parent_rect(new_parent_rect);
 
-    ui::Rect waterfall_rect{
-        0, header_height, new_parent_rect.width(),
-        new_parent_rect.height() - header_height};
+    
+    //从下向上渲染？？ 560 - 24 回头看看这个数据是怎么算的
+    ui::Rect waterfall_rect{0, 240, new_parent_rect.width(),560 - 24};
+    
+    std::string debug_string = "PlaylistView::set_parent_rect and the x,y,width,height is "+
+    std::to_string(waterfall_rect.location().x())+ "," +std::to_string(waterfall_rect.location().y())+"," +
+    std::to_string(waterfall_rect.size().width()) + ","+std::to_string(waterfall_rect.size().height())+"\n" ;
+    UsbSerialAsyncmsg::asyncmsg(debug_string);
+
+    // ui::Rect waterfall_rect{
+    // 0, 0, new_parent_rect.width(),
+    // new_parent_rect.height()};
+
+    // // 设置的不对也会有问题
     waterfall.set_parent_rect(waterfall_rect);
+
+
 }
 
 void PlaylistView::focus() {
@@ -514,20 +545,28 @@ void PlaylistView::focus() {
 }
 
 void PlaylistView::on_hide() {
+
     stop();
+
+    portapack::display.scroll_disable();
+    portapack::display.fill_rectangle(
+        portapack::display.screen_rect(),
+        Theme::getInstance()->bg_darker->background);
+    
+    // UsbSerialAsyncmsg::asyncmsg("display.height() = " +
+    // std::to_string(portapack::display.height()) + "\n");
+
+    // 之前有waterfall.on_hide() 和 stop
+    
     waterfall.on_hide();
-    // free_view();
+    
+
+    std::string debug_string = "PlaylistView::on_hide() !!!!!!\n";
+    UsbSerialAsyncmsg::asyncmsg(debug_string);
+
     View::on_hide();
     // 这边隐藏什么都不做？
 }
-
-// void PlaylistView::free_view() {
-//     this->blur();
-//     for (auto* child : children_) {
-//         remove_child(child);
-//     }
-//     children_.clear(); 
-// }
 
 
 } /* namespace ui */

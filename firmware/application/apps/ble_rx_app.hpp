@@ -343,20 +343,20 @@ class BLERxView : public View {
         {10 * ui::new_font_width, 2 * ui::new_font_height},
         3,
         "Log",
-        true};
+        true,false};
 
     Checkbox check_serial_log{
         {18 * ui::new_font_width + 2, 2 * ui::new_font_height},
         7,
         "USB Log",
-        true
+        true,false
     };
 
     Checkbox check_name{
         {0 * ui::new_font_width, 2 * ui::new_font_height},
         3,
         "Name",
-        true
+        true,false
     };
     //  上述第3行结束
 

@@ -198,10 +198,23 @@ static void cmd_screenframe(BaseSequentialStream* chp, int argc, char* argv[]) {
     auto evtd = getEventDispatcherInstance();
     evtd->enter_shell_working_mode();
 
-    for (int i = 0; i < ui::screen_height; i++) {
-        std::vector<ui::ColorRGB888> row(ui::screen_width);
-        portapack::display.read_pixels({0, i, ui::screen_width, 1}, row);
-        for (int px = 0; px < ui::screen_width; px += 5) {
+    // source
+    // for (int i = 0; i < ui::screen_height; i++) {
+    //     std::vector<ui::ColorRGB888> row(ui::screen_width);
+    //     portapack::display.read_pixels({0, i, ui::screen_width, 1}, row);
+    //     for (int px = 0; px < ui::screen_width; px += 5) {
+    //         char buffer[5 * 3 * 2 + 1];
+    //         sprintf(buffer, "%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X", row[px].r, row[px].g, row[px].b, row[px + 1].r, row[px + 1].g, row[px + 1].b, row[px + 2].r, row[px + 2].g, row[px + 2].b, row[px + 3].r, row[px + 3].g, row[px + 3].b, row[px + 4].r, row[px + 4].g, row[px + 4].b);
+    //         fillOBuffer(&((SerialUSBDriver*)chp)->oqueue, (const uint8_t*)buffer, 5 * 3 * 2);
+    //     }
+    //     chprintf(chp, "\r\n");
+    // }
+
+    // 修改为之前的
+    for (int i = 0; i < 480; i++) {
+        std::vector<ui::ColorRGB888> row(320);
+        portapack::display.read_pixels({0, i, 320, 1}, row);
+        for (int px = 0; px < 320; px += 5) {
             char buffer[5 * 3 * 2 + 1];
             sprintf(buffer, "%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X", row[px].r, row[px].g, row[px].b, row[px + 1].r, row[px + 1].g, row[px + 1].b, row[px + 2].r, row[px + 2].g, row[px + 2].b, row[px + 3].r, row[px + 3].g, row[px + 3].b, row[px + 4].r, row[px + 4].g, row[px + 4].b);
             fillOBuffer(&((SerialUSBDriver*)chp)->oqueue, (const uint8_t*)buffer, 5 * 3 * 2);
@@ -243,8 +256,12 @@ static void cmd_screenframeshort(BaseSequentialStream* chp, int argc, char* argv
     size_t wp = 0;
     for (int y = 0; y < ui::screen_height; y++) {
         std::vector<ui::ColorRGB888> row(ui::screen_width);
+        // 这里读取的有问题吗？
+    //     std::string debug_string = "test for ui_touch_calibration\n";
+    // // UsbSerialAsyncmsg::asyncmsg(debug_string);
         portapack::display.read_pixels({0, y, ui::screen_width, 1}, row);
         for (int i = 0; i < ui::screen_width; ++i) {
+            // 这里可能存在错误，没有清空原始错误数据
             screenbuffer_helper_add(chp, buffer, wp, getChrFromRgb(row[i].r, row[i].g, row[i].b));
         }
         screenbuffer_helper_add(chp, buffer, wp, '\r');
@@ -677,6 +694,25 @@ static void cmd_appstart(BaseSequentialStream* chp, int argc, char* argv[]) {
     }
     chprintf(chp, "ok\r\n");
 }
+
+
+static void cmd_appback(BaseSequentialStream* chp, int argc, char* argv[]) {
+    (void)argc;
+    (void)argv;
+    
+    auto evtd = getEventDispatcherInstance();
+    if (!evtd) return;
+    auto top_widget = evtd->getTopWidget();
+    if (!top_widget) return;
+    auto nav = static_cast<ui::SystemView*>(top_widget)->get_navigation_view();
+    if (!nav) return;
+    
+    nav->pop();
+
+    chprintf(chp, "ok\r\n");
+}
+
+
 
 static void printAppInfo(BaseSequentialStream* chp, ui::AppInfoConsole& element) {
     if (strlen(element.appCallName) == 0) return;
@@ -1383,6 +1419,7 @@ static const ShellCommand commands[] = {
     {"flash", cmd_flash},
     {"screenshot", cmd_screenshot},
     {"screenframe", cmd_screenframe},
+    // {"screenframeshort", cmd_screenframe},
     {"screenframeshort", cmd_screenframeshort},
     {"write_memory", cmd_write_memory},
     {"read_memory", cmd_read_memory},
@@ -1399,6 +1436,8 @@ static const ShellCommand commands[] = {
     {"accessibility_readcurr", cmd_accessibility_readcurr},
     {"applist", cmd_applist},
     {"appstart", cmd_appstart},
+    //添加一个退出当前app
+    {"appback", cmd_appback},
     {"gotgps", cmd_gotgps},
     {"gotorientation", cmd_gotorientation},
     {"gotenv", cmd_gotenv},

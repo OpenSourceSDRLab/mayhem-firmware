@@ -81,6 +81,9 @@
 #include "file_path.hpp"
 #include "ff.h"
 
+// #include"my_test.hpp"
+
+
 #include <locale>
 #include <codecvt>
 
@@ -121,14 +124,14 @@ const NavigationView::AppList NavigationView::appList = {
     {"recon", "Recon", HOME, Color::green(), &bitmap_icon_scanner, new ViewFactory<ReconView>()},
     {"capture", "Capture", HOME, Color::red(), &bitmap_icon_capture, new ViewFactory<CaptureAppView>()},
     {"lookingglass", "Looking Glass", HOME, Color::green(), &bitmap_icon_looking, new ViewFactory<GlassView>()},
-    // 会重复渲染--先解决重复渲染再考虑UI布局
     {"replay", "Replay", HOME, Color::green(), &bitmap_icon_replay, new ViewFactory<PlaylistView>()},
     {nullptr, "Utilities", HOME, Color::cyan(), &bitmap_icon_utilities, new ViewFactory<UtilitiesMenuView>()},
     {nullptr, "Games", HOME, Color::cyan(), &bitmap_icon_games, new ViewFactory<GamesMenuView>()},
-    // to do 
     {nullptr, "Settings", HOME, Color::cyan(), &bitmap_icon_setup, new ViewFactory<SettingsMenuView>()},
     /* RX ********************************************************************/
+    // start to normalize rx
     {"adsbrx", "ADS-B", RX, Color::green(), &bitmap_icon_adsb, new ViewFactory<ADSBRxView>()},
+
     {"ais", "AIS Boats", RX, Color::green(), &bitmap_icon_ais, new ViewFactory<AISAppView>()},
     {"aprsrx", "APRS", RX, Color::green(), &bitmap_icon_aprs, new ViewFactory<APRSRXView>()},
     {"audio", "Audio", RX, Color::green(), &bitmap_icon_speaker, new ViewFactory<AnalogAudioView>()},
@@ -138,8 +141,6 @@ const NavigationView::AppList NavigationView::appList = {
     {"radiosonde", "Radiosnde", RX, Color::green(), &bitmap_icon_sonde, new ViewFactory<SondeView>()},
     {"subghzd", "SubGhzD", RX, Color::yellow(), &bitmap_icon_remote, new ViewFactory<SubGhzDView>()},
     {"weather", "Weather", RX, Color::green(), &bitmap_icon_thermometer, new ViewFactory<WeatherView>()},
-    // todo
-    //显示错误无法修改UI-先解决M0 bug再考虑布局
     {"search", "Search", RX, Color::yellow(), &bitmap_icon_search, new ViewFactory<SearchView>()},
 
     /* TX ********************************************************************/
@@ -152,7 +153,9 @@ const NavigationView::AppList NavigationView::appList = {
     {"soundbrd", "Soundbrd", TX, ui::Color::green(), &bitmap_icon_soundboard, new ViewFactory<SoundBoardView>()},
     {"touchtune", "TouchTune", TX, ui::Color::green(), &bitmap_icon_touchtunes, new ViewFactory<TouchTunesView>()},
     {"signalgen", "SignalGen", TX, Color::green(), &bitmap_icon_cwgen, new ViewFactory<SigGenView>()},
-    
+    // 测试窗体用于测试颜色打印
+    // {"newapp", "NewApp", TX, Color::red(), &bitmap_icon_remote, new ViewFactory<NewAppView>()},
+
     /* TRX ********************************************************************/
     {"microphone", "Mic", TRX, Color::green(), &bitmap_icon_microphone, new ViewFactory<MicTXView>()},
     /* UTILITIES *************************************************************/
@@ -289,7 +292,7 @@ SystemStatusView::SystemStatusView(
         if (nav.is_valid() && v) {
             nav.display_modal(
                 "Stealth",
-                "You just enabled stealth mode.\n"
+                "You just enabled \n stealth mode.\n"
                 "When you transmit,\n"
                 "screen will turn off;\n");
         }
@@ -1230,22 +1233,17 @@ void ModalMessageView::paint(Painter& painter) {
     int start_offset_y = ui::screen_height;
 
     for (size_t i = 0; i < lines.size(); ++i) {
-        // (Coord)(((compact) ? 8 * 3 : start_offset_y/2) + (i * 16))
-        // 其中*16表示字体的高度
-        // 字体的宽度位12 * 24
-        // 建议起始地址是往前3个字节会好一点
-        // 居中显示会好看一点？？
         int tmp_offset_x = 0;
         // 默认字体是最新的字体
-        tmp_offset_x = (ui::screen_width - ui::new_font_width * lines[0].length())/2;
+        tmp_offset_x = (ui::screen_width - 12 * lines[i].length())/2;
         if(tmp_offset_x < 0)
             tmp_offset_x = 0;
-        painter.draw_string(
+        painter.draw_string_with_fitsize(
             {
                 tmp_offset_x  , (Coord)(((compact) ? ui::new_font_height * 3 : start_offset_y/3) + (i * ui::new_font_height))
             },
             style(),
-            lines[i]);
+            lines[i],1);
     }
 }
 

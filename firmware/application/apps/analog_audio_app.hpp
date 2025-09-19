@@ -43,8 +43,8 @@ class AMOptionsView : public View {
 
    private:
     Text label_config{
-        {0 * 8, 0 * 16, 2 * ui::new_font_width, 1 * ui::new_font_height},
-        "BW",
+        {0 * 8, 0 * 16, 2 * 8, 1 * ui::new_font_height},
+        "BW",false
     };
 
     OptionsField options_config{
@@ -94,25 +94,25 @@ class NBFMOptionsView : public View {
 
    private:
     Text label_config{
-        {0 * 8, 0 * 16, 2 * ui::new_font_width, 1 * ui::new_font_height},
-        "BW",
+        {0 * 8, 0 * 16, 2 * 8, 1 * ui::new_font_height},
+        "BW",false
     };
     OptionsField options_config{
-        {3 * ui::new_font_width, 0 * 16},
+        {3 * 8, 0 * 16},
         3,  // Max option length
         {
             // Using common messages from freqman_ui.cpp
-        }};
+        },false,false};
 
     Text text_squelch{
-        {7 * ui::new_font_width, 0 * 16, 8 * ui::new_font_width, 1 *  ui::new_font_height},
-        "SQ   /99"};
+        {7 * 8, 0 * 16, 8 * 8, 1 *  ui::new_font_height},
+        "SQ   /99",false};
     NumberField field_squelch{
-        {10 * ui::new_font_width, 0 * 16},
+        {10 * 8, 0 * 16},
         2,
         {0, 99},
         1,
-        ' ',
+        ' ',false,false
     };
 };
 
@@ -271,29 +271,11 @@ class AnalogAudioView : public View {
     uint32_t spec_bw = 20000000;
     uint16_t spec_trigger = 63;
 
-    RSSI rssi{
-        {21 * ui::new_font_width, 
-        0, 
-        3 * ui::new_font_width, 
-        8}
-    };
+    
 
-    Channel channel{
-        {21 * ui::new_font_width, 
-        9, 
-        3 * ui::new_font_width, 
-        8}
-    };
+   
 
-    Audio audio{
-        {
-            21 * ui::new_font_width, 
-            17, 
-            3 * ui::new_font_width, 
-            8
-            }
-    };
-
+    // 0行 列数占用 5~？
     RxFrequencyField field_frequency{
         {5 * ui::new_font_width, 0 * 16},
         nav_};
@@ -304,6 +286,39 @@ class AnalogAudioView : public View {
     VGAGainField field_vga{
         {18 * ui::new_font_width, 0 * 16}};
 
+    RSSI rssi{
+        // {21 * ui::new_font_width, 
+        // 0, 
+        // 3 * ui::new_font_width, 
+        // 8}
+        {screen_width - 2 * ui::new_font_width,0,3 * ui::new_font_width,8}
+    };
+
+    Channel channel{
+        // {21 * ui::new_font_width, 
+        // 9, 
+        // 3 * ui::new_font_width, 
+        // 8}
+        {screen_width - 2 * ui::new_font_width,9,3 * ui::new_font_width,8}
+    };
+
+    Audio audio{
+        // {
+        //     21 * ui::new_font_width, 
+        //     17, 
+        //     3 * ui::new_font_width, 
+        //     8
+        // }
+        {screen_width - 2 * ui::new_font_width,17,3 * ui::new_font_width,8}
+    };
+
+    // 移动到RSS的嘴边看看效果
+    AudioVolumeField field_volume{
+        // {screen_width - 2 * ui::new_font_width, 0 * 16}
+        {21 * ui::new_font_width, 
+        0}
+    };
+    // 0行 列数0~3 
     OptionsField options_modulation{
         {0 * 8, 0 * 16},
         4,
@@ -316,8 +331,7 @@ class AnalogAudioView : public View {
             {"FMAM", toUType(ReceiverModel::Mode::WFMAudioAMApt)}  // Added to handle  SAT NOAA APT
         }};
 
-    AudioVolumeField field_volume{
-        {screen_width - 2 * ui::new_font_width, 0 * 16}};
+    
 
     Text text_ctcss{
         {16 * ui::new_font_width, 1 * ui::new_font_height, 14 * ui::new_font_width, 1 * ui::new_font_height},

@@ -48,11 +48,21 @@ TouchCalibrationView::TouchCalibrationView(
         &label_failure,
         &button_cancel,
         &button_ok,
+        &debug_text,
+        &button_for_debug
     });
 
     button_cancel.on_select = [this](Button&) { this->on_cancel(); };
     button_ok.on_select = [this](Button&) { this->on_ok(); };
 
+    button_for_debug.on_select = [this](Button&) { 
+        
+        std::string debug_string = "clicked the button";
+
+        debug_text.set(debug_string);
+    };
+
+    // 进行第一步验证
     set_phase(Phase::Calibrate0);
 
     system_view_ptr->get_status_view()->set_back_hidden(true);
@@ -100,12 +110,14 @@ void TouchCalibrationView::set_phase(const Phase value) {
 }
 
 uint32_t TouchCalibrationView::distance_squared(const Point& touch_point, const Image& target) {
+
     const auto target_point = target.screen_rect().center();
     const int32_t dx = target_point.x() - touch_point.x();
     const int32_t dy = target_point.y() - touch_point.y();
     const uint32_t dx2 = dx * dx;
     const uint32_t dy2 = dy * dy;
     return dx2 + dy2;
+
 }
 
 void TouchCalibrationView::touch_complete() {
@@ -130,6 +142,9 @@ void TouchCalibrationView::touch_complete() {
         default:
             break;
     }
+    // 这里加载一些测试打印？？
+    std::string debug_string = "test for ui_touch_calibration\n";
+    UsbSerialAsyncmsg::asyncmsg(debug_string);
 
     if (phase == Phase::Calibrate2) {
         const std::array<Point, 3> display_points{{
@@ -137,6 +152,14 @@ void TouchCalibrationView::touch_complete() {
             image_calibrate_1.screen_rect().center(),
             image_calibrate_2.screen_rect().center(),
         }};
+        debug_string = "Phase::Calibrate2 !!!!";
+        for(int i=0;i<3;i++)
+        {
+            debug_string = "display the x,y is " + std::to_string(display_points.at(i).x()) + "," + std::to_string(display_points.at(i).y()) + " \n";
+            UsbSerialAsyncmsg::asyncmsg(debug_string);
+            debug_string = "press the x,y is " + std::to_string(digitizer_points[i].x) + "," + std::to_string(digitizer_points[i].y) + " \n";
+            UsbSerialAsyncmsg::asyncmsg(debug_string);
+        }
 
         calibration = {digitizer_points, display_points};
     }
@@ -145,11 +168,21 @@ void TouchCalibrationView::touch_complete() {
         const auto calibrated_0 = calibration.translate(digitizer_points[0]);
         const auto d_sq_0 = distance_squared(calibrated_0, image_verify_0);
 
+        // debug_string = "Verify2 ... translate : { " + std::to_string(calibrated_0.x()) + "," + std::to_string(calibrated_0.y()) + "}\n"; 
+        // UsbSerialAsyncmsg::asyncmsg(debug_string);
+        
+
         const auto calibrated_1 = calibration.translate(digitizer_points[1]);
         const auto d_sq_1 = distance_squared(calibrated_1, image_verify_1);
 
+        // debug_string = "Verify2 ... translate : { " + std::to_string(calibrated_1.x()) + "," + std::to_string(calibrated_1.y()) + "}\n"; 
+        // UsbSerialAsyncmsg::asyncmsg(debug_string);
+
         const auto calibrated_2 = calibration.translate(digitizer_points[2]);
         const auto d_sq_2 = distance_squared(calibrated_2, image_verify_2);
+
+        // debug_string = "Verify2 ... translate : { " + std::to_string(calibrated_2.x()) + "," + std::to_string(calibrated_2.y()) + "}\n"; 
+        // UsbSerialAsyncmsg::asyncmsg(debug_string);
 
         if ((d_sq_0 < verify_d_sq_max) && (d_sq_1 < verify_d_sq_max) && (d_sq_2 < verify_d_sq_max)) {
             next_phase = Phase::Success;
@@ -175,7 +208,9 @@ void TouchCalibrationView::on_cancel() {
     nav.pop();
 }
 
+// 每次刷新一帧就调用一次
 void TouchCalibrationView::on_frame_sync() {
+    // 判定阶段
     switch (phase) {
         case Phase::Calibrate0:
         case Phase::Calibrate1:
@@ -190,10 +225,13 @@ void TouchCalibrationView::on_frame_sync() {
     }
 
     const auto frame = get_touch_frame();
+
+    
     const auto metrics = touch::calculate_metrics(frame);
     const auto x = metrics.x * 1024;
     const auto y = metrics.y * 1024;
-
+    
+    //有点击再考虑
     if (metrics.r < 640.0f) {
         if (samples_count > 0) {
             average.x = ((average.x * 7) + x) / 8;
@@ -204,7 +242,10 @@ void TouchCalibrationView::on_frame_sync() {
         }
 
         samples_count += 1;
-    } else {
+    } 
+    else {
+        // std::string  debug_string = "m.r:"+ std::to_string(metrics.r)+" x: "+ std::to_string(x)+" y:"+ std::to_string(y)+"\n";
+
         if (samples_count >= samples_limit) {
             touch_complete();
         }

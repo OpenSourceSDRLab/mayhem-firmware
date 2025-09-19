@@ -254,6 +254,7 @@ void EventDispatcher::handle_shell() {
     }
 }
 
+// 这里检测touch 判定
 ui::Widget* EventDispatcher::touch_widget(ui::Widget* const w, ui::TouchEvent event) {
     if (!w->hidden()) {
         // To achieve reverse depth ordering (last object drawn is

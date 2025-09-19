@@ -25,6 +25,7 @@
 #include "ui_widget.hpp"
 #include "ui_navigation.hpp"
 #include "touch.hpp"
+#include "usb_serial_asyncmsg.hpp"
 
 namespace ui {
 
@@ -75,37 +76,43 @@ class TouchCalibrationView : public View {
     touch::Calibration calibration;
 
     Image image_calibrate_0{
-        {32 - 16, 32 - 16, 32, 32},
+        // {32 - 16, 32 - 16, 32, 32},
+        {32, 48, 32, 32},
         &bitmap_target_calibrate,
         Color::white(),
         Color::black()};
 
     Image image_calibrate_1{
-        {240 - 32 - 16, (320 - 16) / 2 - 16, 32, 32},
+        // {240 - 32 - 16, (320 - 16) / 2 - 16, 32, 32},
+        {208, 168, 32, 32},
         &bitmap_target_calibrate,
         Color::white(),
         Color::black()};
 
     Image image_calibrate_2{
-        {240 / 2 - 16, (320 - 16) - 32 - 16, 32, 32},
+        // {240 / 2 - 16, (320 - 16) - 32 - 16, 32, 32},
+        {120, 288, 32, 32},
         &bitmap_target_calibrate,
         Color::white(),
         Color::black()};
 
     Image image_verify_0{
-        {32 - 16, 32 - 16, 32, 32},
+        // {32 - 16, 32 - 16, 32, 32},
+        {32, 48, 32, 32},
         &bitmap_target_verify,
         Color::white(),
         Color::black()};
 
     Image image_verify_1{
-        {240 - 32 - 16, (320 - 16) / 2 - 16, 32, 32},
+        // {240 - 32 - 16, (320 - 16) / 2 - 16, 32, 32},
+        {208, 168, 32, 32},
         &bitmap_target_verify,
         Color::white(),
         Color::black()};
 
     Image image_verify_2{
-        {240 / 2 - 16, (320 - 16) - 32 - 16, 32, 32},
+        // {240 / 2 - 16, (320 - 16) - 32 - 16, 32, 32},
+        {120, 288, 32, 32},
         &bitmap_target_verify,
         Color::white(),
         Color::black()};
@@ -143,8 +150,20 @@ class TouchCalibrationView : public View {
         {136, ui::screen_height - ui::new_font_height *3, 8*ui::new_font_width, ui::new_font_height *2},
         "OK"};
 
+    Text debug_text{
+        {0,ui::screen_height/4*3,ui::screen_width,ui::new_font_height},
+        "test string",
+        true
+    };
+
+    Button button_for_debug{
+        {0,ui::screen_height-ui::new_font_height *4, 8*ui::new_font_width, ui::new_font_height *2},
+        "debug"
+    };
+
     void on_frame_sync();
 
+    // 这是什么
     MessageHandlerRegistration message_handler_frame_sync{
         Message::ID::DisplayFrameSync,
         [this](const Message* const) {

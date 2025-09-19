@@ -452,6 +452,8 @@ void Labels::set_labels(std::initializer_list<Label> labels) {
     set_dirty();
 }
 
+/// @brief already change source painter draw_string,now can fit the new screen
+/// @param painter 
 void Labels::paint(Painter& painter) {
 
     for (auto& label : labels_) {
@@ -464,14 +466,7 @@ void Labels::paint(Painter& painter) {
         {
             Style tmp{style().font,style().background,label.color};
             painter.draw_string_with_fitsize(label.pos + screen_pos(), tmp, label.text,1);
-            // painter.draw_string(
-            // label.pos + screen_pos(),
-            // style().font,
-            // label.color,
-            // style().background,
-            // label.text);
         }
-        
     }
 }
 
@@ -1483,15 +1478,29 @@ void NewButton::paint(Painter& painter) {
     }
     // 选项栏目-按钮的文字
     // 绘制按钮上的文字
+    // 增添文字下移4px，不遮挡图标
     if (!text_.empty()) {
         if(r.size().width() > ui::screen_width/3)
         {
             int button_string_len = text_.length();
             int offset_x = r.size().width() / 2 - button_string_len*ui::new_font_width / 2; 
-            painter.draw_string(
-                {r.location().x() + offset_x, r.location().y() + (r.size().height() - ui::new_font_height) / 2},
+            // 字体少就放大一点
+            if(button_string_len <= 12)
+            {
+                painter.draw_string(
+                {r.location().x() + offset_x, r.location().y() + (r.size().height() - ui::new_font_height) / 2 + 4},
                 style,
                 text_);
+            }
+            // 字体多默认还是小字体
+            else
+            {
+                const auto label_r = style.font.size_of(text_);
+                painter.draw_string_with_fitsize(
+                {r.location().x() + (r.size().width() - label_r.width()) / 2, r.location().y() + (r.size().height() - label_r.height()) / 2 + 4},
+                style,
+                text_);
+            }
 
         }
         // 进行1行3列渲染
@@ -1499,7 +1508,7 @@ void NewButton::paint(Painter& painter) {
         {
             const auto label_r = style.font.size_of(text_);
             painter.draw_string_with_fitsize(
-                {r.location().x() + (r.size().width() - label_r.width()) / 2, r.location().y() + (r.size().height() - label_r.height()) / 2},
+                {r.location().x() + (r.size().width() - label_r.width()) / 2, r.location().y() + (r.size().height() - label_r.height()) / 2 + 4},
                 style,
                 text_);
             // painter.draw_string(
@@ -2350,7 +2359,9 @@ void BatteryIcon::paint(Painter& painter) {
     painter.draw_hline({rect.left() + 3, rect.top() + 1}, rect.width() - 6, battColor);
     painter.draw_hline({rect.left() + 3, 0}, rect.width() - 6, battColor);
     if (percent_ > 100) {  // error / unk
-        painter.draw_string({rect.left() + 2, rect.top() + 3}, font::fixed_5x8, Theme::getInstance()->bg_dark->foreground, Theme::getInstance()->bg_dark->background, "?");
+        // painter.draw_string({rect.left() + 2, rect.top() + 3}, font::fixed_5x8, Theme::getInstance()->bg_dark->foreground, Theme::getInstance()->bg_dark->background, "?");
+        painter.draw_string_source({rect.left() + 2, rect.top() + 3}, font::fixed_5x8, Theme::getInstance()->bg_dark->foreground, Theme::getInstance()->bg_dark->background, "?");
+
         return;
     }
     int8_t ppx = (rect.bottom() - 3) - (rect.top() + 2);                                // 11px max height to draw bars
@@ -2387,8 +2398,8 @@ void BatteryTextField::paint(Painter& painter) {
         xdelta = 5;
     else if (txt_batt.length() == 2)
         xdelta = 2;
-    painter.draw_string({rect.left() + xdelta, rect.top()}, font::fixed_5x8, Theme::getInstance()->bg_dark->foreground, bg, txt_batt);
-    painter.draw_string({rect.left(), rect.top() + 8}, font::fixed_5x8, Theme::getInstance()->bg_dark->foreground, bg, (charge_) ? "+%" : " %");
+    painter.draw_string_source({rect.left() + xdelta, rect.top()}, font::fixed_5x8, Theme::getInstance()->bg_dark->foreground, bg, txt_batt);
+    painter.draw_string_source({rect.left(), rect.top() + 8}, font::fixed_5x8, Theme::getInstance()->bg_dark->foreground, bg, (charge_) ? "+%" : " %");
 }
 
 void BatteryTextField::getAccessibilityText(std::string& result) {
@@ -2547,6 +2558,8 @@ bool NumberField::on_keyboard(const KeyboardEvent key) {
 }
 
 bool NumberField::on_touch(const TouchEvent event) {
+    // 修改接触解除范围判定逻辑
+    // int
     if (event.type == TouchEvent::Type::Start) {
         focus();
     }
@@ -3088,17 +3101,23 @@ VuMeter::VuMeter(
 }
 
 void VuMeter::set_value(const uint32_t new_value) {
-    if ((new_value != value_) && (new_value < 256)) {
-        value_ = new_value;
+    if ((new_value != value_) && (new_value < 256))
+    // if ((new_value != value_) && (new_value < 449)) 
+    {
+        value_ = new_value*2;
         set_dirty();
     }
 }
 
 void VuMeter::set_mark(const uint32_t new_mark) {
     if ((new_mark != mark) && (new_mark < 256)) {
-        mark = new_mark;
+        mark = new_mark*2;
         set_dirty();
     }
+    // if ((new_mark != mark) && (new_mark < 449)) {
+    //     mark = new_mark;
+    //     set_dirty();
+    // }
 }
 
 void VuMeter::paint(Painter& painter) {
@@ -3133,7 +3152,7 @@ void VuMeter::paint(Painter& painter) {
         }
         prev_value = value_;
     }
-
+    // 现在是set valu里面改系数将其x2
     // Update max level
     if (show_max_) {
         if (value_ > max) {

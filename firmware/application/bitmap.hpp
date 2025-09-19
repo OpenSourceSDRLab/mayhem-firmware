@@ -2965,6 +2965,7 @@ static constexpr uint8_t bitmap_icon_previous_data[] = {
 };
 static constexpr Bitmap bitmap_icon_previous{
     {16, 16},
+    // {32, 32},
     bitmap_icon_previous_data};
 
 static constexpr uint8_t bitmap_icon_protoview_data[] = {

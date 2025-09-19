@@ -130,7 +130,9 @@ struct Calibration {
     constexpr Calibration()
         : Calibration(
               /* Values derived from one PortaPack H1 unit. */
-              {{{256, 731}, {880, 432}, {568, 146}}},
+                // 这里对应的也许不正确
+            //   {{{256, 731}, {880, 432}, {568, 146}}},
+                {{{94, 875}, {640, 642}, {366, 406}}},
               {{{32, 48}, {208, 168}, {120, 288}}}) {
     }
 

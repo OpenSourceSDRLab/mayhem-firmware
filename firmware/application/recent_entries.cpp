@@ -52,7 +52,8 @@ void RecentEntriesHeader::paint(Painter& painter) {
             text.append(width - text.length(), ' ');
         }
 
-        painter.draw_string(p, style, text);
+        // painter.draw_string(p, style, text);
+        painter.draw_string_with_fitsize(p, style, text,1);
         p += {static_cast<Coord>((width * ui::new_font_width) + 8), 0};
         // p += {static_cast<Coord>((width * 8) + 8), 0};
     }

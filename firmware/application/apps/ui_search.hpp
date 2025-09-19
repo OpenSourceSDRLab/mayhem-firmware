@@ -126,7 +126,9 @@ class SearchView : public View {
     uint32_t bin_skip_acc = 0;
     uint32_t bin_skip_frac = 0;
     uint32_t pixel_index = 0;
-    std::array<Color, 240> spectrum_row{};
+    // std::array<Color, 240> spectrum_row{};
+    // 修改这里的320逻辑即可
+    std::array<Color, 320> spectrum_row{};
     ChannelSpectrumFIFO* fifo = nullptr;
 
     uint8_t detect_timer = 0;
@@ -162,67 +164,110 @@ class SearchView : public View {
     RecentEntriesView<RecentEntries<SearchRecentEntry>> recent_entries_view{columns, recent};
 
     Labels labels{
-        {{1 * 8, 0}, "Min:      Max:       LNA VGA", Theme::getInstance()->fg_light->foreground},
-        {{1 * 8, 4 * 8}, "Trig:   /255    Mean:   /255", Theme::getInstance()->fg_light->foreground},
-        {{1 * 8, 6 * 8}, "Slices:  /32      Rate:   Hz", Theme::getInstance()->fg_light->foreground},
-        {{6 * 8, 10 * 8}, "Timer  Status", Theme::getInstance()->fg_light->foreground},
-        {{1 * 8, 25 * 8}, "Accuracy +/-4.9kHz", Theme::getInstance()->fg_light->foreground},
-        {{26 * 8, 25 * 8}, "MHz", Theme::getInstance()->fg_light->foreground}};
+        
+        {{1 * 8, 0}, "Min:      Max:       LNA VGA", Theme::getInstance()->fg_light->foreground,false},
+
+        {{1 * 8, 4 * 8}, "Trig:   /255    Mean:   /255", Theme::getInstance()->fg_light->foreground,false},
+        {{1 * 8, 6 * 8}, "Slices:  /32      Rate:   Hz", Theme::getInstance()->fg_light->foreground,false},
+        //这一列以后可以大写
+
+        // {{6 * 8, 10 * 8}, "Timer  Status", Theme::getInstance()->fg_light->foreground,false},
+        
+        {{6 * ui::new_font_width , 10 * 8}, "Timer  Status", Theme::getInstance()->fg_light->foreground,true},
+
+        {{1 * 8, 8*10+6*ui::new_font_height}, "Accuracy +/-4.9kHz", Theme::getInstance()->fg_light->foreground,false},
+        {{26 * 8, 8*10+6*ui::new_font_height}, "MHz", Theme::getInstance()->fg_light->foreground,false}};
 
     FrequencyField field_frequency_min{
-        {1 * 8, 1 * 16}};
+        {1 * 8, 1 * 16},
+        false
+    };
     FrequencyField field_frequency_max{
-        {11 * 8, 1 * 16}};
+        {11 * 8, 1 * 16},
+        false
+    };
 
     LNAGainField field_lna{
-        {22 * 8, 1 * 16}};
+        {22 * 8, 1 * 16},
+        false,
+        false
+    };
+
     VGAGainField field_vga{
-        {26 * 8, 1 * 16}};
+        {26 * 8, 1 * 16},
+        false,
+        false
+    };
+
 
     NumberField field_threshold{
         {6 * 8, 2 * 16},
         3,
         {5, 255},
         5,
-        ' '};
+        ' ',false,false
+    };
+    
     Text text_mean{
         {22 * 8, 2 * 16, 3 * 8, 16},
-        "---"};
+        "---",false};
+    
     Text text_slices{
         {8 * 8, 3 * 16, 2 * 8, 16},
-        "--"};
+        "--",false};
     Text text_rate{
         {24 * 8, 3 * 16, 3 * 8, 16},
-        "---"};
+        "---",false};
 
+
+
+    // 这是可以变大的插件
     VuMeter vu_max{
-        {1 * 8, 11 * 8 - 4, 3 * 8, 48},
+        // {1 * 8, 11 * 8 - 4, 3 * 8, 48}
+        {1 * 8, 10 * 8 + ui::new_font_height, 3 * 8, 48},
         18,
         false};
 
     ProgressBar progress_timers{
-        {6 * 8, 12 * 8, 6 * 8, 16}};
+        // {6 * 8, 12 * 8, 6 * 8, 16}
+        {6 * ui::new_font_width, 8*10+1*ui::new_font_height, 6 * 8, ui::new_font_height}
+    };
+
+
     Text text_infos{
-        {13 * 8, 12 * 8, 15 * 8, 16},
-        "Listening"};
+        // {13 * 8, 12 * 8, 15 * 8, 16},
+        {13 * ui::new_font_width, 8*10+1*ui::new_font_height, 15 * ui::new_font_width, ui::new_font_height},
+        "Listening",
+        true
+    };
 
     Checkbox check_snap{
-        {6 * 8, 15 * 8},
+        // {6 * 8, 15 * 8},
+        {6 * ui::new_font_width, 8*10+2*ui::new_font_height+4},
         7,
         "Snap to:",
-        true};
+        false,true};
+
     OptionsField options_snap{
-        {17 * 8, 15 * 8},  // Position
-        7,                 // Length
-        {                  // Options
-         {"25kHz  ", 25'000},
-         {"12.5kHz", 12'500},
-         {"8.33kHz", 8'333},
-         {"2.5kHz", 2'500},
-         {"500Hz", 500}}};
+        // {17 * 8, 15 * 8},  // Position
+        {17 * ui::new_font_width, 8*10+2*ui::new_font_height+16},
+        // Length
+        7,
+        // Options                 
+        {                  
+            {"25kHz  ", 25'000},
+            {"12.5kHz", 12'500},
+            {"8.33kHz", 8'333},
+            {"2.5kHz", 2'500},
+            {"500Hz", 500}
+        },
+        true,
+        false
+    };
 
     BigFrequency big_display{
-        {4, 9 * 16, 28 * 8, 52},
+        // {4, 9 * 16, 28 * 8, 52},
+        {4, 8*10+4*ui::new_font_height - 12,28 * 8 , 52},
         0};
 
     MessageHandlerRegistration message_handler_spectrum_config{
@@ -242,7 +287,7 @@ class SearchView : public View {
                 }
             }
             this->do_timers();
-        }};
+    }};
 };
 
 } /* namespace ui */

@@ -54,37 +54,37 @@ class BattinfoView : public View {
     int32_t current = 0;
 
     Labels labels{
-        {{2 * 8, 1 * 16}, "Percent:", Theme::getInstance()->fg_light->foreground},
-        {{2 * 8, 2 * 16}, "Voltage:", Theme::getInstance()->fg_light->foreground},
-        {{2 * 8, 3 * 16}, "Method:", Theme::getInstance()->fg_light->foreground},
+        {{2 * ui::new_font_width, 1 * ui::new_font_height}, "Percent:", Theme::getInstance()->fg_light->foreground},
+        {{2 * ui::new_font_width, 2 * ui::new_font_height}, "Voltage:", Theme::getInstance()->fg_light->foreground},
+        {{2 * ui::new_font_width, 3 * ui::new_font_height}, "Method:", Theme::getInstance()->fg_light->foreground},
     };
 
     Labels labels_opt{
-        {{2 * 8, 4 * 16}, "Current:", Theme::getInstance()->fg_light->foreground},
-        {{2 * 8, 5 * 16}, "Charge:", Theme::getInstance()->fg_light->foreground},
-        {{2 * 8, 6 * 16}, "TTF/E:", Theme::getInstance()->fg_light->foreground},
+        {{2 * ui::new_font_width, 4 * ui::new_font_height}, "Current:", Theme::getInstance()->fg_light->foreground},
+        {{2 * ui::new_font_width, 5 * ui::new_font_height}, "Charge:", Theme::getInstance()->fg_light->foreground},
+        {{2 * ui::new_font_width, 6 * ui::new_font_height}, "TTF/E:", Theme::getInstance()->fg_light->foreground},
         // {{2 * 8, 7 * 16}, "Cycles:", Theme::getInstance()->fg_light->foreground},
-        {{2 * 8, 10 * 16}, "Change method:", Theme::getInstance()->fg_light->foreground},
+        {{2 * ui::new_font_width, 10 * ui::new_font_height}, "Change method:", Theme::getInstance()->fg_light->foreground},
     };
 
     Text text_percent{
-        {13 * 8, 1 * 16, 10 * 16, 16},
-        "-"};
+        {13 * ui::new_font_width, 1 * ui::new_font_height, 12 * ui::new_font_width, ui::new_font_height},
+        "-",true};
     Text text_voltage{
-        {13 * 8, 2 * 16, 10 * 16, 16},
-        "-"};
+        {13 * ui::new_font_width, 2 * ui::new_font_height, 12 * ui::new_font_width, ui::new_font_height},
+        "-",true};
     Text text_method{
-        {13 * 8, 3 * 16, 10 * 16, 16},
-        "-"};
+        {13 * ui::new_font_width, 3 * ui::new_font_height, 12 * ui::new_font_width, ui::new_font_height},
+        "-",true};
     Text text_current{
-        {13 * 8, 4 * 16, 10 * 16, 16},
-        "-"};
+        {13 * ui::new_font_width, 4 * ui::new_font_height, 12 * ui::new_font_width, ui::new_font_height},
+        "-",true};
     Text text_charge{
-        {13 * 8, 5 * 16, 10 * 16, 16},
-        "-"};
+        {13 * ui::new_font_width, 5 * ui::new_font_height, 12 * ui::new_font_width, ui::new_font_height},
+        "-",true};
     Text text_ttef{
-        {13 * 8, 6 * 16, 10 * 16, 16},
-        "-"};
+        {13 * ui::new_font_width, 6 * ui::new_font_height, 12 * ui::new_font_width, ui::new_font_height},
+        "-",true};
     /* Text text_cycles{
         {13 * 8, 7 * 16, 10 * 16, 16},
         "-"};
@@ -94,11 +94,11 @@ class BattinfoView : public View {
         ""}; */
 
     Button button_mode{
-        {2 * 8, 11 * 16 + 5, 5 * 16, 32},
+        {2 * 8, 11 * ui::new_font_height + 5, 5 * 16, 32},
         "Volt"};
 
     Button button_exit{
-        {72, 17 * 16, 96, 32},
+        {72, 17 * ui::new_font_height, 96, 32},
         "Back"};
     static msg_t static_fn(void* arg);
     Thread* thread{nullptr};

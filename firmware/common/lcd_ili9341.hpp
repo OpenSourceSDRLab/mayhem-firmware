@@ -90,6 +90,7 @@ class ILI9341 {
     void read_pixels(
         const ui::Rect r,
         std::vector<ui::ColorRGB888>& colors) {
+        //(0,0,320,1)
         read_pixels(r, colors.data(), colors.size());
     }
 

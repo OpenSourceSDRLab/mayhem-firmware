@@ -215,8 +215,11 @@ class SystemStatusView : public View {
         {0 * 8, 0 * 16, ui::screen_width, ui::good_display_header_height },
         Theme::getInstance()->bg_dark->background};
 
+
     ImageButton button_back{
+        // 修改触控逻辑，好于扩大其接触范围
         {0, 0 * 16, 12 * 8, ui::good_display_header_height},  // Back button also covers the title for easier touch.
+        // {0, 0 * 16, ui::screen_width / 2, 32},  // Back button also covers the title for easier touch.
         &bitmap_icon_previous,
         Theme::getInstance()->bg_dark->foreground,
         Theme::getInstance()->bg_dark->background};
@@ -224,7 +227,7 @@ class SystemStatusView : public View {
     
 
     ImageButton button_title{
-        {2, 0, 80, ui::good_display_header_height},
+        {0, 0, 80, ui::good_display_header_height},
         &bitmap_titlebar_image,
         Theme::getInstance()->bg_dark->foreground,
         Theme::getInstance()->bg_dark->background};
@@ -334,7 +337,7 @@ class InformationView : public View {
 
    private:
     // static constexpr auto version_string = "v1.4.4"; // This is commented out as we are now setting the version via ENV (VERSION_STRING=v1.0.0)
-    static constexpr auto version_string = "NEW-UI";
+    static constexpr auto version_string = "V2.3.0";
     NavigationView& nav_;
 
     Rectangle backdrop{

@@ -99,6 +99,69 @@ uint32_t lcd_read_display_status() {
 }
 
 
+// void lcd_init()
+// {
+//     //完全参照给定的驱动进行开发
+
+//     // 用于设置内部电荷泵的比率，用于驱动液晶面板的电压调节
+//     io.lcd_data_write_command_and_data(0xF7, {0xA9,0x51,0x2C,0x82});
+//     // Set Panel Related Control / Panel Driving Setting
+//     io.lcd_data_write_command_and_data(0xEC, {0x00,0x02,0x03,0x7A});
+//     // Power Control 1（PWR_CTRL1）
+//     io.lcd_data_write_command_and_data(0xC0, {0x13, 0x13});
+//     // Power Control 2（PWR_CTRL2）
+//     io.lcd_data_write_command_and_data(0xC1, {0x41}); 
+//     // VCOM Control 1
+//     io.lcd_data_write_command_and_data(0xC5, {0x00, 0x28, 0x80});
+//     // frame rate
+//     io.lcd_data_write_command_and_data(0xB1, {0xB0, 0x11});
+//     //  Display Inversion Control（INVCTRL）
+//     io.lcd_data_write_command_and_data(0xB4, {0x02});
+//     // Display Function Control / RGB/MCU Interface Control
+//     io.lcd_data_write_command_and_data(0xB6, {0x02,0x22});
+//     // Entry Mode Set
+//     io.lcd_data_write_command_and_data(0xB7, {0xC6});
+//     // Pump Timing Control / Pump Setting
+//     io.lcd_data_write_command_and_data(0xBE, {0x00,0x04});
+
+//     // Set Image Function / Image Enhancement Function
+//     io.lcd_data_write_command_and_data(0xE9, {0x00});
+
+//     // Interface Control
+//     io.lcd_data_write_command_and_data(0xF4, {0x00,0x00,0x0F});
+
+//     // Positive Gamma Correction
+//     io.lcd_data_write_command_and_data(0xE0, {0x00,0x04,0x0E,0x08,0x17,0x0A,0x40,0x79,0x4D,0x07,0x0E,0x0A,0x1A,0x1D,0x0F});
+//     // Negative Gamma Correction（负向伽马校正）
+//     io.lcd_data_write_command_and_data(0xE1, {0x00,0x1B,0x1F,0x02,0x10,0x05,0x32,0x34,0x43,0x02,0x0A,0x09,0x33,0x37,0x0F});
+
+//     // Interface Control
+//     io.lcd_data_write_command_and_data(0xF4, {0x00,0x00,0x0F});
+//     // Memory Access Control (MADCTL)
+//      io.lcd_data_write_command_and_data(0x36, {
+//                                                  (1 << 7) |  // MY=1
+//                                                  (0 << 6) |  // MX=0
+//                                                  (0 << 5) |  // MV=0
+//                                                  (1 << 4) |  // ML=1: reverse vertical refresh to simplify scrolling logic
+//                                                  (1 << 3)    // BGR=1: For Kingtech LCD, BGR filter.
+//                                              });
+
+//     //Interface Mode Control 0x66 18bit; 0x55 16bit
+//     io.lcd_data_write_command_and_data(0x3A, {0x55});
+    
+//     // Display Inversion On
+//     io.lcd_data_write_command_and_data(0x21, {});  
+    
+//     // Sleep Out
+//     io.lcd_data_write_command_and_data(0x11, {});  
+
+//     chThdSleepMilliseconds(120); 
+//      // Display On
+//     io.lcd_data_write_command_and_data(0x29, {}); 
+//     chThdSleepMilliseconds(5); 
+// }
+
+// source 
 void lcd_init() {
     // LCDs are configured for IM[2:0] = 001
     // 8080-I system, 16-bit parallel bus
@@ -164,6 +227,7 @@ void lcd_ramwr_start() {
 
 void lcd_ramrd_start() {
     io.lcd_data_write_command_and_data(0x2e, {});
+    //dummy read
     io.lcd_read_word();
 }
 
@@ -187,6 +251,7 @@ void lcd_start_ram_write(
 void lcd_start_ram_read(
     const ui::Point p,
     const ui::Size s) {
+    //(0,0,320,1)
     lcd_caset(p.x(), p.x() + s.width() - 1);
     lcd_paset(p.y(), p.y() + s.height() - 1);
     lcd_ramrd_start();
@@ -684,6 +749,7 @@ void ILI9341::read_pixels(
     ui::ColorRGB888* const colors,
     const size_t count) {
     /* TODO: Assert that rectangle width x height < count */
+    //(0,0,320,1)
     lcd_start_ram_read(r);
     io.lcd_read_bytes(
         reinterpret_cast<uint8_t*>(colors),
@@ -831,16 +897,9 @@ void ILI9341::draw_glyph(
     const ui::Glyph& glyph,
     const ui::Color foreground,
     const ui::Color background,
-    uint8_t zoom_level) {
-    // 原始渲染函数
+    uint8_t zoom_level) 
+{
     draw_bitmap(p, glyph.size(), glyph.pixels(), foreground, background, zoom_level);
-    // if(glyph.w() == 12)
-    // {
-    //     draw_bitmap_only_char_16(p, glyph.size(), glyph.pixels(), foreground, background);
-    // }
-    // else
-    // 大字渲染函数
-    // draw_bitmap_only_char(p, glyph.size(), glyph.pixels(), foreground, background);
 }
 
 void ILI9341::scroll_set_area(

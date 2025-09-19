@@ -27,6 +27,7 @@
 #include "i2cdev_ppmod.hpp"
 
 #include <optional>
+#include "usb_serial_asyncmsg.hpp"
 
 namespace ui {
 
@@ -36,97 +37,110 @@ void ExternalModuleView::focus() {
 
 void ExternalModuleView::on_tick_second() {
     i2cdev::I2CDevManager::manual_scan();
+    std::string debug_string = "##########################\n";
+    UsbSerialAsyncmsg::asyncmsg(debug_string);
+    
+    auto addrlist = i2cdev::I2CDevManager::get_gev_list_by_addr();
+    debug_string = "目前找到的I2C设备个数为："+std::to_string(addrlist.size())+"\n";
+    UsbSerialAsyncmsg::asyncmsg(debug_string);
 
-    auto dev = (i2cdev::I2cDev_PPmod*)i2cdev::I2CDevManager::get_dev_by_model(I2C_DEVMDL::I2CDECMDL_PPMOD);
-
-    if (!dev) {
-        text_header.set("No module connected");
-        text_name.set("");
-        text_version.set("");
-        text_number_apps.set("");
-        text_app1_name.set("");
-        text_app2_name.set("");
-        text_app3_name.set("");
-        text_app4_name.set("");
-        text_app5_name.set("");
-        return;
+    std::string all_hex_string;
+    for (size_t i = 0; i < addrlist.size(); ++i) {
+        all_hex_string += "0x"+to_string_hex(addrlist[i])+"\t"; 
     }
+    UsbSerialAsyncmsg::asyncmsg(all_hex_string+"\n");
+    debug_string = "##########################\n";
+    UsbSerialAsyncmsg::asyncmsg(debug_string);
+    // auto dev = (i2cdev::I2cDev_PPmod*)i2cdev::I2CDevManager::get_dev_by_model(I2C_DEVMDL::I2CDECMDL_PPMOD);
 
-    auto device_info = dev->readDeviceInfo();
+    // if (!dev) {
+    //     text_header.set("No module connected");
+    //     text_name.set("");
+    //     text_version.set("");
+    //     text_number_apps.set("");
+    //     text_app1_name.set("");
+    //     text_app2_name.set("");
+    //     text_app3_name.set("");
+    //     text_app4_name.set("");
+    //     text_app5_name.set("");
+    //     return;
+    // }
 
-    if (device_info.has_value() == false) {
-        text_header.set("No module connected");
-        text_name.set("");
-        text_version.set("");
-        text_number_apps.set("");
-        text_app1_name.set("");
-        text_app2_name.set("");
-        text_app3_name.set("");
-        text_app4_name.set("");
-        text_app5_name.set("");
-        return;
-    }
+    // auto device_info = dev->readDeviceInfo();
 
-    text_header.set("Module found");
+    // if (device_info.has_value() == false) {
+    //     text_header.set("No module connected");
+    //     text_name.set("");
+    //     text_version.set("");
+    //     text_number_apps.set("");
+    //     text_app1_name.set("");
+    //     text_app2_name.set("");
+    //     text_app3_name.set("");
+    //     text_app4_name.set("");
+    //     text_app5_name.set("");
+    //     return;
+    // }
 
-    std::string btnText = (std::string) "Module: " + device_info->module_name;
-    text_name.set(btnText);
-    text_version.set("Version: " + std::to_string(device_info->module_version));
-    text_number_apps.set("No# Apps: " + std::to_string(device_info->application_count));
+    // text_header.set("Module found");
 
-    for (uint32_t i = 0; i < device_info->application_count && i < 5; i++) {
-        auto appInfo = dev->getStandaloneAppInfo(i);
-        if (appInfo.has_value() == false) {
-            continue;
-        }
+    // std::string btnText = (std::string) "Module: " + device_info->module_name;
+    // text_name.set(btnText);
+    // text_version.set("Version: " + std::to_string(device_info->module_version));
+    // text_number_apps.set("No# Apps: " + std::to_string(device_info->application_count));
 
-        std::string btnText = (std::string) "App " + std::to_string(i + 1) + ": " + (const char*)appInfo->app_name;
+    // for (uint32_t i = 0; i < device_info->application_count && i < 5; i++) {
+    //     auto appInfo = dev->getStandaloneAppInfo(i);
+    //     if (appInfo.has_value() == false) {
+    //         continue;
+    //     }
 
-        switch (appInfo->menu_location) {
-            case app_location_t::UTILITIES:
-                btnText += " (Utilities)";
-                break;
-            case app_location_t::RX:
-                btnText += " (RX)";
-                break;
-            case app_location_t::TX:
-                btnText += " (TX)";
-                break;
-            case app_location_t::TRX:
-                btnText += " (TRX)";
-                break;
-            case app_location_t::SETTINGS:
-                btnText += " (Settings)";
-                break;
-            case app_location_t::DEBUG:
-                btnText += " (Debug)";
-                break;
-            case app_location_t::HOME:
-                btnText += " (Home)";
-                break;
-            case app_location_t::GAMES:
-                btnText += " (Games)";
-                break;
-        }
+    //     std::string btnText = (std::string) "App " + std::to_string(i + 1) + ": " + (const char*)appInfo->app_name;
 
-        switch (i) {
-            case 0:
-                text_app1_name.set(btnText);
-                break;
-            case 1:
-                text_app2_name.set(btnText);
-                break;
-            case 2:
-                text_app3_name.set(btnText);
-                break;
-            case 3:
-                text_app4_name.set(btnText);
-                break;
-            case 4:
-                text_app5_name.set(btnText);
-                break;
-        }
-    }
+    //     switch (appInfo->menu_location) {
+    //         case app_location_t::UTILITIES:
+    //             btnText += " (Utilities)";
+    //             break;
+    //         case app_location_t::RX:
+    //             btnText += " (RX)";
+    //             break;
+    //         case app_location_t::TX:
+    //             btnText += " (TX)";
+    //             break;
+    //         case app_location_t::TRX:
+    //             btnText += " (TRX)";
+    //             break;
+    //         case app_location_t::SETTINGS:
+    //             btnText += " (Settings)";
+    //             break;
+    //         case app_location_t::DEBUG:
+    //             btnText += " (Debug)";
+    //             break;
+    //         case app_location_t::HOME:
+    //             btnText += " (Home)";
+    //             break;
+    //         case app_location_t::GAMES:
+    //             btnText += " (Games)";
+    //             break;
+    //     }
+
+    //     switch (i) {
+    //         case 0:
+    //             text_app1_name.set(btnText);
+    //             break;
+    //         case 1:
+    //             text_app2_name.set(btnText);
+    //             break;
+    //         case 2:
+    //             text_app3_name.set(btnText);
+    //             break;
+    //         case 3:
+    //             text_app4_name.set(btnText);
+    //             break;
+    //         case 4:
+    //             text_app5_name.set(btnText);
+    //             break;
+    //     }
+    // }
 }
 
 }  // namespace ui

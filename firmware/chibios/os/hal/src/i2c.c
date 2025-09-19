@@ -203,8 +203,11 @@ msg_t i2cMasterTransmitTimeout(I2CDriver *i2cp,
   chSysLock();
   i2cp->errors = I2CD_NO_ERROR;
   i2cp->state = I2C_ACTIVE_TX;
-  rdymsg = i2c_lld_master_transmit_timeout(i2cp, addr, txbuf, txbytes,
-                                           rxbuf, rxbytes, timeout);
+  rdymsg = i2c_lld_master_transmit_timeout(i2cp, addr, txbuf, txbytes,rxbuf, rxbytes, timeout);
+  
+  //默认返回都是对的
+  // i2cp->state = I2C_READY;
+                                        
   if (rdymsg == RDY_TIMEOUT)
     i2cp->state = I2C_LOCKED;
   else
@@ -253,6 +256,8 @@ msg_t i2cMasterReceiveTimeout(I2CDriver *i2cp,
   i2cp->errors = I2CD_NO_ERROR;
   i2cp->state = I2C_ACTIVE_RX;
   rdymsg = i2c_lld_master_receive_timeout(i2cp, addr, rxbuf, rxbytes, timeout);
+  // 这里先默认都返回true?
+  // i2cp->state = I2C_READY;
   if (rdymsg == RDY_TIMEOUT)
     i2cp->state = I2C_LOCKED;
   else

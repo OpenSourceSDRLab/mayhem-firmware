@@ -37,62 +37,6 @@ Style Style::invert() const {
 }
 
 
-static void convert_8x16_to_12x16(const uint8_t* src, uint16_t* dst) {
-    const uint8_t repeat_map[8] = {2, 2, 1, 2, 1, 1, 2, 1};  // 水平放大规则：总共扩展为12位
-
-    for (int y = 0; y < 16; ++y) {
-        uint8_t row = src[y];
-        uint16_t expanded_row = 0;
-        int bit_pos = 11;  // 从高位向低位填充
-
-        for (int bit = 0; bit < 8; ++bit) {
-            uint8_t src_bit = (row >> (7 - bit)) & 1;
-            for (int r = 0; r < repeat_map[bit]; ++r) {
-                if (src_bit && bit_pos >= 0) {
-                    expanded_row |= (1 << bit_pos);
-                }
-                --bit_pos;
-            }
-        }
-
-        dst[y] = expanded_row;  // 每行只写一次（共16行）
-    }
-}
-
-
-
-static void convert_8x16_to_12x24(const uint8_t* src, uint16_t* dst) {
-    const uint8_t h_repeat[8] = {2, 2, 1, 2, 1, 1, 2, 1}; // 8列变12列
-    const uint8_t v_repeat[16] = {
-        2, 2, 2, 2, 1, 1, 2, 1,
-        2, 1, 1, 1, 1, 1, 2, 2  // 保证视觉均匀，底部不空洞
-    };
-
-    int dst_row_index = 0;
-
-    for (int y = 0; y < 16; ++y) {
-        uint8_t row = src[y];
-        uint16_t expanded_row = 0;
-        int bit_pos = 11; // 左边高位
-
-        // 水平方向扩展：构造 12-bit 行
-        for (int bit = 0; bit < 8; ++bit) {
-            uint8_t pixel = (row >> (7 - bit)) & 1;
-            for (int r = 0; r < h_repeat[bit]; ++r) {
-                if (pixel && bit_pos >= 0) {
-                    expanded_row |= (1 << bit_pos);
-                }
-                --bit_pos;
-            }
-        }
-
-        // 垂直方向扩展：将此行重复 v_repeat[y] 次
-        for (int vr = 0; vr < v_repeat[y]; ++vr) {
-            dst[dst_row_index++] = expanded_row;
-        }
-    }
-}
-
 int Painter::draw_char_source(Point p, const Style& style, char c, uint8_t zoom_level) {
     const auto glyph = style.font.glyph(c);
 
@@ -100,15 +44,11 @@ int Painter::draw_char_source(Point p, const Style& style, char c, uint8_t zoom_
     return glyph.advance().x() * zoom_level;
 }
 
-// 目前看起来8*16变为 8*24好看一点
+
 int Painter::draw_char(Point p, const Style& style, char c, uint8_t zoom_level) {
     if( c >= 0x20 && c<=0x7E)
     {
         uint8_t idx = c-0x20;
-        // uint16_t test_char[]=
-        // {0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x079E, 0x010C, 0x0108, 0x0118, 0x0090, 0x0090, 0x00B0, 0x0060, 0x0060, 0x0020, 0x0020, 0x0020, 0x0014, 0x000C}
-        // ;
-        // display.draw_glyph_v2(p, ui::Size(12,24), style.foreground, style.background,(void *)test_char);
         display.draw_glyph_v2(p, ui::Size(12,24), style.foreground, style.background,(void *)font12x24[idx]);
         return p.x()* zoom_level;
     }
@@ -116,21 +56,6 @@ int Painter::draw_char(Point p, const Style& style, char c, uint8_t zoom_level) 
     {
         return p.x()* zoom_level;
     }
-    // else
-    // {
-    //     const auto glyph = style.font.glyph(c);
-    //     uint16_t output[32];
-    //     convert_8x16_to_12x16(glyph.pixels(), output);
-    //     display.draw_glyph_v2(p, ui::Size(12,16), style.foreground, style.background,output);
-    //     return p.x()* zoom_level;
-    // }
-
-    
-    // 原始部分
-    // const auto glyph = style.font.glyph(c);
-
-    // display.draw_glyph(p, glyph, style.foreground, style.background, zoom_level);
-    // return glyph.advance().x() * zoom_level;
 }
 
 
@@ -166,15 +91,15 @@ int Painter::draw_string(Point p, const Style& style, std::string_view text) {
 }
 
 
-/// @brief 这个函数的目的是在于适配text窗体的字体大小
-/// @param p 
-/// @param style 
-/// @param text 
-/// @param fit_size 
+/// @brief for fit new screen 
+/// @param p source arg
+/// @param style source arg
+/// @param text source arg
+/// @param fit_size 0 for old paint function or 1 for new paint function
 /// @return 
 int Painter::draw_string_with_fitsize(Point p, const Style& style, std::string_view text,int fit_size)
 {
-    // 这里进行最原始的渲染
+    // source
     if(fit_size == 0)
     {
         return draw_string_orgin(p, style.font, style.foreground, style.background, text);
@@ -209,30 +134,55 @@ int Painter::draw_string(
             else {
                 if( c >= 0x20 && c<=0x7E)
                 {
+                    // new font width
                     int tt_width = 12;
+                    // get new font idx
                     uint8_t idx = c-0x20;
-                    
-                    // uint16_t test_char[]=
-                    // {0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x079E, 0x010C, 0x0108, 0x0118, 0x0090, 0x0090, 0x00B0, 0x0060, 0x0060, 0x0020, 0x0020, 0x0020, 0x0014, 0x000C}
-                    // ;
-                    // display.draw_glyph_v2(p, ui::Size(12,24), foreground,background,(void *) test_char);
+                    // show new font
                     display.draw_glyph_v2(p, ui::Size(12,24), foreground,background,(void *) font12x24[idx]);
                     p += Point(tt_width,0);
                     width+=tt_width;
                 }
+            }
+        }
+    }
+    return width;
+}
 
-                // 原始部分
-                // display.draw_glyph(p, glyph, pen, background);
-                // const auto advance = glyph.advance();
+int Painter::draw_string_source(
+    Point p,
+    const Font& font,
+    Color foreground,
+    Color background,
+    std::string_view text) {
+    bool escape = false;
+    size_t width = 0;
+    Color pen = foreground;
 
-                // p += advance;
-                // width += advance.x();
+    for (auto c : text) {
+        if (escape) {
+            if (c < std::size(term_colors))
+                pen = term_colors[(uint8_t)c];
+            else
+                pen = foreground;
+            escape = false;
+        } else {
+            if (c == '\x1B') {
+                escape = true;
+            } else {
+                const auto glyph = font.glyph(c);
+                display.draw_glyph(p, glyph, pen, background);
+                const auto advance = glyph.advance();
+                p += advance;
+                width += advance.x();
             }
         }
     }
 
     return width;
 }
+
+
 
 void Painter::draw_bitmap(Point p, const Bitmap& bitmap, Color foreground, Color background) {
     // If bright foreground colors on white background, darken the foreground color to improve visibility

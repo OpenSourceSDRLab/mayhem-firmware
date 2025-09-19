@@ -75,6 +75,7 @@ class Painter {
     int draw_string_with_fitsize(Point p, const Style& style, std::string_view text,int fit_size=0);
     int draw_string(Point p, const Style& style, std::string_view text);
     int draw_string(Point p, const Font& font, Color foreground, Color background, std::string_view text);
+    int draw_string_source(Point p, const Font& font, Color foreground, Color background, std::string_view text);
 
     void draw_bitmap(Point p, const Bitmap& bitmap, Color background, Color foreground);
 

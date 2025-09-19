@@ -329,6 +329,7 @@ set(CPPSRC
 	${HACKRF_CPLD_DATA_CPP}
 	ui_external_items_menu_loader.cpp
 	view_factory_base.cpp
+	# apps/my_test.cpp
 )
 
 set_source_files_properties(${CPPSRC} PROPERTIES COMPILE_FLAGS -flto) # Add lto flag to the non-external sources only

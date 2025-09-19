@@ -414,10 +414,12 @@ class ADSBRxView : public View {
     /* The key of the entry in the details view if shown. */
     AircraftRecentEntry::Key detail_key{AircraftRecentEntry::invalid_key};
     ADSBRxDetailsView* details_view{nullptr};
-    // 现在测试字体高度都为32
+    
+    // new UI font height is 24
+    // and the label have default boom tag for fit new LCD ILI9488
+    // UI COLUNM 1
     Labels labels{
         {
-            // {0 * 8, 0 * 8}, "LNA:   VGA:   AMP:", Theme::getInstance()->fg_light->foreground
             {0 * ui::new_font_width, 0 * ui::new_font_height}, "LNA:   VGA:   AMP:", Theme::getInstance()->fg_light->foreground
         }
     };
@@ -429,32 +431,27 @@ class ADSBRxView : public View {
 
     RFAmpField field_rf_amp{
         {18 * ui::new_font_width, 0 * ui::new_font_height}};
-
-    // 类似进度跳的面板
+        
     RSSI rssi{
-        // {20 * 8, 4, 7 * 8, 8},
-         {20 * ui::new_font_width, ui::new_font_height/4, 4 * ui::new_font_width, ui::new_font_height/2},
+        {20 * ui::new_font_width, ui::new_font_height/4, 4 * ui::new_font_width, ui::new_font_height/2},
     };
 
     AudioVolumeField field_volume{
         {screen_width - 2 * ui::new_font_width, 0 * 16}};
     
 
-    // 第二行开始位置
+
+    // // UI COLUNM 2
     ActivityDot status_frame{
-        // {27 * 8 + 2, 5, 2, 2},
         {27 * ui::new_font_width + 2, ui::new_font_height/4+1, 2, 2},
         Theme::getInstance()->bg_darkest->foreground,
     };
     
 
     ActivityDot status_good_frame{
-        // {27 * 8 + 2, 9, 2, 2},
         {27 * ui::new_font_width + 2, ui::new_font_height + 1, 2, 2},
         Theme::getInstance()->fg_green->foreground,
     };
-
-    
 
     MessageHandlerRegistration message_handler_frame{
         Message::ID::ADSBFrame,

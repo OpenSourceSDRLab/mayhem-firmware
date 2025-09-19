@@ -205,17 +205,55 @@ class IO {
         }
     }
 
+    //这块有问题？
+    // source code
+    // void lcd_read_bytes(uint8_t* byte, size_t byte_count) {
+    //     size_t word_count = byte_count / 2;
+    //     while (word_count) {
+    //         const auto word = lcd_read_data();
+    //         *(byte++) = word >> 8;
+    //         *(byte++) = word >> 0;
+    //         word_count--;
+    //     }
+    //     if (byte_count & 1) {
+    //         const auto word = lcd_read_data();
+    //         *(byte++) = word >> 8;
+    //     }
+    // }
+    // 数据是BGR565
+    // 结合lcd init推断结构,这一块可以图像16-bit?
     void lcd_read_bytes(uint8_t* byte, size_t byte_count) {
-        size_t word_count = byte_count / 2;
-        while (word_count) {
-            const auto word = lcd_read_data();
-            *(byte++) = word >> 8;
-            *(byte++) = word >> 0;
-            word_count--;
-        }
-        if (byte_count & 1) {
-            const auto word = lcd_read_data();
-            *(byte++) = word >> 8;
+        size_t word_count = byte_count / 3;
+        for(size_t i=0;i<word_count;i++)
+        {
+            uint32_t word = lcd_read_data();
+            // 假设目前不是高六位
+            // uint8_t r = (word >> 16) & 0xfc;; // 高5位
+            // uint8_t g = (word >> 8)  & 0xfc;;  // 中6位
+            // uint8_t b = word & 0xfc;
+            // 直接返回最原始的
+            uint8_t r = (word >> 16);// 高5位
+            uint8_t g = (word >> 8);  // 中6位
+            uint8_t b = word;
+            *(byte++) = r ;
+            *(byte++) = g ;
+            *(byte++) = b ;
+        
+            // uint8_t r = (word >> 11) & 0x1F; // 高5位
+            // uint8_t g = (word >> 5) & 0x3F;  // 中6位
+            // uint8_t b = word & 0x1F;
+
+            // r = (r << 3) | (r >> 2);
+            // g = (g << 2) | (g >> 4);
+            // b = (b << 3) | (b >> 2);
+            
+            // *(byte++) = r & 0xfc;
+            // *(byte++) = g & 0xfc;
+            // *(byte++) = b & 0xfc;
+            // *(byte++) = r & 0x1f;
+            // *(byte++) = g & 0x3f;
+            // *(byte++) = b & 0x1f;
+
         }
     }
 
@@ -398,36 +436,48 @@ class IO {
         __asm__("nop");
         lcd_wr_deassert(); /* Complete write operation */
     }
-
+    // source
     uint32_t lcd_read_data() {
         // NOTE: Assumes ADDR=1 from command phase.
+        
         dir_read();
 
         /* Start read operation */
         lcd_rd_assert();
         /* Wait for passthrough data(15:8) to settle -- ~16ns (3 cycles) typical */
         /* Wait for read control L duration (355ns) */
+        // halPolledDelay(71);  // 355ns
         halPolledDelay(71);  // 355ns
         const auto value_high = data_read();
-
         /* Latch data[7:0] */
         lcd_rd_deassert();
         /* Wait for latched data[7:0] to settle -- ~26ns (5 cycles) typical */
         /* Wait for read control H duration (90ns) */
-        halPolledDelay(18);  // 90ns
-
+        // halPolledDelay(18);  // 90ns
+        halPolledDelay(71);  // 90ns
         const auto value_low = data_read();
-        uint32_t original_value = (value_high << 8) | value_low;
 
-        if (lcd_normally_black) return original_value;
+        lcd_rd_deassert();
+        halPolledDelay(71);  // 90ns
+        const auto value_last_low = data_read();
 
-        if (dark_cover_enabled) {
-            // this is read data, so if the fake brightness is enabled AKA get_dark_cover() == true,
-            // then shift to back side AKA UNDARKENED_PIXEL, to prevent read shifted darkern info
-            original_value = UNDARKENED_PIXEL(original_value, brightness);
-        }
+        // source之前代码
+        // uint32_t original_value = (value_high << 8) | value_low;
+        // 读取三字节
+        uint32_t original_value = (value_high << 16) | value_low << 8 | value_last_low;
+        // uint32_t original_value = (value_low << 8) | value_high;
+        // 先注释掉这两个if
+        // if (lcd_normally_black) return original_value;
+
+        // if (dark_cover_enabled) {
+        //     // this is read data, so if the fake brightness is enabled AKA get_dark_cover() == true,
+        //     // then shift to back side AKA UNDARKENED_PIXEL, to prevent read shifted darkern info
+        //     original_value = UNDARKENED_PIXEL(original_value, brightness);
+        // }
         return original_value;
     }
+    
+    
 
     void io_write(const bool address, const uint_fast16_t value) {
         data_write_low(value);

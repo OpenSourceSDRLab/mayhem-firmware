@@ -1080,7 +1080,7 @@ void SetBatteryView::focus() {
 
 SettingsMenuView::SettingsMenuView(NavigationView& nav)
     : nav_(nav) {
-    set_max_rows(3);  // allow wider buttons
+    set_max_rows(2);  // allow wider buttons
 }
 
 void SettingsMenuView::on_populate() {
@@ -1093,7 +1093,9 @@ void SettingsMenuView::on_populate() {
     add_items({
         {"App Settings", ui::Color::dark_cyan(), &bitmap_icon_notepad, [this]() { nav_.push<AppSettingsView>(); }},
         {"Audio", ui::Color::dark_cyan(), &bitmap_icon_speaker, [this]() { nav_.push<SetAudioView>(); }},
+        // 这里是触控校对逻辑
         {"Calibration", ui::Color::dark_cyan(), &bitmap_icon_options_touch, [this]() { nav_.push<TouchCalibrationView>(); }},
+        
         {"TouchThreshold", ui::Color::dark_cyan(), &bitmap_icon_options_touch, [this]() { nav_.push<SetTouchscreenThresholdView>(); }},
         {"Config Mode", ui::Color::dark_cyan(), &bitmap_icon_clk_ext, [this]() { nav_.push<SetConfigModeView>(); }},
         {"Converter", ui::Color::dark_cyan(), &bitmap_icon_options_radio, [this]() { nav_.push<SetConverterSettingsView>(); }},

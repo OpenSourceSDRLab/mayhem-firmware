@@ -81,7 +81,7 @@ void MenuItemView::paint(Painter& painter) {
         .background = final_bg_color,
         .foreground = final_item_color};
 
-    painter.draw_string(
+    painter.draw_string_with_fitsize(
         {r.location().x() + offset_x, r.location().y() + (r.size().height() - 16) / 2},
         text_style,
         item->text);

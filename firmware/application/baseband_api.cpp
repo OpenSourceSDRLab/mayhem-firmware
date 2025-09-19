@@ -311,9 +311,11 @@ void set_rds_data(const uint16_t message_length) {
     send_message(&message);
 }
 
-void set_spectrum(const size_t sampling_rate, const size_t trigger) {
-    const WidebandSpectrumConfigMessage message{
-        sampling_rate, trigger};
+void set_spectrum(const size_t sampling_rate, const size_t trigger)
+{
+    
+    const WidebandSpectrumConfigMessage message{sampling_rate, trigger};
+    
     send_message(&message);
 }
 
@@ -422,7 +424,8 @@ void spectrum_streaming_start() {
 
 void spectrum_streaming_stop() {
     SpectrumStreamingConfigMessage message{
-        SpectrumStreamingConfigMessage::Mode::Stopped};
+        SpectrumStreamingConfigMessage::Mode::Stopped
+    };
     send_message(&message);
 }
 

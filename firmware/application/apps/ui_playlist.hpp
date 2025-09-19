@@ -33,6 +33,8 @@
 #include "ui_spectrum.hpp"
 #include "ui_transmitter.hpp"
 #include "ui_widget.hpp"
+//加上一个debug函数
+#include "usb_serial_asyncmsg.hpp"
 
 #include <string>
 #include <memory>
@@ -42,8 +44,12 @@ namespace ui {
 
 class PlaylistView : public View {
    public:
-    PlaylistView(NavigationView& nav);
+    // 首次会调用这里
+   PlaylistView(NavigationView& nav);
+
+   // 测试调用的是哪个
     PlaylistView(NavigationView& nav, const std::filesystem::path& path);
+
     ~PlaylistView();
     bool initialized_ = false;
     // Following 2 called by 'NavigationView::update_view' after view is created.
@@ -63,6 +69,7 @@ class PlaylistView : public View {
 
     // More header == less spectrum view.
     // static constexpr ui::Dim header_height = 6 * 16;
+    
     static constexpr ui::Dim header_height = 8 * 24;
 
     struct playlist_entry {
@@ -103,9 +110,6 @@ class PlaylistView : public View {
     void send_current_track();
     void stop();
 
-    // 模仿ui_navigation添加此函数
-    // 没用
-    void free_view();
 
     void update_ui();
 
@@ -128,13 +132,17 @@ class PlaylistView : public View {
     };
 
     ProgressBar progressbar_track{
-        {ui::screen_width - 18 *8, 1 * ui::new_font_height,  18 * 8, ui::new_font_height}
+        // {ui::screen_width - 18 *8, 1 * ui::new_font_height,  18 * 8, ui::new_font_height}
+        {ui::screen_width - 18 *8, 2 * ui::new_font_height,  18 * 8, 8}
+
+        
     };
 
     // (-1) to overlap with progressbar_track so there's
     // only 1 pixel between them instead of 2.
     ProgressBar progressbar_transmit{
-        {ui::screen_width - 18 *8, 2 * ui::new_font_height, 18 * 8, ui::new_font_height}
+        // {ui::screen_width - 18 *8, 2 * ui::new_font_height, 18 * 8, ui::new_font_height}
+        {ui::screen_width - 18 *8, 2 * ui::new_font_height+8,  18 * 8, 8}
     };
 
     Text text_duration{

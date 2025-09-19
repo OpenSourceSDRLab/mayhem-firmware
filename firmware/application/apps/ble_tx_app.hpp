@@ -279,7 +279,7 @@ class BLETxView : public View {
          {"SCAN_REQ", PKT_TYPE_SCAN_REQ},
          {"SCAN_RSP", PKT_TYPE_SCAN_RSP},
          {"CONNECT_REQ", PKT_TYPE_CONNECT_REQ}},
-         false,true 
+         false,false 
     
     };
     // 第3行结束

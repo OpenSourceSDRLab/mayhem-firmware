@@ -415,7 +415,8 @@ class MicTXView : public View {
         true};
 
     Image tx_icon{
-        {FIT_OFFSET + 6 * 8, 31 * 8 + 4, 16, 16},
+        // {FIT_OFFSET + 6 * 8, 31 * 8 + 4, 16, 16},
+        {FIT_OFFSET + 6 * 8, 3 * 16 + 16* ui::new_font_height ,16, 16},
         &bitmap_icon_microphone,
         Theme::getInstance()->bg_darkest->background,
         Theme::getInstance()->bg_darkest->background};

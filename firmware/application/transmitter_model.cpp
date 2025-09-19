@@ -102,6 +102,8 @@ void TransmitterModel::enable() {
     update_tx_gain();
 
     led_tx.on();
+
+    // 为什么设置成黑屏？？
     signal_token_tick_second = rtc_time::signal_tick_second += [this]() {
         this->on_tick_second();
     };

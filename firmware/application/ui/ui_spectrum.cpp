@@ -280,9 +280,21 @@ bool FrequencyScale::on_touch(const TouchEvent touch) {
 // preventing flicker from drawing. Would use more RAM however.
 
 void WaterfallWidget::on_show() {
+
+    //不行全黑尝试
+    // 先进行移位复制
     clear();
     const auto screen_r = screen_rect();
+    // 这里打印看看效果
+
+    std::string debug_string = "call aterfallWidget::on_show() the top bottom "+
+    std::to_string(screen_r.top()) + ","+std::to_string(screen_r.bottom())+"\n" ;
+    UsbSerialAsyncmsg::asyncmsg(debug_string);
+    //这里是16,480 -- source code
     display.scroll_set_area(screen_r.top(), screen_r.bottom());
+    clear();
+    //debug modify
+    // display.scroll_set_area(ui::screen_height/2, screen_r.bottom());
 }
 
 void WaterfallWidget::on_hide() {
@@ -322,9 +334,14 @@ void WaterfallWidget::on_channel_spectrum(
 
     const auto draw_y = display.scroll(1);
 
+    // std::string debug_string = "WaterfallWidget::on_channel_spectrum x,y "+
+    // std::to_string(0)+ "," +std::to_string(draw_y)+"\n";
+    // UsbSerialAsyncmsg::asyncmsg(debug_string);
+
     display.draw_pixels(
         {{0, draw_y}, {pixel_row.size(), 1}},
         pixel_row);
+    
 }
 
 bool WaterfallWidget::on_touch(const TouchEvent event) {
@@ -337,6 +354,12 @@ bool WaterfallWidget::on_touch(const TouchEvent event) {
 }
 
 void WaterfallWidget::clear() {
+
+    std::string debug_string = "WaterfallWidget::clear() and the x,y,width,height is "+
+    std::to_string(screen_rect().location().x())+ "," +std::to_string(screen_rect().location().y())+"," +
+    std::to_string(screen_rect().size().width()) + ","+std::to_string(screen_rect().size().height())+"\n" ;
+    UsbSerialAsyncmsg::asyncmsg(debug_string);
+
     display.fill_rectangle(
         screen_rect(),
         Color::black());
@@ -390,14 +413,22 @@ void WaterfallView::start() {
 
 void WaterfallView::stop() {
     if (running_) {
+        std::string debug_string = "WaterfallView::stop() on running and stop it\n";
+        UsbSerialAsyncmsg::asyncmsg(debug_string);
         baseband::spectrum_streaming_stop();
         running_ = false;
     }
 }
 
 void WaterfallView::show_audio_spectrum_view(const bool show) {
-    if ((audio_spectrum_view && show) || (!audio_spectrum_view && !show)) return;
+    // 这里会直接跳出
+    if ((audio_spectrum_view && show) || (!audio_spectrum_view && !show)) 
+    {
+        return;
+    }
 
+    std::string debug_string = "test for show_audio_spectrum_view\n";
+    UsbSerialAsyncmsg::asyncmsg(debug_string);
     if (show) {
         audio_spectrum_view = std::make_unique<AudioSpectrumView>(audio_spectrum_view_rect);
         add_child(audio_spectrum_view.get());
@@ -411,6 +442,7 @@ void WaterfallView::show_audio_spectrum_view(const bool show) {
 }
 
 void WaterfallView::update_widgets_rect() {
+    // change there
     if (audio_spectrum_view) {
         // 这是瀑布图上面的信息？？
         frequency_scale.set_parent_rect({0, audio_spectrum_height, screen_rect().width(), scale_height});
@@ -420,13 +452,23 @@ void WaterfallView::update_widgets_rect() {
         frequency_scale.set_parent_rect({0, 0, screen_rect().width(), scale_height});
         waterfall_widget.set_parent_rect(waterfall_normal_rect);
     }
+    //这是什么？
+    // frequency_scale.set_parent_rect({0, 0, screen_rect().width(), scale_height});
+    // // 这又是什么？
+    // // 这里设置会存在一些问题
+    // // 目前想把这里永远设置为顶层看看效果如何
+    // waterfall_widget.set_parent_rect(waterfall_normal_rect);
+    // 这里的on_show会有很大的问题
+    // 注释掉这里看看
     waterfall_widget.on_show();
 }
 
 void WaterfallView::set_parent_rect(const Rect new_parent_rect) {
     View::set_parent_rect(new_parent_rect);
-
+    // source code is here
     waterfall_normal_rect = {0, scale_height, new_parent_rect.width(), new_parent_rect.height() - scale_height};
+    
+    // waterfall_normal_rect = {0, 0, new_parent_rect.width(), 240};
     waterfall_reduced_rect = {0, audio_spectrum_height + scale_height, new_parent_rect.width(), new_parent_rect.height() - scale_height - audio_spectrum_height};
 
     update_widgets_rect();
