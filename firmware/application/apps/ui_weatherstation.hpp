@@ -134,32 +134,33 @@ class WeatherView : public View {
     WeatherRecentEntries recent{};
 
     OptionsField options_temperature{
-        {10 * ui::new_font_width, 0 * 16},
+        {10 * ui::new_font_width, 0 * ui::new_font_height},
         2,
         {{STR_DEGREES_C, 0},
          {STR_DEGREES_F, 1}}};
 
     RFAmpField field_rf_amp{
-        {13 * ui::new_font_width, 0 * 16}};
+        {13 * ui::new_font_width, 0 * ui::new_font_height}
+    };
     LNAGainField field_lna{
-        {15 *ui::new_font_width, 0 * 16}};
+        {15 *ui::new_font_width, 0 * ui::new_font_height}
+    };
     VGAGainField field_vga{
-        {18 * 8, 0 * 16}};
+        {18 * 8, 0 * ui::new_font_height}
+    };
     RSSI rssi{
-        // {21 * 8, 0, 6 * 8, 4}
         {21 * ui::new_font_width, 0, 4 * 8, ui::new_font_height}
     };
 
     AudioVolumeField field_volume{
-        {screen_width - 2 * ui::new_font_width, 0 * 16}};
+        {screen_width - 2 * ui::new_font_width, 0 * ui::new_font_height}
+    };
 
-    RxFrequencyField field_frequency{
-        {0 * 8, 0 * 16},
-        nav_};
+    RxFrequencyField field_frequency{{0 * 8, 0 * ui::new_font_height},nav_};
 
     SignalToken signal_token_tick_second{};
 
-    // butto最好设置的大小是字体的二倍
+    // button height use x2 font size look well.
     Button button_clear_list{
         {0, ui::new_font_height, 7 * ui::new_font_width, ui::new_font_height*2},
         "Clear"};
@@ -174,13 +175,7 @@ class WeatherView : public View {
 
     std::unique_ptr<WeatherLogger> logger{};
 
-    // 这里同ERT RX
     const RecentEntriesColumns columns{{
-        // {"Type", 10},
-        // {"Temp", 5},
-        // {"Hum", 4},
-        // {"Ch", 3},
-        // {"Age", 4},
         {"Type", 6},
         {"Temp", 6},
         {"Hum", 5},

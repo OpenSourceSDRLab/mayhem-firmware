@@ -238,19 +238,19 @@ class POCSAGAppView : public View {
     uint16_t packet_count = 0;
 
     RxFrequencyField field_frequency{
-        {0 * 8, 0 * 8},
+        {0 * 8, 0 * ui::new_font_height},
         nav_};
 
     RFAmpField field_rf_amp{
-        {11 * ui::new_font_width, 0 * 16}
+        {11 * ui::new_font_width, 0 * ui::new_font_height}
     };
 
     LNAGainField field_lna{
-        { 13 * ui::new_font_width , 0 * 16 }
+        { 13 * ui::new_font_width , 0 * ui::new_font_height }
     };
 
     VGAGainField field_vga{
-        {16 * ui::new_font_width, 0 * 16}
+        {16 * ui::new_font_width, 0 * 160 * ui::new_font_height}
     };
     RSSI rssi{
         {19 * ui::new_font_width, 0, 6 * 8, 8}};
@@ -258,7 +258,7 @@ class POCSAGAppView : public View {
         {19 * ui::new_font_width, 8, 6 * 8, 8}};
 
     NumberField field_squelch{
-        {25 * ui::new_font_width, 0 * 16},
+        {25 * ui::new_font_width, 0 * ui::new_font_height},
         2,
         {0, 99},
         1,
@@ -267,7 +267,7 @@ class POCSAGAppView : public View {
     };
 
     AudioVolumeField field_volume{
-        {screen_width - 2 * ui::new_font_width, 0 * 16}
+        {screen_width - 2 * ui::new_font_width, 0 * ui::new_font_height}
     };
 
     Image image_status{
@@ -282,18 +282,17 @@ class POCSAGAppView : public View {
         true
     };
 
-    /////////////////////////////////////////////////////////////////////////
     BitsIndicator widget_bits{
-        {ui::new_font_width * 4 + 9, 1 * ui::new_font_height}};
+        {ui::new_font_width * 4 + 9, 1 * ui::new_font_height}
+    };
 
     FrameIndicator widget_frames{
-        // {ui::new_font_width * 4 + 4, 1 * ui::new_font_height}};
-        {ui::new_font_width * 4 + 8, 1 * ui::new_font_height}};
+        {ui::new_font_width * 4 + 8, 1 * ui::new_font_height}
+    };
 
     BaudIndicator widget_baud{
-        {ui::new_font_width * 4 + 10, 1 * ui::new_font_height+3}};
-
-    /////////////////////////////////////////////////////////////////////////
+        {ui::new_font_width * 4 + 10, 1 * ui::new_font_height+3}
+    };
 
     Button button_filter_last{
         {6 * ui::new_font_width, 1 * ui::new_font_height, 12 * ui::new_font_width, ui::new_font_height},
@@ -302,8 +301,7 @@ class POCSAGAppView : public View {
     Button button_config{
         {19 * ui::new_font_width, 1 * ui::new_font_height, 8 * ui::new_font_width, ui::new_font_height},
         "Config"};
-
-    // 54 == status bar (16) + top controls (2 * 16 + 6).
+        
     Console console{
         {0, 2 * ui::new_font_height + 6, screen_width, screen_height - 54}};
 

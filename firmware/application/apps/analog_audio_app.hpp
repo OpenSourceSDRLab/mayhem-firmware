@@ -262,65 +262,41 @@ class AnalogAudioView : public View {
         }};
 
 
-    //这里用作更替 option标签进行不同显示
-    const Rect options_view_rect{0 * ui::new_font_width, 1 * ui::new_font_height, screen_width, 1 * ui::new_font_height};
-    
+    const Rect options_view_rect{0 * ui::new_font_width, 1 * ui::new_font_height, screen_width, 1 * ui::new_font_height};    
     const Rect nbfm_view_rect{0 * ui::new_font_width, 1 * ui::new_font_height, 18 * ui::new_font_width, 1 * ui::new_font_height};
 
     size_t spec_bw_index = 0;
     uint32_t spec_bw = 20000000;
     uint16_t spec_trigger = 63;
 
-    
-
-   
-
-    // 0行 列数占用 5~？
     RxFrequencyField field_frequency{
-        {5 * ui::new_font_width, 0 * 16},
+        {5 * ui::new_font_width, 0 * ui::new_font_height},
         nav_};
 
     LNAGainField field_lna{
-        {15 * ui::new_font_width, 0 * 16}};
+        {15 * ui::new_font_width, 0 * ui::new_font_height}};
 
     VGAGainField field_vga{
-        {18 * ui::new_font_width, 0 * 16}};
+        {18 * ui::new_font_width, 0 * ui::new_font_height}};
 
     RSSI rssi{
-        // {21 * ui::new_font_width, 
-        // 0, 
-        // 3 * ui::new_font_width, 
-        // 8}
         {screen_width - 2 * ui::new_font_width,0,3 * ui::new_font_width,8}
     };
 
     Channel channel{
-        // {21 * ui::new_font_width, 
-        // 9, 
-        // 3 * ui::new_font_width, 
-        // 8}
         {screen_width - 2 * ui::new_font_width,9,3 * ui::new_font_width,8}
     };
 
     Audio audio{
-        // {
-        //     21 * ui::new_font_width, 
-        //     17, 
-        //     3 * ui::new_font_width, 
-        //     8
-        // }
         {screen_width - 2 * ui::new_font_width,17,3 * ui::new_font_width,8}
     };
 
-    // 移动到RSS的嘴边看看效果
     AudioVolumeField field_volume{
-        // {screen_width - 2 * ui::new_font_width, 0 * 16}
-        {21 * ui::new_font_width, 
-        0}
+        {21 * ui::new_font_width, 0}
     };
-    // 0行 列数0~3 
+
     OptionsField options_modulation{
-        {0 * 8, 0 * 16},
+        {0 * 8, 0 * ui::new_font_height},
         4,
         {
             {" AM ", toUType(ReceiverModel::Mode::AMAudio)},

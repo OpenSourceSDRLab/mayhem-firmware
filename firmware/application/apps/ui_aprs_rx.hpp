@@ -209,15 +209,15 @@ class APRSRxView : public View {
     std::string str_log{""};
 
     RFAmpField field_rf_amp{
-        {13 * ui::new_font_width, 0 * 16}
+        {13 * ui::new_font_width, 0 * ui::new_font_height}
     };
 
     LNAGainField field_lna{
-        {15 * ui::new_font_width , 0 * 16}
+        {15 * ui::new_font_width , 0 * ui::new_font_height}
     };
 
     VGAGainField field_vga{
-        {18 * ui::new_font_width , 0 * 16}
+        {18 * ui::new_font_width , 0 * ui::new_font_height}
     };
 
     RSSI rssi{
@@ -226,7 +226,7 @@ class APRSRxView : public View {
         {21 * ui::new_font_width, 9, 3 * 8, 8}};
 
     AudioVolumeField field_volume{
-        {screen_width - 2 * ui::new_font_width, 0 * 16}};
+        {screen_width - 2 * ui::new_font_width, 0 * ui::new_font_height}};
 
     OptionsField options_region{
         {0 * 8, 0 * 8},
@@ -248,10 +248,9 @@ class APRSRxView : public View {
     };
 
     FrequencyField field_frequency{
-        {3 * 8, 0 * 16}};
+        {3 * 8, 0 * ui::new_font_height}
+    };
 
-    // DEBUG
-    // 这里是一个是一个子控件集合
     RecordView record_view{
         {0 * 8, 1 * ui::new_font_height, screen_width, 1 * ui::new_font_height},
         u"AFS_????.WAV",

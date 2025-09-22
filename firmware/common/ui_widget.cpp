@@ -400,13 +400,8 @@ void Text::paint(Painter& painter) {
 
     if (text_view.length() > max_len)
         text_view = text_view.substr(0, max_len);
-    // source code
-    // painter.draw_string(
-    //     rect.location(),
-    //     s,
-    //     text_view);
-    // 这里增加一个逻辑
-    // 窗体的高度与字体大小一样就不需要增加比例参数，否则就设置一下即可
+        
+    // use boom tag for fit better UI size
     if(this->boom_tag == false)
     {
         painter.draw_string_with_fitsize(
@@ -421,22 +416,6 @@ void Text::paint(Painter& painter) {
         s,
         text_view,1);
     }
-    
-    // if(rect.height() == ui::new_font_height)
-    // {
-    //     painter.draw_string_with_fitsize(
-    //     rect.location(),
-    //     s,
-    //     text_view,1);
-    // }
-    // else
-    // {
-    //     painter.draw_string_with_fitsize(
-    //     rect.location(),
-    //     s,
-    //     text_view);
-    // }
-    
 }
 
 /* Labels ****************************************************************/

@@ -148,29 +148,26 @@ class ERTAppView : public View {
 
     static constexpr auto header_height = 1 * 24;
 
-    RxFrequencyField field_frequency{
-        {0 * 8, 0 * 16},
-        nav_};
+    RxFrequencyField field_frequency{{0 * 8, 0 * ui::new_font_height},nav_};
 
     RFAmpField field_rf_amp{
-        {13 * ui::new_font_width , 0 * 16}
+        {13 * ui::new_font_width ,0 * ui::new_font_height}
     };
 
     LNAGainField field_lna{
-        {15 * ui::new_font_width, 0 * 16}
+        {15 * ui::new_font_width, 0 * ui::new_font_height}
     };
 
     VGAGainField field_vga{
-        {18 * ui::new_font_width, 0 * 16}
+        {18 * ui::new_font_width, 0 * ui::new_font_height}
     };
 
     RSSI rssi{
-        // {21 * 8, 0, 6 * 8, 4},
         {21 *ui::new_font_width, 0, 4 * 8, ui::new_font_height},
     };
 
     AudioVolumeField field_volume{
-        {screen_width - 2 * ui::new_font_width, 0 * 16}};
+        {screen_width - 2 * ui::new_font_width, 0 * ui::new_font_height}};
 
     MessageHandlerRegistration message_handler_packet{
         Message::ID::ERTPacket,

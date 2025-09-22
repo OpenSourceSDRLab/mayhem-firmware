@@ -219,37 +219,28 @@ class SearchView : public View {
         {24 * 8, 3 * 16, 3 * 8, 16},
         "---",false};
 
-
-
-    // 这是可以变大的插件
     VuMeter vu_max{
-        // {1 * 8, 11 * 8 - 4, 3 * 8, 48}
         {1 * 8, 10 * 8 + ui::new_font_height, 3 * 8, 48},
         18,
         false};
 
     ProgressBar progress_timers{
-        // {6 * 8, 12 * 8, 6 * 8, 16}
         {6 * ui::new_font_width, 8*10+1*ui::new_font_height, 6 * 8, ui::new_font_height}
     };
 
-
     Text text_infos{
-        // {13 * 8, 12 * 8, 15 * 8, 16},
         {13 * ui::new_font_width, 8*10+1*ui::new_font_height, 15 * ui::new_font_width, ui::new_font_height},
         "Listening",
         true
     };
 
     Checkbox check_snap{
-        // {6 * 8, 15 * 8},
         {6 * ui::new_font_width, 8*10+2*ui::new_font_height+4},
         7,
         "Snap to:",
         false,true};
 
     OptionsField options_snap{
-        // {17 * 8, 15 * 8},  // Position
         {17 * ui::new_font_width, 8*10+2*ui::new_font_height+16},
         // Length
         7,
@@ -266,7 +257,6 @@ class SearchView : public View {
     };
 
     BigFrequency big_display{
-        // {4, 9 * 16, 28 * 8, 52},
         {4, 8*10+4*ui::new_font_height - 12,28 * 8 , 52},
         0};
 

@@ -122,20 +122,17 @@ class SubGhzDView : public View {
     SubGhzDRecentEntries recent{};
 
     RFAmpField field_rf_amp{
-        {13 * ui::new_font_width, 0 * 16}};
+        {13 * ui::new_font_width, 0 * ui::new_font_height}};
     LNAGainField field_lna{
-        {15 * ui::new_font_width, 0 * 16}};
+        {15 * ui::new_font_width, 0 * ui::new_font_height}};
     VGAGainField field_vga{
-        {18 * ui::new_font_width, 0 * 16}};
+        {18 * ui::new_font_width, 0 * ui::new_font_height}};
     
     RSSI rssi{
-        // {21 * 8, 0, 6 * 8, 4}
         {21 * ui::new_font_width, 0, 8 * 8, ui::new_font_height}
     };
     
-    RxFrequencyField field_frequency{
-        {0 * 8, 0 * 16},
-        nav_};
+    RxFrequencyField field_frequency{{0 * 8, 0 * ui::new_font_height},nav_};
 
     SignalToken signal_token_tick_second{};
 
@@ -156,10 +153,6 @@ class SubGhzDView : public View {
     std::unique_ptr<SubGhzDLogger> logger{};
 
     const RecentEntriesColumns columns{{
-        // {"Type", 19},
-        // {"Bits", 4},
-        // {"Age", 3},
-        // 这里与ble rx 一致
         {"Type ", 7},
         {"Bits ", 7},
         {"Age ", 6},

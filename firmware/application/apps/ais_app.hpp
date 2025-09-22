@@ -176,14 +176,11 @@ class AISAppView : public View {
     std::unique_ptr<AISLogger> logger{};
     
     const RecentEntriesColumns columns{{
-        // 计算方式 每个字符长度 比例 比如现在有个 1：2
-        //  就拿320/8 = 40 
-        //  40 /3 *1 = 13 *2=26
-        // 所以长度为 13 和 26
         {"MMSI", 13},
         {"Name/Call", 26},
     }};
-    // 这两个会在对应paint函数进行绘制
+
+
     AISRecentEntriesView recent_entries_view{columns, recent};
     AISRecentEntryDetailView recent_entry_detail_view{nav_};
 
@@ -197,7 +194,7 @@ class AISAppView : public View {
     };
 
     OptionsField options_channel{
-        {3 * ui::new_font_width, 0 * 16},
+        {3 * ui::new_font_width, 0 * ui::new_font_height},
         5,
         {
             {"87B", 161975000},
@@ -208,13 +205,13 @@ class AISAppView : public View {
     };
 
     RFAmpField field_rf_amp{
-        {13 * ui::new_font_width, 0 * 16}};
+        {13 * ui::new_font_width, 0 * ui::new_font_height}};
 
     LNAGainField field_lna{
-        {15 *  ui::new_font_width, 0 * 16}};
+        {15 *  ui::new_font_width, 0 * ui::new_font_height}};
 
     VGAGainField field_vga{
-        {18 *  ui::new_font_width, 0 * 16}};
+        {18 *  ui::new_font_width, 0 * ui::new_font_height}};
 
     RSSI rssi{
         {
@@ -225,12 +222,10 @@ class AISAppView : public View {
         },
     };
     
-    // 这个是ui的宽度
     AudioVolumeField field_volume{
-        {screen_width - 2 * ui::new_font_width, 0 * 16}};
+        {screen_width - 2 * ui::new_font_width, 0 * ui::new_font_height}};
 
     Channel channel{
-        // {21 * 8, 5, 6 * 8, 4},
         {21 * ui::new_font_width, ui::new_font_height/2+1, 4 * 8, ui::new_font_height/4},
     };
 

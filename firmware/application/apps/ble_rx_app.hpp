@@ -277,37 +277,33 @@ class BLERxView : public View {
     };
 
     RxFrequencyField field_frequency{
-        {6 * ui::new_font_width, 0 * 16},
+        {6 * ui::new_font_width, 0 * ui::new_font_height},
         nav_};
 
     RFAmpField field_rf_amp{
-        {16 * ui::new_font_width, 0 * 16}};
+        {16 * ui::new_font_width, 0 * ui::new_font_height}};
 
     LNAGainField field_lna{
-        {18 * ui::new_font_width, 0 * 16}};
+        {18 * ui::new_font_width, 0 * ui::new_font_height}};
 
     VGAGainField field_vga{
-        {21 * ui::new_font_width , 0 * 16}};
+        {21 * ui::new_font_width ,0 * ui::new_font_height}};
 
     RSSI rssi{
-        // {24 * 8, 0, 6 * 8, 4}
-        // 加长加高，左对其
         {24 * ui::new_font_width, 0, 4 * 8, 8}
     };
 
     Channel channel{
-        // {24 * 8, 5, 6 * 8, 4}
-        // 加长加高，左对其
         { 24 * ui::new_font_width, 9, 4 * 8, 8}
     };
-    //  上述第1行结束
 
     Labels label_sort{
         {
             {0 * 8, 1 * ui::new_font_height}, 
             "Sort:", 
             Theme::getInstance()->fg_light->foreground
-    }};
+        }
+    };
 
     OptionsField options_sort{
         {5 * ui::new_font_width, 1 * ui::new_font_height},
@@ -337,7 +333,6 @@ class BLERxView : public View {
         false,
         true
     };
-    //  上述第2行结束
 
     Checkbox check_log{
         {10 * ui::new_font_width, 2 * ui::new_font_height},
@@ -358,7 +353,6 @@ class BLERxView : public View {
         "Name",
         true,false
     };
-    //  上述第3行结束
 
     Button button_find{
         {0 * 8, 3 * ui::new_font_height, 4 * ui::new_font_width, ui::new_font_height},
@@ -366,8 +360,8 @@ class BLERxView : public View {
     };
 
     Labels label_found{
-        {{5 * ui::new_font_width, 3* ui::new_font_height}, "Found:", Theme::getInstance()->fg_light->foreground}};
-        // {{5 * 8, 7 * 8 - 2}, "Found:", Theme::getInstance()->fg_light->foreground}};
+        {{5 * ui::new_font_width, 3* ui::new_font_height}, "Found:", Theme::getInstance()->fg_light->foreground}
+    };
 
     Text text_found_count{
         // {11 * 8, 7 * 8 - 2, 20 * 8, 16},
@@ -375,12 +369,7 @@ class BLERxView : public View {
         "0/0",
         true
     };
-    //  上述第4行结束
 
-    // Console console{
-    //     {0, 10 * 8, screen_height, screen_height-80}};
-
-    // button的高度是字体的两倍
     Button button_clear_list{
         {1 * ui::new_font_width, screen_height - (3* ui::new_font_height), 6 * ui::new_font_width,2* ui::new_font_height},
         "Clear"};
@@ -399,13 +388,7 @@ class BLERxView : public View {
     BleRecentEntries recent{};
     BleRecentEntries tempList{};
 
-    // 这里是动态渲染的图标
-    // 这里计算的方法是屏幕宽度假设为320
-    // 320/8 = 40 ，绘制头部的时候每个个体间还有个空格因此需要设置为37即可
     const RecentEntriesColumns columns{{
-        // {"Mac Address", 17},
-        // {"Hits", 7},
-        // {"dB", 4},
         {"Mac Address", 13},
         {"Hits", 7},
         {"dB", 3},
