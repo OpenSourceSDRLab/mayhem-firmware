@@ -97,8 +97,6 @@ class SoundBoardView : public View {
     Labels labels{
         {{24 * 8, 180}, "Vol:", Theme::getInstance()->fg_light->foreground},
         {{0, 180}, "Key:", Theme::getInstance()->fg_light->foreground}
-        // {{24 * 8, 0}, "Vol:", Theme::getInstance()->fg_light->foreground},
-        // {{0, 0}, "Key:", Theme::getInstance()->fg_light->foreground}
     
     };
 

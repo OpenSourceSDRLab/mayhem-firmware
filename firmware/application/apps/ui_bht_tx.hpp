@@ -213,9 +213,7 @@ class BHTView : public View {
 
     Rect view_rect = {0, ui::new_font_height, screen_width, 176};
 
-    // 标签页1
     XylosView view_xylos{view_rect};
-    // 标签页2
     EPARView view_EPAR{view_rect};
 
     TabView tab_view{
@@ -233,12 +231,10 @@ class BHTView : public View {
 
     Checkbox checkbox_flashing{
         {16 * 8, 25 * 8},
-        // { ui::screen_width - 16 * 8, 25 * 8},
         10,
         "Flashing"};
     NumberField field_speed{
         {32 * 8, 25 * 8 + 4},
-        // {ui::screen_width - 3, 25 * 8 + 4},
         2,
         {1, 99},
         1,

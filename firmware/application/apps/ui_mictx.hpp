@@ -157,41 +157,24 @@ class MicTXView : public View {
 
 
     Labels labels_both{
-        // 第1行 - 小行
         {{ FIT_OFFSET , 0 * 8}, "MIC-GAIN:", Theme::getInstance()->fg_light->foreground,false},
-        // 第2行 - 小行
         {{ FIT_OFFSET , 1 * 16}, "F:         MHz", Theme::getInstance()->fg_light->foreground,false },        
         {{ FIT_OFFSET + 18 * 8 , 1 * 16}, "TXBW:    kHz", Theme::getInstance()->fg_light->foreground,false },  // to be more symetric and consistent to the below FM RXBW
-       
-        // 第3行 - 小行
         {{ FIT_OFFSET + 18 *8, 2 * 16}, "Mode:", Theme::getInstance()->fg_light->foreground,false },       // now, no need to handle GAIN, Amp here It is handled by ui_transmitter.cpp
-        
-        // 第5行 - 小行
         {{ FIT_OFFSET, 3 * 16 + 2* ui::new_font_height}, "LVL:", Theme::getInstance()->fg_light->foreground,false},          // we delete  { {11 * 8, 5 * 8 }, "Amp:", Theme::getInstance()->fg_light->foreground },
         {{ FIT_OFFSET + 9 * 8, 3 * 16 + 2 * ui::new_font_height}, "ATT:", Theme::getInstance()->fg_light->foreground,false},
         {{ FIT_OFFSET + 16 * 8, 3 * 16 + 2 * ui::new_font_height}, "DEC:", Theme::getInstance()->fg_light->foreground,false},
-
-        // 第6行 
         {{ FIT_OFFSET , 3 * 16 + 3 * ui::new_font_height}, "TONE KEY:", Theme::getInstance()->fg_light->foreground},
-
-        // 第8行 
         {{ FIT_OFFSET , 3 * 16 + 5 * ui::new_font_height}, "======= Receiver ========", Theme::getInstance()->fg_green->foreground,true},
-        
-        // 第10行
         {{ FIT_OFFSET, 3 * 16 + 8 * ui::new_font_height}, "VOL:", Theme::getInstance()->fg_light->foreground},
         {{ FIT_OFFSET + 11 * ui::new_font_width, 3 * 16 + 8 * ui::new_font_height}, "RXBW:", Theme::getInstance()->fg_light->foreground},  // we remove the label "FM" because we will display all MOD types RX_BW.
-        
-        // 第11行
         {{ FIT_OFFSET, 3 * 16 + 10 * ui::new_font_height}, "F_RX:", Theme::getInstance()->fg_light->foreground},
         {{ FIT_OFFSET + 15 * ui::new_font_width, 3 * 16 + 10 * ui::new_font_height}, "SQ:", Theme::getInstance()->fg_light->foreground},
-
-        // 第12行
         {{ FIT_OFFSET , 3 * 16 + 12 * ui::new_font_height}, "LNA:", Theme::getInstance()->fg_light->foreground},
         {{ FIT_OFFSET + 8*ui::new_font_width, 3 * 16 + 12 * ui::new_font_height}, "VGA:", Theme::getInstance()->fg_light->foreground},
         {{ FIT_OFFSET + 17*ui::new_font_width, 3 * 16 + 12 * ui::new_font_height}, "AMP:", Theme::getInstance()->fg_light->foreground},
-        
-        // 第13行
-        {{ FIT_OFFSET, 3 * 16 + 14 * ui::new_font_height}, "TX-IQ-CAL:", Theme::getInstance()->fg_light->foreground}};
+        {{ FIT_OFFSET, 3 * 16 + 14 * ui::new_font_height}, "TX-IQ-CAL:", Theme::getInstance()->fg_light->foreground}
+    };
     
     // 第1行
     OptionsField options_gain{

@@ -184,9 +184,6 @@ class BLETxView : public View {
     static constexpr auto header_height = 10 * 16;
     static constexpr auto switch_button_height = 6 * 16;
 
-    // 第1行开始
-
-    // 采用小字布局
     Button button_open{
         {0 * 8, 0 * 16, 10 * 8, 2 * 16},
         "Open file",
@@ -194,14 +191,12 @@ class BLETxView : public View {
         false
     };
 
-    // 注意button占用两行，这是第1行
     Text text_filename{
         {12 * 8 , 0 * 16, 16 * 8, 16},
         "-",
         false
     };
 
-    // 注意button占用两行，这是第2行
     ProgressBar progressbar{
         {12 * 8 , 1 * 16, 14 * 8, 16}};
 
@@ -212,16 +207,12 @@ class BLETxView : public View {
         true,
         false};
 
-    // 第1行结束
-
-    // 第2行开始
     TxFrequencyField field_frequency{
         {0 * 8, 2 * 16},
         nav_,
         false};
 
     TransmitterView2 tx_view{
-        // {11 * 8, 2 * 16},
         {11 * 8, 2 * 16},
         /*short_ui*/ true};
 
@@ -239,9 +230,6 @@ class BLETxView : public View {
         Theme::getInstance()->fg_green->foreground,
         Theme::getInstance()->fg_green->background
     };
-    // 第2行结束
-
-    // 第3行开始 -- 字体可以逐步大一点
 
     Labels label_speed{
         {{0 * 8, 4 * 16}, "Speed:", Theme::getInstance()->fg_light->foreground}};
@@ -282,14 +270,11 @@ class BLETxView : public View {
          false,false 
     
     };
-    // 第3行结束
-
-    //第4行开始
+    
     Labels label_marked_data{
         {{0 * 8, 4 * 16 + ui::new_font_height * 1}, "Marked Data:", Theme::getInstance()->fg_light->foreground}};
 
     OptionsField marked_data_sequence{
-        // {12 * 8, 8 * 8},
         {12 * ui::new_font_width , 4 * 16 + ui::new_font_height * 1},
         8,
         {{"Ascend", 0},
@@ -298,7 +283,6 @@ class BLETxView : public View {
         false,
         true
     };
-    //第4行结束
 
 
     Labels label_packet_index{
@@ -335,19 +319,15 @@ class BLETxView : public View {
 
 
     Button button_clear_marked{
-        // {1 * 8, 14 * 16, 13 * 8, 3 * 8},
         { 0 , ui::screen_height - ui::new_font_height * 5, 13 * ui::new_font_width, ui::new_font_height},
         "Clear Marked"
     };
 
     Button button_save_packet{
-        // {1 * 8, 16 * 16, 13 * 8, 2 * 16},
         {0 , ui::screen_height - ui::new_font_height *3, 13 * ui::new_font_width, ui::new_font_height*2},
         "Save Packet"};
 
     Button button_switch{
-        // {16 * 8, 16 * 16, 13 * 8, 2 * 16},
-
         {ui::screen_width/2, ui::screen_height - ui::new_font_height *3, 13 * ui::new_font_width, ui::new_font_height*2},
         "Switch to Rx"};
 

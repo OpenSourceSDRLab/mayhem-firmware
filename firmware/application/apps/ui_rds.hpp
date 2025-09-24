@@ -189,9 +189,7 @@ class RDSView : public View {
 
     Labels labels{
         {{0 * 8, 28}, "Program type:", Theme::getInstance()->fg_light->foreground,false},
-        //{ { 14 * 8, 16 + 8 }, "CC:", Theme::getInstance()->fg_light->foreground },
         {{2 * 8, 28 + 16}, "Program ID:", Theme::getInstance()->fg_light->foreground,false},
-        //{ { 13 * 8, 32 + 8 }, "Cov:",Theme::getInstance()->fg_light->foreground },
     };
 
     OptionsField options_pty{

@@ -220,9 +220,7 @@ class EncodersView : public View {
         "Ready"};
 
     ProgressBar progressbar{
-        // {2 * 8, 13 * 16 + 20, 208, 16}
         {2 * 8, 13 * 16 + 20, ui::screen_width - 2*8*2, 16}
-    
     };
 
     TransmitterView tx_view{

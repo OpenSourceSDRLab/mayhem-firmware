@@ -501,21 +501,6 @@ class ModalMessageView : public View {
     const modal_t type_;
     const std::function<void(bool)> on_choice_;
     const bool compact;
-    // source
-    // Button button_ok{
-    //     {10 * 8, 14 * 16, 10 * 8, 48},
-    //     "OK",
-    // };
-
-    // Button button_yes{
-    //     {5 * 8, 14 * 16, 8 * 8, 48},
-    //     "YES",
-    // };
-
-    // Button button_no{
-    //     {17 * 8, 14 * 16, 8 * 8, 48},
-    //     "NO",
-    // };
     Button button_ok{
         {0, ui::screen_height - ui::new_font_height*3 , ui::new_font_width * 8, ui::new_font_height*2},
         "OK",
