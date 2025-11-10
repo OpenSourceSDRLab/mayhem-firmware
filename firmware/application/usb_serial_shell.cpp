@@ -653,20 +653,43 @@ static void cmd_accessibility_readcurr(BaseSequentialStream* chp, int argc, char
 static void cmd_appstart(BaseSequentialStream* chp, int argc, char* argv[]) {
     (void)argc;
     (void)argv;
-    if (argc != 1) {
+
+    // 这里如果没有指定APP名字就无法继续运行
+    // 现在想要处理多参数的情况
+    // if (argc != 1) {
+    if (argc < 1) {
         chprintf(chp, "Usage: appstart APPCALLNAME");
         return;
     }
+    // 获取到顶层app
     auto evtd = getEventDispatcherInstance();
-    if (!evtd) return;
-    auto top_widget = evtd->getTopWidget();
-    if (!top_widget) return;
-    auto nav = static_cast<ui::SystemView*>(top_widget)->get_navigation_view();
-    if (!nav) return;
-    if (nav->StartAppByName(argv[0])) {
-        chprintf(chp, "ok\r\n");
+    // UI循环时间没有实例的话就返回即可
+    if (!evtd) 
         return;
+    // 取得顶层APP
+    auto top_widget = evtd->getTopWidget();
+    // 没有顶层APP
+    if (!top_widget) 
+        return;
+    auto nav = static_cast<ui::SystemView*>(top_widget)->get_navigation_view();
+    if (!nav) 
+        return;
+    // 这里是开启APP的环节
+    if(argc == 1)
+    {
+        if (nav->StartAppByName(argv[0])) {
+            chprintf(chp, "ok\r\n");
+            return;
+        }
     }
+    else if(argc >1)
+    {
+        if (nav->StartAppByNameWithMulitArgs(argv[0],argc,argv)) {
+            chprintf(chp, "ok\r\n");
+            return;
+        }
+    }
+    
     // since ext app loader changed, we can just pass the string to it, and it"ll return if started or not.
     std::string appwithpath = "/" + apps_dir.string() + "/";
     appwithpath += argv[0];

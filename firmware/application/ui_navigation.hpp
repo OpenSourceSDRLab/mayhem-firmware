@@ -61,7 +61,7 @@ using namespace sd_card;
 namespace ui {
 
 void add_apps(NavigationView& nav, BtnGridView& grid, app_location_t loc);
-void add_external_items(NavigationView& nav, app_location_t location, BtnGridView& grid, uint8_t error_tile_pos);
+void add_external_items(NavigationView& nav, app_location_t location, BtnGridView& grid, uint8_t error_tile_pos, bool show_error_tile = true);
 bool verify_sdcard_format();
 
 enum modal_t {
@@ -146,6 +146,8 @@ class NavigationView : public View {
 
     bool StartAppByName(const char* name);  // Starts a View  (app) by name stored in appListFC. This is to start apps from console
     void handle_autostart();
+
+    bool StartAppByNameWithMulitArgs(const char* name,int arg_len,char* args[]); 
 
    private:
     struct ViewState {
@@ -421,6 +423,7 @@ class SystemMenuView : public BtnGridView {
     void hackrf_mode(NavigationView& nav);
 };
 
+// 相当于整个主页面
 class SystemView : public View {
    public:
     SystemView(
@@ -437,11 +440,15 @@ class SystemView : public View {
 
    private:
     uint8_t overlay_active{0};
-
+    // 顶部的窗体
     SystemStatusView status_view{navigation_view};
+    // 底部的窗体
     InformationView info_view{navigation_view};
+    // DFU按键显示的窗体
     DfuMenu overlay{navigation_view};
+    // DFU按键显示的窗体
     DfuMenu2 overlay2{navigation_view};
+
     NavigationView navigation_view{};
     Context& context_;
 };

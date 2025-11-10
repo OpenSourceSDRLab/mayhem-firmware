@@ -553,4 +553,9 @@ void AnalogAudioView::handle_coded_squelch(uint32_t value) {
 void AnalogAudioView::on_freqchg(int64_t freq) {
     field_frequency.set_value(freq);
 }
+
+void AnalogAudioView::public_for_on_freqchg(int64_t value)
+{
+    on_freqchg(value);
+}
 } /* namespace ui */

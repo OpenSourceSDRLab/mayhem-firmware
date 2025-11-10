@@ -222,6 +222,8 @@ class AnalogAudioView : public View {
     uint8_t get_previous_zoom_option();
     void set_previous_zoom_option(uint8_t zoom);
 
+    void public_for_on_freqchg(int64_t value);
+
    private:
     static constexpr ui::Dim header_height = 3 * 16;
 
@@ -260,6 +262,7 @@ class AnalogAudioView : public View {
     Audio audio{
         {UI_POS_X(21), 10, UI_POS_WIDTH_REMAINING(21) - UI_POS_WIDTH(2), 4}};
 
+    // 这里是修改具体值？
     RxFrequencyField field_frequency{
         {UI_POS_X(5), UI_POS_Y(0)},
         nav_};
@@ -316,6 +319,7 @@ class AnalogAudioView : public View {
 
     void handle_coded_squelch(uint32_t value);
 
+    // 这里是修改具体数值的地方吗？
     void on_freqchg(int64_t freq);
 
     MessageHandlerRegistration message_handler_coded_squelch{
@@ -323,7 +327,8 @@ class AnalogAudioView : public View {
         [this](const Message* p) {
             const auto message = *reinterpret_cast<const CodedSquelchMessage*>(p);
             this->handle_coded_squelch(message.value);
-        }};
+        }
+    };
 
     MessageHandlerRegistration message_handler_freqchg{
         Message::ID::FreqChangeCommand,

@@ -63,6 +63,11 @@
 #include "ui_battinfo.hpp"
 #include "ui_external_items_menu_loader.hpp"
 
+// 添加一个mp3播放器
+#include "ui_mp3player.hpp"
+// 一个有关I2C升级控件
+#include "ui_esp32update.hpp"
+
 #include "ais_app.hpp"
 #include "analog_audio_app.hpp"
 // #include "ble_comm_app.hpp"
@@ -141,6 +146,9 @@ const NavigationView::AppList NavigationView::appList = {
     {"rdstx", "RDS", TX, ui::Color::green(), &bitmap_icon_rds, new ViewFactory<RDSView>()},
     {"touchtune", "TouchTune", TX, ui::Color::green(), &bitmap_icon_touchtunes, new ViewFactory<TouchTunesView>()},
     {"signalgen", "SignalGen", TX, Color::green(), &bitmap_icon_cwgen, new ViewFactory<SigGenView>()},
+    {"mp3player", "Mp3Player", TX, Color::red(), &bitmap_icon_remote, new ViewFactory<mp3player>()},
+    // GAME
+    {"espupdate", "espupdate", GAMES,Color::red(), &bitmap_icon_remote, new ViewFactory<esp32Update>()},
     /* TRX ********************************************************************/
     {"microphone", "Mic", TRX, Color::green(), &bitmap_icon_microphone, new ViewFactory<MicTXView>()},
     /* UTILITIES *************************************************************/
@@ -159,7 +167,8 @@ const NavigationView::AppMap NavigationView::appMap = generate_app_map(Navigatio
 
 bool NavigationView::StartAppByName(const char* name) {
     home(false);
-
+    // 根据实际ID进行查找
+    // 比如audip
     auto it = appMap.find(name);
     if (it != appMap.end()) {
         push_view(std::unique_ptr<View>(it->second.viewFactory->produce(*this)));
@@ -168,6 +177,36 @@ bool NavigationView::StartAppByName(const char* name) {
 
     return false;
 }
+
+
+bool NavigationView::StartAppByNameWithMulitArgs(const char* name,int arg_len,char* args[])
+{
+    home(false);
+    // 寻找对应的app
+    auto it = appMap.find(name);
+    // 找到了这个app
+    if (it != appMap.end()) {
+        std::unique_ptr<View> view = std::unique_ptr<View>(it->second.viewFactory->produce(*this));
+        // 这里后续需要添加switch case，现在是测试阶段，所以简单的使用
+        if(strcmp(name,"audio")==0)
+        {
+            
+            auto audioview= static_cast<AnalogAudioView*>(view.get());
+            audioview->public_for_on_freqchg(std::atol(args[1]));
+            push_view(std::move(view));
+
+        }
+        else
+        {
+            // 转移所有权
+            push_view(std::move(view));
+        }
+        return true;
+    }
+    // 没有找到就返回false
+    return false;
+}
+
 
 /* StatusTray ************************************************************/
 
@@ -769,9 +808,9 @@ void add_apps(NavigationView& nav, BtnGridView& grid, app_location_t loc) {
 }
 
 // clang-format off
-void add_external_items(NavigationView& nav, app_location_t location, BtnGridView& grid, uint8_t error_tile_pos) {
+void add_external_items(NavigationView& nav, app_location_t location, BtnGridView& grid, uint8_t error_tile_pos, bool show_error_tile ) {
     auto externalItems = ExternalItemsMenuLoader::load_external_items(location, nav);
-    if (externalItems.empty()) {
+    if (externalItems.empty() && show_error_tile) {
         grid.insert_item({"ExtAppErr",
                           Theme::getInstance()->error_dark->foreground,
                           nullptr,
@@ -848,8 +887,7 @@ void TranceiversMenuView::on_populate() {
         add_items({{"..", Theme::getInstance()->fg_light->foreground, &bitmap_icon_previous, [this]() { nav_.pop(); }}});
     }
     add_apps(nav_, *this, TRX);
-    // add_external_items(nav_, app_location_t::TRX, *this, return_icon ? 1 : 0);
-    // this folder doesn't have external apps, comment to prevent pop the err msg.
+    add_external_items(nav_, app_location_t::TRX, *this, return_icon ? 1 : 0, false);  // this folder doesn't have external apps, so don't show error for it.
     // NB: when has external app someday, uncomment this.
 }
 
