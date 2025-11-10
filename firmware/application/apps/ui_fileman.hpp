@@ -118,20 +118,36 @@ class FileManBaseView : public View {
 
     bool show_hidden_files{false};
 
+    // 第一行
     Labels labels{
         {{0, 0}, "Path:", Theme::getInstance()->fg_light->foreground}};
 
     Text text_current{
+<<<<<<< HEAD
         {UI_POS_X(6), UI_POS_Y(0), UI_POS_WIDTH_REMAINING(6), UI_POS_HEIGHT(1)},
+=======
+        {6 * ui::new_font_width, 0 * 8, 24 * 8, ui::new_font_height},
+>>>>>>> a8149f33222353859a0f315bd7789e0ba82aefeb
         "",
+        true
     };
 
+    // 第2行
     MenuView menu_view{
+<<<<<<< HEAD
         {0, UI_POS_Y(1), UI_POS_MAXWIDTH, UI_POS_HEIGHT_REMAINING(7)},
+=======
+        {0, 2 * ui::new_font_height, screen_width, 26 * 8},
+>>>>>>> a8149f33222353859a0f315bd7789e0ba82aefeb
         true};
 
+    // 最后一行最右侧
     Button button_exit{
+<<<<<<< HEAD
         {UI_POS_X_RIGHT(8), UI_POS_Y_BOTTOM(3), 8 * 8, UI_POS_HEIGHT(2)},
+=======
+        {ui::screen_width - 8*8, ui::screen_height-32*2, 8 * 8, 32},
+>>>>>>> a8149f33222353859a0f315bd7789e0ba82aefeb
         "Exit"};
 };
 

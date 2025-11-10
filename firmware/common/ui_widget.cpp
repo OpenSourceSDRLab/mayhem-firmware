@@ -369,15 +369,17 @@ void Rectangle::paint(Painter& painter) {
 
 Text::Text(
     Rect parent_rect,
-    std::string text)
-    : Widget{parent_rect},
-      text{std::move(text)} {
+    std::string text,bool boom_tag)
+    : Widget{parent_rect},text{std::move(text)},boom_tag{boom_tag}
+{
+    
 }
 
-Text::Text(
-    Rect parent_rect)
-    : Text{parent_rect, {}} {
+Text::Text(Rect parent_rect,bool boom_tag): Widget{parent_rect},boom_tag{boom_tag}
+{
+
 }
+
 
 void Text::set(std::string_view value) {
     text = std::string{value};
@@ -400,18 +402,30 @@ void Text::paint(Painter& painter) {
 
     if (text_view.length() > max_len)
         text_view = text_view.substr(0, max_len);
-
-    painter.draw_string(
+        
+    // use boom tag for fit better UI size
+    if(this->boom_tag == false)
+    {
+        painter.draw_string_with_fitsize(
         rect.location(),
         s,
-        text_view);
+        text_view,0);
+    }
+    else
+    {
+        painter.draw_string_with_fitsize(
+        rect.location(),
+        s,
+        text_view,1);
+    }
 }
 
 /* Labels ****************************************************************/
 
-Labels::Labels(
-    std::initializer_list<Label> labels)
-    : labels_{labels} {
+Labels::Labels(std::initializer_list<Label> labels)
+    : labels_{labels} 
+{
+
 }
 
 void Labels::set_labels(std::initializer_list<Label> labels) {
@@ -419,14 +433,21 @@ void Labels::set_labels(std::initializer_list<Label> labels) {
     set_dirty();
 }
 
+/// @brief already change source painter draw_string,now can fit the new screen
+/// @param painter 
 void Labels::paint(Painter& painter) {
+
     for (auto& label : labels_) {
-        painter.draw_string(
-            label.pos + screen_pos(),
-            style().font,
-            label.color,
-            style().background,
-            label.text);
+        if(label.boom_tag == false)
+        {
+            Style tmp{style().font,style().background,label.color};
+            painter.draw_string_with_fitsize(label.pos + screen_pos(), tmp, label.text,0);
+        }
+        else
+        {
+            Style tmp{style().font,style().background,label.color};
+            painter.draw_string_with_fitsize(label.pos + screen_pos(), tmp, label.text,1);
+        }
     }
 }
 
@@ -811,10 +832,12 @@ Checkbox::Checkbox(
     Point parent_pos,
     size_t length,
     std::string text,
-    bool small)
+    bool small,
+    bool boom_tag)
     : Widget{},
       text_{text},
-      small_{small} {
+      small_{small},
+      boom_tag{boom_tag} {
     if (!small_)
         set_parent_rect({parent_pos, {static_cast<ui::Dim>((8 * length) + 24), 24}});
     else
@@ -878,13 +901,13 @@ void Checkbox::paint(Painter& painter) {
             portapack::display.draw_line({x + 1, y + 1}, {x + 24 - 2, y + 24 - 2}, Theme::getInstance()->fg_red->foreground);
             portapack::display.draw_line({x + 24 - 2, y + 1}, {x + 1, y + 24 - 2}, Theme::getInstance()->fg_red->foreground);
         }
-
-        painter.draw_string(
-            {static_cast<Coord>(x + 24 + 4),
-             static_cast<Coord>(y + (24 - label_r.height()) / 2)},
-            paint_style,
-            text_);
-    } else {
+        // painter.draw_string(
+        //     {static_cast<Coord>(x + 24 + 4),
+        //      static_cast<Coord>(y + (24 - label_r.height()) / 2)},
+        //     paint_style,
+        //     text_);
+    } 
+    else {
         painter.draw_rectangle({{r.location()}, {16, 16}}, style().foreground);
 
         painter.fill_rectangle({x + 1, y + 1, 16 - 2, 16 - 2}, style().background);
@@ -902,11 +925,32 @@ void Checkbox::paint(Painter& painter) {
             portapack::display.draw_line({x + 16 - 2, y + 1}, {x + 1, y + 16 - 2}, Theme::getInstance()->fg_red->foreground);
         }
 
-        painter.draw_string(
-            {static_cast<Coord>(x + 16 + 2),
-             static_cast<Coord>(y + (16 - label_r.height()) / 2)},
+        // painter.draw_string(
+        //     {static_cast<Coord>(x + 16 + 2),
+        //      static_cast<Coord>(y + (16 - label_r.height()) / 2)},
+        //     paint_style,
+        //     text_);
+    }
+
+    if(this->boom_tag == true)
+    {
+        painter.draw_string_with_fitsize(
+            {
+                static_cast<Coord>(x + 24 + 4),
+                static_cast<Coord>(y + (24 - label_r.height()) / 2)
+            },
             paint_style,
-            text_);
+            text_,1);
+    }
+    else
+    {
+        painter.draw_string_with_fitsize(
+            {
+                static_cast<Coord>(x + 16 + 4),
+                static_cast<Coord>(y + (16 - label_r.height()) / 2)
+            },
+            paint_style,
+            text_,0);
     }
 }
 
@@ -948,10 +992,13 @@ bool Checkbox::on_touch(const TouchEvent event) {
 Button::Button(
     Rect parent_rect,
     std::string text,
-    bool instant_exec)
+    bool instant_exec,
+    bool boom_tag)
     : Widget{parent_rect},
       text_{text},
-      instant_exec_{instant_exec} {
+      instant_exec_{instant_exec},
+      boom_tag{boom_tag}
+{
     set_focusable(true);
 }
 
@@ -970,6 +1017,8 @@ void Button::getAccessibilityText(std::string& result) {
 void Button::getWidgetName(std::string& result) {
     result = "Button";
 }
+
+// button的按键渲染字体应当设置为大小可以根据字体的长度宽度进行大小配置会好一点
 
 void Button::paint(Painter& painter) {
     Color bg, fg;
@@ -992,12 +1041,61 @@ void Button::paint(Painter& painter) {
     painter.fill_rectangle(
         {r.location().x(), r.location().y() + 1, r.size().width() - 1, r.size().height() - 2},
         paint_style.background);
+    
+    // button默认使用大字
+    // button 按键的渲染文字也是使用原始与扩大后的布局
+    int button_string_len = text_.length();
+    if(this->boom_tag == true)
+    {
+        int offset_x = r.size().width() / 2 - button_string_len*ui::new_font_width / 2;
+        
+        painter.draw_string_with_fitsize({r.location().x() + offset_x, r.location().y() + (r.size().height() - ui::new_font_height) / 2},
+            paint_style,
+            text_,1);
+    }
+    else
+    {
+        int offset_x = r.size().width() / 2 - button_string_len * 8/ 2;
+        painter.draw_string_with_fitsize({r.location().x() + offset_x, r.location().y() + (r.size().height() - 16) / 2},
+            paint_style,
+            text_,0);
+    }
+    
+   
 
-    const auto label_r = paint_style.font.size_of(text_);
-    painter.draw_string(
-        {r.location().x() + (r.size().width() - label_r.width()) / 2, r.location().y() + (r.size().height() - label_r.height()) / 2},
-        paint_style,
-        text_);
+    
+    // source code is here
+    // const auto label_r = paint_style.font.size_of(text_);
+    // painter.draw_string(
+    //     {r.location().x() + (r.size().width() - label_r.width()) / 3, r.location().y() + (r.size().height() - label_r.height()) / 2},
+    //     paint_style,
+    //     text_);
+
+    // 这里的三格渲染与二格渲染逻辑需要进行区分
+    // 进行1行2列渲染
+    // if(r.size().width() > ui::screen_width/3)
+    // {
+    //     int button_string_len = text_.length();
+    //     int offset_x = r.size().width() / 2 - button_string_len*ui::new_font_width / 2; 
+    //     painter.draw_string(
+    //         {r.location().x() + offset_x, r.location().y() + (r.size().height() - ui::new_font_height) / 2},
+    //         paint_style,
+    //         text_);
+
+    // }
+    // // 进行1行3列渲染
+    // else
+    // {
+    //     const auto label_r = paint_style.font.size_of(text_);
+    //     painter.draw_string_with_fitsize(
+    //         {r.location().x() + (r.size().width() - label_r.width()) / 2, r.location().y() + (r.size().height() - label_r.height()) / 2},
+    //         paint_style,
+    //         text_);
+    //     // painter.draw_string(
+    //     //     {r.location().x() + (r.size().width() - label_r.width()) / 2, r.location().y() + (r.size().height() - label_r.height()) / 2},
+    //     //     paint_style,
+    //     //     text_);
+    // }
 }
 
 void Button::on_focus() {
@@ -1095,10 +1193,12 @@ bool Button::on_touch(const TouchEvent event) {
 ButtonWithEncoder::ButtonWithEncoder(
     Rect parent_rect,
     std::string text,
-    bool instant_exec)
+    bool instant_exec,
+    bool boom_tag)
     : Widget{parent_rect},
       text_{text},
-      instant_exec_{instant_exec} {
+      instant_exec_{instant_exec},
+      boom_tag{boom_tag}{
     set_focusable(true);
 }
 
@@ -1147,10 +1247,19 @@ void ButtonWithEncoder::paint(Painter& painter) {
         paint_style.background);
 
     const auto label_r = paint_style.font.size_of(text_);
-    painter.draw_string(
+    if(boom_tag == true)
+    {
+        painter.draw_string(
         {r.location().x() + (r.size().width() - label_r.width()) / 2, r.location().y() + (r.size().height() - label_r.height()) / 2},
         paint_style,
         text_);
+    }
+    else
+    {
+        painter.draw_string_with_fitsize({r.location().x() + (r.size().width() - label_r.width()) / 2, r.location().y() + (r.size().height() - label_r.height()) / 2}, paint_style, text_,0);
+    }
+    
+    
 }
 
 void ButtonWithEncoder::on_focus() {
@@ -1334,6 +1443,7 @@ void NewButton::paint(Painter& painter) {
         style.background);
 
     int y = r.top();
+<<<<<<< HEAD
     if (vertical_center_) {
         const int bmp_h = bitmap_ ? bitmap_->size.height() : 0;
         const int txt_h = !text_.empty() ? style.font.line_height() : 0;
@@ -1385,6 +1495,88 @@ void NewButton::paint(Painter& painter) {
                 style,
                 text_);
         }
+=======
+    // 这是绘制图标
+    if (bitmap_) {
+        // 这里将图标下移动4行会更好看一点
+        int offset_y = vertical_center_ ? (r.height() / 2) - (bitmap_->size.height() / 2) : 6;
+        offset_y+=4;
+        Point bmp_pos = {r.left() + (r.width() / 2) - (bitmap_->size.width() / 2), r.top() + offset_y};
+        y += bitmap_->size.height() - offset_y;
+
+        painter.draw_bitmap(
+            bmp_pos,
+            *bitmap_,
+            color_,
+            style.background);
+    }
+    // 选项栏目-按钮的文字
+    // 绘制按钮上的文字
+    // 增添文字下移4px，不遮挡图标
+    if (!text_.empty()) {
+        if(r.size().width() > ui::screen_width/3)
+        {
+            int button_string_len = text_.length();
+            int offset_x = r.size().width() / 2 - button_string_len*ui::new_font_width / 2; 
+            // 字体少就放大一点
+            if(button_string_len <= 12)
+            {
+                painter.draw_string(
+                {r.location().x() + offset_x, r.location().y() + (r.size().height() - ui::new_font_height) / 2 + 4},
+                style,
+                text_);
+            }
+            // 字体多默认还是小字体
+            else
+            {
+                const auto label_r = style.font.size_of(text_);
+                painter.draw_string_with_fitsize(
+                {r.location().x() + (r.size().width() - label_r.width()) / 2, r.location().y() + (r.size().height() - label_r.height()) / 2 + 4},
+                style,
+                text_);
+            }
+
+        }
+        // 进行1行3列渲染
+        else
+        {
+            const auto label_r = style.font.size_of(text_);
+            painter.draw_string_with_fitsize(
+                {r.location().x() + (r.size().width() - label_r.width()) / 2, r.location().y() + (r.size().height() - label_r.height()) / 2 + 4},
+                style,
+                text_);
+            // painter.draw_string(
+            //     {r.location().x() + (r.size().width() - label_r.width()) / 2, r.location().y() + (r.size().height() - label_r.height()) / 2},
+            //     paint_style,
+            //     text_);
+        }
+        // 目前设想根据文字多少进行渲染
+
+        // const auto label_r = style.font.size_of(text_);
+        // int font_width = text_.size()*12;
+
+        // painter.draw_string(
+        //     // {r.left() + (r.width() - label_r.width()) / 2, y + (r.height() - label_r.height()) / 2},
+        //     {r.left()+ (r.width() - font_width) / 2, y + (r.height() - ui::new_font_height) / 2 },
+        //     style,
+        //     text_);
+
+        // source code
+        // const auto label_r = style.font.size_of(text_);
+
+        // int text_area_top = y;
+        // int text_area_height = (r.top() + r.height()) - y;
+
+        // int text_y = text_area_top + (text_area_height - label_r.height()) / 2;
+        // if (text_y < text_area_top) {
+        //     text_y = text_area_top;  // 防止文字顶部超出
+        // }
+
+        // painter.draw_string(
+        //     {r.left() + (r.width() - label_r.width()) / 2, text_y},
+        //     style,
+        //     text_);
+>>>>>>> a8149f33222353859a0f315bd7789e0ba82aefeb
     }
 }
 
@@ -1503,6 +1695,26 @@ void Image::paint(Painter& painter) {
             selected ? background_ : foreground_,
             selected ? foreground_ : background_);
     }
+
+    /*
+    if(bitmap_)
+    {
+        const bool selected = (has_focus() || highlighted());
+
+        if(this->parent_rect().height() == 32)
+        {
+            painter.draw_bitmap_with_autofit(screen_pos(),*bitmap_,selected ? background_ : foreground_,selected ? foreground_ : background_,2);
+        }
+        else
+        {
+            
+            painter.draw_bitmap_with_autofit(screen_pos(),*bitmap_,selected ? background_ : foreground_,selected ? foreground_ : background_,1);
+        }
+    }
+    
+    */
+
+    
 }
 
 /* ImageButton ***********************************************************/
@@ -1745,12 +1957,16 @@ OptionsField::OptionsField(
     Point parent_pos,
     size_t length,
     options_t options,
-    bool centered)
+    bool centered,
+    bool boom_tag
+    )
     : Widget{{parent_pos, {8 * (int)length, 16}}},
       length_{length},
       options_{std::move(options)},
-      centered_{centered} {
+      centered_{centered} 
+{
     set_focusable(true);
+    this->boom_tag = boom_tag;
 }
 
 size_t OptionsField::selected_index() const {
@@ -1851,11 +2067,20 @@ void OptionsField::paint(Painter& painter) {
             int x_offset = (available_width - text_width) / 2;
             draw_pos = {draw_pos.x() + x_offset, draw_pos.y()};
         }
-
-        painter.draw_string(
-            draw_pos,
-            paint_style,
-            temp);
+        if(this->boom_tag == false)
+        {
+            painter.draw_string_with_fitsize(draw_pos,paint_style, temp,0);
+        }
+        else
+        {
+            painter.draw_string_with_fitsize(draw_pos,paint_style, temp,1);
+        }
+        
+        // 修改这里全部用小的？
+        // painter.draw_string(
+        //     draw_pos,
+        //     paint_style,
+        //     temp);
     }
 }
 
@@ -1895,7 +2120,7 @@ TextEdit::TextEdit(
     size_t max_length,
     Point position,
     uint32_t length)
-    : Widget{{position, {8 * static_cast<int>(length), 16}}},
+    : Widget{{position, {ui::new_font_width, ui::new_font_height}}},
       text_{str},
       max_length_{std::max<size_t>(max_length, str.length())},
       char_count_{std::max<uint32_t>(length, 1)},
@@ -1968,12 +2193,14 @@ void TextEdit::paint(Painter& painter) {
         auto c = (i + offset < text_.length()) ? text_[i + offset] : ' ';
 
         painter.draw_char(
-            {rect.location().x() + (static_cast<int>(i) * char_width), rect.location().y()},
+            // {rect.location().x() + (static_cast<int>(i) * char_width), rect.location().y()},
+            {rect.location().x() + (static_cast<int>(i) * ui::new_font_width), rect.location().y()},
             text_style, c);
     }
 
     // Determine cursor position on screen (either the cursor position or the last char).
-    int32_t cursor_x = char_width * (offset > 0 ? char_count_ - 1 : cursor_pos_);
+    // int32_t cursor_x = char_width * (offset > 0 ? char_count_ - 1 : cursor_pos_);
+    int32_t cursor_x = ui::new_font_width * (offset > 0 ? char_count_ - 1 : cursor_pos_);
     Point cursor_point{screen_pos().x() + cursor_x, screen_pos().y()};
     auto cursor_style = text_style.invert();
 
@@ -1982,7 +2209,8 @@ void TextEdit::paint(Painter& painter) {
         painter.draw_char(cursor_point, cursor_style, text_[cursor_pos_]);
 
     // Draw the cursor.
-    Rect cursor_box{cursor_point, {char_width, char_height}};
+    Rect cursor_box{cursor_point, {ui::new_font_width, ui::new_font_height}};
+
     painter.draw_rectangle(cursor_box, cursor_style.background);
 }
 
@@ -2055,8 +2283,14 @@ void TextEdit::on_blur() {
 
 /* TextField *************************************************************/
 
-TextField::TextField(Rect parent_rect, std::string text)
-    : Text(parent_rect, std::move(text)) {
+// TextField::TextField(Rect parent_rect, std::string text)
+//     : Text(parent_rect, std::move(text)) {
+//     set_focusable(true);
+// }
+
+TextField::TextField(Rect parent_rect, std::string text,bool boom_tag)
+    : Text(parent_rect, std::move(text),boom_tag) 
+{
     set_focusable(true);
 }
 
@@ -2160,7 +2394,9 @@ void BatteryIcon::paint(Painter& painter) {
     painter.draw_hline({rect.left() + 3, rect.top() + 1}, rect.width() - 6, battColor);
     painter.draw_hline({rect.left() + 3, 0}, rect.width() - 6, battColor);
     if (percent_ > 100) {  // error / unk
-        painter.draw_string({rect.left() + 2, rect.top() + 3}, font::fixed_5x8, Theme::getInstance()->bg_dark->foreground, Theme::getInstance()->bg_dark->background, "?");
+        // painter.draw_string({rect.left() + 2, rect.top() + 3}, font::fixed_5x8, Theme::getInstance()->bg_dark->foreground, Theme::getInstance()->bg_dark->background, "?");
+        painter.draw_string_source({rect.left() + 2, rect.top() + 3}, font::fixed_5x8, Theme::getInstance()->bg_dark->foreground, Theme::getInstance()->bg_dark->background, "?");
+
         return;
     }
     int8_t ppx = (rect.bottom() - 3) - (rect.top() + 2);                                // 11px max height to draw bars
@@ -2199,8 +2435,8 @@ void BatteryTextField::paint(Painter& painter) {
         xdelta = 5;
     else if (txt_batt.length() == 2)
         xdelta = 2;
-    painter.draw_string({rect.left() + xdelta, rect.top()}, font::fixed_5x8, Theme::getInstance()->bg_dark->foreground, bg, txt_batt);
-    painter.draw_string({rect.left(), rect.top() + 8}, font::fixed_5x8, Theme::getInstance()->bg_dark->foreground, bg, (charge_) ? "+%" : " %");
+    painter.draw_string_source({rect.left() + xdelta, rect.top()}, font::fixed_5x8, Theme::getInstance()->bg_dark->foreground, bg, txt_batt);
+    painter.draw_string_source({rect.left(), rect.top() + 8}, font::fixed_5x8, Theme::getInstance()->bg_dark->foreground, bg, (charge_) ? "+%" : " %");
 }
 
 void BatteryTextField::getAccessibilityText(std::string& result) {
@@ -2247,13 +2483,15 @@ NumberField::NumberField(
     range_t range,
     int32_t step,
     char fill_char,
-    bool can_loop)
+    bool can_loop,
+    bool boom_tag)
     : Widget{{parent_pos, {8 * length, 16}}},
       range{range},
       step{step},
       length_{length},
       fill_char{fill_char},
-      can_loop{can_loop} {
+      can_loop{can_loop},
+      boom_tag{boom_tag}{
     set_focusable(true);
 }
 
@@ -2302,10 +2540,18 @@ void NumberField::paint(Painter& painter) {
 
     const auto paint_style = has_focus() ? style().invert() : style();
 
-    painter.draw_string(
-        screen_pos(),
-        paint_style,
-        text);
+    if(this->boom_tag == true)
+    {
+        painter.draw_string_with_fitsize(screen_pos(),paint_style,text,1);
+    }
+    else
+    {
+        painter.draw_string_with_fitsize(screen_pos(),paint_style,text,0);
+    }
+    // painter.draw_string(
+    //     screen_pos(),
+    //     paint_style,
+    //     text);
 }
 
 bool NumberField::on_key(const KeyEvent key) {
@@ -2349,6 +2595,8 @@ bool NumberField::on_keyboard(const KeyboardEvent key) {
 }
 
 bool NumberField::on_touch(const TouchEvent event) {
+    // 修改接触解除范围判定逻辑
+    // int
     if (event.type == TouchEvent::Type::Start) {
         focus();
     }
@@ -2361,10 +2609,13 @@ SymField::SymField(
     Point parent_pos,
     size_t length,
     Type type,
-    bool explicit_edits)
-    : Widget{{parent_pos, {char_width * (int)length, 16}}},
+    bool explicit_edits,
+    bool boom_tag)
+    : Widget{{parent_pos, {ui::new_font_width * (int)length, ui::new_font_height}}},
       type_{type},
-      explicit_edits_{explicit_edits} {
+      explicit_edits_{explicit_edits},
+      boom_tag{boom_tag}
+       {
     if (length == 0)
         length = 1;
 
@@ -2400,8 +2651,10 @@ SymField::SymField(
     Point parent_pos,
     size_t length,
     std::string symbol_list,
-    bool explicit_edits)
-    : SymField{parent_pos, length, Type::Custom, explicit_edits} {
+    bool explicit_edits,bool boom_tag)
+    : SymField{parent_pos, length, Type::Custom, explicit_edits,boom_tag} 
+
+{
     set_symbol_list(std::move(symbol_list));
 }
 
@@ -2515,9 +2768,20 @@ void SymField::paint(Painter& painter) {
                 paint_style.background = Theme::getInstance()->fg_blue->foreground;
             }
         }
+        if(boom_tag == true)
+        {
+            painter.draw_char(p, paint_style, c);
+            p += {12, 0};
+        }
+        else
+        {
+            painter.draw_char_source(p, paint_style, c);
+            p += {8, 0};
+        }
+       
 
-        painter.draw_char(p, paint_style, c);
-        p += {8, 0};
+        // painter.draw_char(p, paint_style, c);
+        // p += {ui::new_font_width, 0};
     }
 }
 
@@ -3077,17 +3341,23 @@ VuMeter::VuMeter(
 }
 
 void VuMeter::set_value(const uint32_t new_value) {
-    if ((new_value != value_) && (new_value < 256)) {
-        value_ = new_value;
+    if ((new_value != value_) && (new_value < 256))
+    // if ((new_value != value_) && (new_value < 449)) 
+    {
+        value_ = new_value*2;
         set_dirty();
     }
 }
 
 void VuMeter::set_mark(const uint32_t new_mark) {
     if ((new_mark != mark) && (new_mark < 256)) {
-        mark = new_mark;
+        mark = new_mark*2;
         set_dirty();
     }
+    // if ((new_mark != mark) && (new_mark < 449)) {
+    //     mark = new_mark;
+    //     set_dirty();
+    // }
 }
 
 void VuMeter::paint(Painter& painter) {
@@ -3122,7 +3392,7 @@ void VuMeter::paint(Painter& painter) {
         }
         prev_value = value_;
     }
-
+    // 现在是set valu里面改系数将其x2
     // Update max level
     if (show_max_) {
         if (value_ > max) {

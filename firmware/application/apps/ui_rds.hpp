@@ -43,24 +43,29 @@ class RDSPSNView : public OptionTabView {
 
    private:
     Labels labels{
-        {{1 * 8, 3 * 8}, "Program Service Name", Theme::getInstance()->fg_light->foreground},
-        {{2 * 8, 7 * 8}, "PSN:", Theme::getInstance()->fg_light->foreground}};
+        {{1 * 8, 3 * 8}, "Program Service Name", Theme::getInstance()->fg_light->foreground,false},
+        {{2 * 8, 7 * 8}, "PSN:", Theme::getInstance()->fg_light->foreground,false}};
 
     Button button_set{
         {18 * 8, 3 * 16, 80, 32},
         "Set"};
+
     Text text_psn{
         {6 * 8, 3 * 16 + 8, 8 * 8, 16},
-        ""};
+        "",
+        false};
 
     Checkbox check_mono_stereo{
         {2 * 8, 12 * 8},
         6,
         "Stereo"};
+
     Checkbox check_MS{
-        {14 * 8, 12 * 8},
+        {14 * ui::new_font_width, 12 * 8},
         5,
-        "Music"};
+        "Music"
+    };
+
     Checkbox check_TA{
         {2 * 8, 16 * 8},
         20,
@@ -76,13 +81,20 @@ class RDSRadioTextView : public OptionTabView {
    private:
     Labels labels{
         {{2 * 8, 3 * 8}, "Radiotext", Theme::getInstance()->fg_light->foreground},
-        {{1 * 8, 6 * 8}, "Text:", Theme::getInstance()->fg_light->foreground}};
+        // {{1 * 8, 6 * 8}, "Text:", Theme::getInstance()->fg_light->foreground}};
+        {{2 * 8, 6 * 8}, "Text:", Theme::getInstance()->fg_light->foreground}};
 
     Text text_radiotext{
-        {1 * 8, 4 * 16, 28 * 8, 16},
-        "-"};
+        // {1 * 8, 4 * 16, 28 * 8, 16},
+        {4 * 8, 6*8 + 2*ui::new_font_height, 28 * ui::new_font_width, ui::new_font_height},
+        "-",true
+    };
     Button button_set{
+<<<<<<< HEAD
         {UI_POS_X_CENTER(8), 6 * 16, UI_POS_WIDTH(8), 32},
+=======
+        {88, 6*8 + 4*ui::new_font_height, ui::new_font_width *5 , ui::new_font_height*2},
+>>>>>>> a8149f33222353859a0f315bd7789e0ba82aefeb
         "Set"};
 };
 
@@ -92,7 +104,14 @@ class RDSDateTimeView : public OptionTabView {
 
    private:
     Labels labels{
+<<<<<<< HEAD
         {{UI_POS_X_CENTER(19), 5 * 16}, "Not yet implemented", Theme::getInstance()->error_dark->foreground}};
+=======
+        {
+            // {44, 5 * 16}, "Not yet implemented", Theme::getInstance()->error_dark->foreground}
+            {(ui::screen_width - 20 *ui::new_font_width)/(2), 5 * 16}, "Not yet implemented", Theme::getInstance()->error_dark->foreground}
+        };
+>>>>>>> a8149f33222353859a0f315bd7789e0ba82aefeb
 };
 
 class RDSAudioView : public OptionTabView {
@@ -101,7 +120,14 @@ class RDSAudioView : public OptionTabView {
 
    private:
     Labels labels{
+<<<<<<< HEAD
         {{UI_POS_X_CENTER(19), 5 * 16}, "Not yet implemented", Theme::getInstance()->error_dark->foreground}};
+=======
+        // {{44 + 320 /8, 5 * 16}, "Not yet implemented", Theme::getInstance()->error_dark->foreground}
+        {{(ui::screen_width - 20 *ui::new_font_width)/(2), 5 * 16}, "Not yet implemented", Theme::getInstance()->error_dark->foreground}
+        
+    };
+>>>>>>> a8149f33222353859a0f315bd7789e0ba82aefeb
 };
 
 class RDSThread {
@@ -174,10 +200,15 @@ class RDSView : public View {
         {"Audio", Theme::getInstance()->fg_orange->foreground, &view_audio}};
 
     Labels labels{
+<<<<<<< HEAD
         {{UI_POS_X(0), 28}, "Program type:", Theme::getInstance()->fg_light->foreground},
         //{ { 14 * 8, 16 + 8 }, "CC:", Theme::getInstance()->fg_light->foreground },
         {{2 * 8, 28 + 16}, "Program ID:", Theme::getInstance()->fg_light->foreground},
         //{ { 13 * 8, 32 + 8 }, "Cov:",Theme::getInstance()->fg_light->foreground },
+=======
+        {{0 * 8, 28}, "Program type:", Theme::getInstance()->fg_light->foreground,false},
+        {{2 * 8, 28 + 16}, "Program ID:", Theme::getInstance()->fg_light->foreground,false},
+>>>>>>> a8149f33222353859a0f315bd7789e0ba82aefeb
     };
 
     OptionsField options_pty{
@@ -316,7 +347,7 @@ class RDSView : public View {
     Checkbox check_TP{
         {23 * 8, 4 * 8},
         2,
-        "TP"};
+        "TP",true,false};
 
     TransmitterView tx_view{
         (int16_t)UI_POS_Y_BOTTOM(4),

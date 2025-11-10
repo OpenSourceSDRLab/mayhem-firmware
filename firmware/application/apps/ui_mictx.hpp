@@ -37,6 +37,7 @@
 #include "receiver_model.hpp"
 #include "ui_transmitter.hpp"
 
+
 namespace ui {
 
 class MicTXView : public View {
@@ -67,6 +68,8 @@ class MicTXView : public View {
     std::string title() const override { return "Microphone"; };
 
    private:
+    int FIT_OFFSET = 40;
+
     static constexpr uint32_t sampling_rate = 1536000U;
     static constexpr uint32_t lcd_frame_duration = (256 * 1000UL) / 60;  // 1 frame @ 60fps in ms .8 fixed point  /60
 
@@ -146,44 +149,58 @@ class MicTXView : public View {
     int32_t focused_ui{2};
     bool button_touch{false};
 
-    Labels labels_both{
-        {{3 * 8, 1 * 8}, "MIC-GAIN:", Theme::getInstance()->fg_light->foreground},
-        {{3 * 8, 3 * 8}, "F:         MHz", Theme::getInstance()->fg_light->foreground},
-        {{18 * 8, 3 * 8}, "TXBW:    kHz", Theme::getInstance()->fg_light->foreground},  // to be more symetric and consistent to the below FM RXBW
-        {{18 * 8, (5 * 8)}, "Mode:", Theme::getInstance()->fg_light->foreground},       // now, no need to handle GAIN, Amp here It is handled by ui_transmitter.cpp
-        {{4 * 8, 10 * 8}, "LVL:", Theme::getInstance()->fg_light->foreground},          // we delete  { {11 * 8, 5 * 8 }, "Amp:", Theme::getInstance()->fg_light->foreground },
-        {{12 * 8, 10 * 8}, "ATT:", Theme::getInstance()->fg_light->foreground},
-        {{20 * 8, 10 * 8}, "DEC:", Theme::getInstance()->fg_light->foreground},
-        {{3 * 8, (13 * 8) - 5}, "TONE KEY:", Theme::getInstance()->fg_light->foreground},
-        {{3 * 8, (18 * 8) - 1}, "======== Receiver ========", Theme::getInstance()->fg_green->foreground},
-        {{5 * 8, (23 * 8) + 2}, "VOL:", Theme::getInstance()->fg_light->foreground},
-        {{14 * 8, (23 * 8) + 2}, "RXBW:", Theme::getInstance()->fg_light->foreground},  // we remove the label "FM" because we will display all MOD types RX_BW.
-        {{20 * 8, (25 * 8) + 2}, "SQ:", Theme::getInstance()->fg_light->foreground},
-        {{5 * 8, (25 * 8) + 2}, "F_RX:", Theme::getInstance()->fg_light->foreground},
-        {{5 * 8, (27 * 8) + 2}, "LNA:", Theme::getInstance()->fg_light->foreground},
-        {{12 * 8, (27 * 8) + 2}, "VGA:", Theme::getInstance()->fg_light->foreground},
-        {{19 * 8, (27 * 8) + 2}, "AMP:", Theme::getInstance()->fg_light->foreground},
-        {{21 * 8, (31 * 8)}, "TX-IQ-CAL:", Theme::getInstance()->fg_light->foreground}};
-    Labels labels_WM8731{
-        {{17 * 8, 1 * 8}, "Boost", Theme::getInstance()->fg_light->foreground}};
-    Labels labels_AK4951{
-        {{17 * 8, 1 * 8}, "ALC", Theme::getInstance()->fg_light->foreground}};
-
+    // 左侧音量图标
     VuMeter vumeter{
+<<<<<<< HEAD
         {UI_POS_X(0), 1 * 8, 2 * 8, 33 * 8},
+=======
+        { 0 * 8, 1 * 8, 32 , ui::screen_height - 32},
+>>>>>>> a8149f33222353859a0f315bd7789e0ba82aefeb
         12,
         true};
 
+
+    Labels labels_both{
+        {{ FIT_OFFSET , 0 * 8}, "MIC-GAIN:", Theme::getInstance()->fg_light->foreground,false},
+        {{ FIT_OFFSET , 1 * 16}, "F:         MHz", Theme::getInstance()->fg_light->foreground,false },        
+        {{ FIT_OFFSET + 18 * 8 , 1 * 16}, "TXBW:    kHz", Theme::getInstance()->fg_light->foreground,false },  // to be more symetric and consistent to the below FM RXBW
+        {{ FIT_OFFSET + 18 *8, 2 * 16}, "Mode:", Theme::getInstance()->fg_light->foreground,false },       // now, no need to handle GAIN, Amp here It is handled by ui_transmitter.cpp
+        {{ FIT_OFFSET, 3 * 16 + 2* ui::new_font_height}, "LVL:", Theme::getInstance()->fg_light->foreground,false},          // we delete  { {11 * 8, 5 * 8 }, "Amp:", Theme::getInstance()->fg_light->foreground },
+        {{ FIT_OFFSET + 9 * 8, 3 * 16 + 2 * ui::new_font_height}, "ATT:", Theme::getInstance()->fg_light->foreground,false},
+        {{ FIT_OFFSET + 16 * 8, 3 * 16 + 2 * ui::new_font_height}, "DEC:", Theme::getInstance()->fg_light->foreground,false},
+        {{ FIT_OFFSET , 3 * 16 + 3 * ui::new_font_height}, "TONE KEY:", Theme::getInstance()->fg_light->foreground},
+        {{ FIT_OFFSET , 3 * 16 + 5 * ui::new_font_height}, "======= Receiver ========", Theme::getInstance()->fg_green->foreground,true},
+        {{ FIT_OFFSET, 3 * 16 + 8 * ui::new_font_height}, "VOL:", Theme::getInstance()->fg_light->foreground},
+        {{ FIT_OFFSET + 11 * ui::new_font_width, 3 * 16 + 8 * ui::new_font_height}, "RXBW:", Theme::getInstance()->fg_light->foreground},  // we remove the label "FM" because we will display all MOD types RX_BW.
+        {{ FIT_OFFSET, 3 * 16 + 10 * ui::new_font_height}, "F_RX:", Theme::getInstance()->fg_light->foreground},
+        {{ FIT_OFFSET + 15 * ui::new_font_width, 3 * 16 + 10 * ui::new_font_height}, "SQ:", Theme::getInstance()->fg_light->foreground},
+        {{ FIT_OFFSET , 3 * 16 + 12 * ui::new_font_height}, "LNA:", Theme::getInstance()->fg_light->foreground},
+        {{ FIT_OFFSET + 8*ui::new_font_width, 3 * 16 + 12 * ui::new_font_height}, "VGA:", Theme::getInstance()->fg_light->foreground},
+        {{ FIT_OFFSET + 17*ui::new_font_width, 3 * 16 + 12 * ui::new_font_height}, "AMP:", Theme::getInstance()->fg_light->foreground},
+        {{ FIT_OFFSET, 3 * 16 + 14 * ui::new_font_height}, "TX-IQ-CAL:", Theme::getInstance()->fg_light->foreground}
+    };
+    
+    // 第1行
     OptionsField options_gain{
-        {12 * 8, 1 * 8},
+        {FIT_OFFSET + 10 * 8, 0 * 16},
         4,
         {{"x0.5", 5},
          {"x1.0", 10},
          {"x1.5", 15},
-         {"x2.0", 20}}};
+         {"x2.0", 20}},
+        false,false
+    };
+
+    Labels labels_WM8731{
+        {{ FIT_OFFSET + 16 * 8 , 0 * 16 }, "Boost", Theme::getInstance()->fg_light->foreground,false}};
+    
+    Labels labels_AK4951{
+        {{ FIT_OFFSET + 16 * 8 , 0 * 16 }, "ALC", Theme::getInstance()->fg_light->foreground,false}};
+
+    
 
     OptionsField options_ak4951_alc_mode{
-        {20 * 8, 1 * 8},
+        {FIT_OFFSET + 22 * 8, 0 },
         10,  // Label has 10 chars
         {
             {" OFF-12kHz", 0},   // Nothing changed from ORIGINAL, keeping ALL programmable AK4951 Digital Block->OFF, sampling 24Khz)
@@ -198,10 +215,11 @@ class MicTXView : public View {
             {"-06dB-6kHz", 9},   // ALC-> on, (-06dB's) Auto Vol max + Wind Noise cancel + LPF 6kHz + Pre-amp Mic (+21dB=original)
             {"-09dB-6kHz", 10},  // ALC-> on, (-09dB's) Auto Vol max + Wind Noise cancel + LPF 6kHz - Pre-amp MIC -3dB (18dB's)
             {"-12dB-6kHz", 11},  // ALC-> on, (-12dB's) Auto Vol max + Wind Noise cancel + LPF 6kHz - Pre-amp MIC -6dB (15dB's)
-        }};
+        },false,false
+    };
 
     OptionsField options_wm8731_boost_mode{
-        {22 * 8, 1 * 8},
+        {FIT_OFFSET + 22* 8, 0},
         8,  // Label has 8 chars
         {
             {"ON +12dB", 0},  // WM8731 Mic Boost ON, original+12dBs condition, easy to saturate ADC sat in high voice, relative G = +12 dB's respect ref level
@@ -209,25 +227,32 @@ class MicTXView : public View {
             {"OFF+04dB", 2},  // WM8731 Mic Boost OFF to avoid ADC sat in high voice, relative G = +04 dB's (respect ref level), always effective sampling 24khz
             {"OFF-02dB", 3},  // WM8731 Mic Boost OFF to avoid ADC sat in high voice, relative G = -02 dB's (respect ref level)
             {"OFF-08dB", 4},  // WM8731 Mic Boost OFF to avoid ADC sat in high voice, relative G = -12 dB's (respect ref level)
-        }};
+        },false,false
+    };
+    // 第1行结束
+
 
     // TODO: Use TxFrequencyField
+
+    // 第2行开始
     FrequencyField field_frequency{
-        {5 * 8, 3 * 8},
+        {FIT_OFFSET + 3 * 8 , 1 * 16},false
     };
     NumberField field_bw{
-        {23 * 8, 3 * 8},
+        {FIT_OFFSET + 23 * 8, 1 * 16},
         3,
         {0, 150},
         1,
-        ' '};
-
+        ' ',false,false};
+    // 第2行结束
+    
+    // 第3行开始
     TransmitterView2 tx_view{
-        {3 * 8, 5 * 8},
+        {FIT_OFFSET , 2*16},
         /*short_ui*/ false};
 
     OptionsField options_mode{
-        {24 * 8, 5 * 8},
+        {FIT_OFFSET + 24 * 8, 2*16},
         6,
         {
             {"NFM/FM", MIC_MOD_NFM},
@@ -236,113 +261,135 @@ class MicTXView : public View {
             {" USB  ", MIC_MOD_USB},
             {" LSB  ", MIC_MOD_LSB},
             {"DSB-SC", MIC_MOD_DSB}  // We are TX Double Side AM Band with suppressed carrier, and allowing in RX both indep SSB lateral band (USB/LSB).
-        }};
+        },false,false
+    };
+    // 第3行结束
 
+    // 第4行开始
     Checkbox check_va{
-        {3 * 8, 8 * 7},
+        {FIT_OFFSET, 3*16},
         10,
         "VOX enable",
-        false};
+        false,true};
+    // 第4行结束
 
+    // 第5行开始
     NumberField field_va_level{
-        {8 * 8, 10 * 8},
+        {FIT_OFFSET + 5 * 8, 3 * 16 + 2 * ui::new_font_height},
         3,
         {0, 255},
         2,
-        ' '};
+        ' ',false,false
+    };
     NumberField field_va_attack{
-        {16 * 8, 10 * 8},
+        {FIT_OFFSET + 13 * 8, 3 * 16 + 2 * ui::new_font_height},
         3,
         {0, 999},
         20,
-        ' '};
+        ' ',false,false
+    };
     NumberField field_va_decay{
-        {24 * 8, 10 * 8},
+        {FIT_OFFSET + 21 * 8, 3 * 16 + 2 * ui::new_font_height},
         4,
         {0, 9999},
         100,
-        ' '};
+        ' ',false,false
+    };
+    // 第5行结束
 
+    // 第6行开始
     OptionsField options_tone_key{
-        {12 * 8, (13 * 8) - 5},
+        {FIT_OFFSET + 12 * ui::new_font_width , 3 * 16 + 3 * ui::new_font_height },
         18,
-        {}};
+        {},false,true};
+    // 第6行结束
 
+    // 第7行开始
     Checkbox check_rogerbeep{
-        {3 * 8, (14 * 8) + 4},
+        {FIT_OFFSET, 3 * 16 + 4 * ui::new_font_height},
         10,
         "Roger beep",
-        false};
+        true,false};
 
     Checkbox check_mic_to_HP{
-        {18 * 8, (14 * 8) + 4},
+        {FIT_OFFSET + 15 * 8 , 3 * 16 + 4 * ui::new_font_height},
         10,
         "Hear Mic",
-        false};
+        true,false};
+    // 第7行结束
 
+    // 第9行开始
     Checkbox check_rxactive{
-        {3 * 8, (21 * 8) - 7},
+        {FIT_OFFSET,  3 * 16 + 6 * ui::new_font_height},
         8,  // it was 18, but if it is string size should be 8
         "RX audio",
-        false};
+        false,true};
 
     Checkbox check_common_freq_tx_rx{
-        {18 * 8, (21 * 8) - 7},
+        {FIT_OFFSET + 17 * 8, 3 * 16 + 6 * ui::new_font_height},
         8,
         "F  RX=TX",
-        false};
+        false,true};
+    // 第9行结束
 
+    // 第10行
     AudioVolumeField field_volume{
-        {9 * 8, (23 * 8) + 2}};
+        {FIT_OFFSET + 5 *ui::new_font_width, 3 * 16 + 8 * ui::new_font_height}
+    };
 
     OptionsField field_rxbw{
-        {19 * 8, (23 * 8) + 2},
+        {FIT_OFFSET + 16 * ui::new_font_width, 3 * 16 + 8 * ui::new_font_height},
         7,
         {
             {" 8k5  ", 0},  // Initial dynamic values when we start Mic App.
             {" 11k  ", 1},
             {" 16k  ", 2},
-        }};
+        },false,true
+    };
+    // 第10行结束
+
+    // 第11行开始
+    // TODO: Use RxFrequencyField
+    FrequencyField field_rxfrequency{
+        {FIT_OFFSET + 5*ui::new_font_width, 3 * 16 + 10 * ui::new_font_height}
+    };
 
     NumberField field_squelch{
-        {23 * 8, (25 * 8) + 2},
+        {FIT_OFFSET +20* ui::new_font_width, 3 * 16 + 10 * ui::new_font_height},
         2,
         {0, 99},
         1,
-        ' ',
+        ' '
     };
+    // 第11行结束
 
-    // TODO: Use RxFrequencyField
-    FrequencyField field_rxfrequency{
-        {10 * 8, (25 * 8) + 2},
-    };
-
+    // 第12行开始
     NumberField field_rxlna{
-        {9 * 8, (27 * 8) + 2},
+        {FIT_OFFSET + 5*ui::new_font_width, 3 * 16 + 12 * ui::new_font_height},
         2,
         {0, 40},
         8,
-        ' ',
+        ' '
     };
-
     NumberField field_rxvga{
-        {16 * 8, (27 * 8) + 2},
+        {FIT_OFFSET + 12*ui::new_font_width, 3 * 16 + 12 * ui::new_font_height},
         2,
         {0, 62},
         2,
-        ' ',
+        ' '
     };
-
     NumberField field_rxamp{
-        {24 * 8, (27 * 8) + 2},
+        {FIT_OFFSET + 22*ui::new_font_width, 3 * 16 + 12 * ui::new_font_height},
         1,
         {0, 1},
         1,
-        ' ',
+        ' '
     };
+    // 第12行结束
 
+    
     NumberField field_tx_iq_phase_cal{
-        {24 * 8, (33 * 8)},
+        {FIT_OFFSET + 12 * ui::new_font_width, 3 * 16 + 14 * ui::new_font_height},
         2,
         {0, 63},  // 5 or 6 bits IQ CAL phase adjustment (range updated later)
         1,
@@ -350,12 +397,13 @@ class MicTXView : public View {
     };
 
     Button tx_button{
-        {10 * 8, screen_width, 10 * 8, 5 * 8},
+        {FIT_OFFSET + 10 * 8, 3 * 16 + 16* ui::new_font_height, 10 * 8, 26*1},
         "PTT TX",
         true};
 
     Image tx_icon{
-        {6 * 8, 31 * 8 + 4, 16, 16},
+        // {FIT_OFFSET + 6 * 8, 31 * 8 + 4, 16, 16},
+        {FIT_OFFSET + 6 * 8, 3 * 16 + 16* ui::new_font_height ,16, 16},
         &bitmap_icon_microphone,
         Theme::getInstance()->bg_darkest->background,
         Theme::getInstance()->bg_darkest->background};

@@ -290,18 +290,30 @@ class BLERxView : public View {
     std::filesystem::path log_packets_path{blerx_dir / u"Logs/????.TXT"};
     std::filesystem::path packet_save_path{blerx_dir / u"Lists/????.csv"};
 
+<<<<<<< HEAD
     static constexpr auto header_height = 12 * 8;
     static constexpr auto switch_button_height = 3 * 16;
+=======
+    // 动态渲染区域要求不遮盖已有行
+    static constexpr auto header_height = 4 * 24;
+    static constexpr auto switch_button_height = 24;
+>>>>>>> a8149f33222353859a0f315bd7789e0ba82aefeb
 
     OptionsField options_channel{
         {UI_POS_X(0), UI_POS_Y(0)},
         5,
-        {{"Ch.37", 37},
-         {"Ch.38", 38},
-         {"Ch.39", 39},
-         {"Auto", 40}}};
+        {
+            {"Ch.37", 37},
+            {"Ch.38", 38},
+            {"Ch.39", 39},
+            {"Auto", 40}
+        },
+        false,
+        true,
+    };
 
     RxFrequencyField field_frequency{
+<<<<<<< HEAD
         {UI_POS_X(6), UI_POS_Y(0)},
         nav_};
 
@@ -346,11 +358,70 @@ class BLERxView : public View {
          {"Info", 3},
          {"Vendor", 4},
          {"Channel", 5}}};
+=======
+        {6 * ui::new_font_width, 0 * ui::new_font_height},
+        nav_};
+
+    RFAmpField field_rf_amp{
+        {16 * ui::new_font_width, 0 * ui::new_font_height}};
+
+    LNAGainField field_lna{
+        {18 * ui::new_font_width, 0 * ui::new_font_height}};
+
+    VGAGainField field_vga{
+        {21 * ui::new_font_width ,0 * ui::new_font_height}};
+
+    RSSI rssi{
+        {24 * ui::new_font_width, 0, 4 * 8, 8}
+    };
+
+    Channel channel{
+        { 24 * ui::new_font_width, 9, 4 * 8, 8}
+    };
+
+    Labels label_sort{
+        {
+            {0 * 8, 1 * ui::new_font_height}, 
+            "Sort:", 
+            Theme::getInstance()->fg_light->foreground
+        }
+    };
+
+    OptionsField options_sort{
+        {5 * ui::new_font_width, 1 * ui::new_font_height},
+        4,
+        {
+            {"MAC", 0},
+            {"Hits", 1},
+            {"dB", 2},
+            {"Time", 3},
+            {"Name", 4}
+        },
+        false,
+        true
+    };
+
+    Button button_filter{
+        {11 * ui::new_font_width, 1 * ui::new_font_height, 7 * ui::new_font_width, ui::new_font_height},
+        "Filter:"};
+
+    OptionsField options_filter{
+        {18 * ui::new_font_width + 2, 1 * ui::new_font_height},
+        4,
+        {
+            {"Data", 0},
+            {"MAC", 1}
+        },
+        false,
+        true
+    };
+>>>>>>> a8149f33222353859a0f315bd7789e0ba82aefeb
 
     Checkbox check_log{
-        {10 * 8, 4 * 8 + 2},
+        {10 * ui::new_font_width, 2 * ui::new_font_height},
         3,
         "Log",
+<<<<<<< HEAD
         true};
 
     Checkbox check_name{
@@ -358,13 +429,18 @@ class BLERxView : public View {
         3,
         "Name",
         true};
+=======
+        true,false};
+>>>>>>> a8149f33222353859a0f315bd7789e0ba82aefeb
 
     Checkbox check_serial_log{
-        {18 * 8 + 2, 4 * 8 + 2},
+        {18 * ui::new_font_width + 2, 2 * ui::new_font_height},
         7,
         "USB Log",
-        true};
+        true,false
+    };
 
+<<<<<<< HEAD
     Checkbox check_unique{
         {0 * 8 + 2, 7 * 8 + 2},
         7,
@@ -387,17 +463,49 @@ class BLERxView : public View {
     Text text_found_count{
         {11 * 8, 10 * 8 - 2, 20 * 8, 16},
         "0/0"};
+=======
+    Checkbox check_name{
+        {0 * ui::new_font_width, 2 * ui::new_font_height},
+        3,
+        "Name",
+        true,false
+    };
+
+    Button button_find{
+        {0 * 8, 3 * ui::new_font_height, 4 * ui::new_font_width, ui::new_font_height},
+        "Find"
+    };
+
+    Labels label_found{
+        {{5 * ui::new_font_width, 3* ui::new_font_height}, "Found:", Theme::getInstance()->fg_light->foreground}
+    };
+
+    Text text_found_count{
+        // {11 * 8, 7 * 8 - 2, 20 * 8, 16},
+        {11 * ui::new_font_width, 3* ui::new_font_height, 3 * ui::new_font_width, ui::new_font_height},
+        "0/0",
+        true
+    };
+>>>>>>> a8149f33222353859a0f315bd7789e0ba82aefeb
 
     Button button_clear_list{
-        {2 * 8, screen_height - (16 + 32), 7 * 8, 32},
+        {1 * ui::new_font_width, screen_height - (3* ui::new_font_height), 6 * ui::new_font_width,2* ui::new_font_height},
         "Clear"};
 
     Button button_save_list{
+<<<<<<< HEAD
         {UI_POS_X_CENTER(11), screen_height - (16 + 32), 11 * 8, 32},
         "Export CSV"};
 
     Button button_switch{
         {UI_POS_X_RIGHT(6), screen_height - (16 + 32), 4 * 8, 32},
+=======
+        {10 * ui::new_font_width, screen_height - (3* ui::new_font_height), 11 * ui::new_font_width,2* ui::new_font_height},
+        "Export CSV"};
+
+    Button button_switch{
+        {23 * ui::new_font_width, screen_height - (3* ui::new_font_height), 3 * ui::new_font_width, 2*ui::new_font_height},
+>>>>>>> a8149f33222353859a0f315bd7789e0ba82aefeb
         "Tx"};
 
     std::string str_log{""};
@@ -406,10 +514,17 @@ class BLERxView : public View {
     BleRecentEntries recent{};
     BleRecentEntries tempList{};
 
+<<<<<<< HEAD
     RecentEntriesColumns columns{{
         {"Name", 0},
         {"Hits", 7},
         {"dBm", 4},
+=======
+    const RecentEntriesColumns columns{{
+        {"Mac Address", 13},
+        {"Hits", 7},
+        {"dB", 3},
+>>>>>>> a8149f33222353859a0f315bd7789e0ba82aefeb
     }};
 
     BleRecentEntriesView recent_entries_view{columns, recent};

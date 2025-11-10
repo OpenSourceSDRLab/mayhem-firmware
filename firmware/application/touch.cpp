@@ -69,8 +69,13 @@ ui::Point Calibration::translate(const DigitizerPoint& p) const {
     // static constexpr range_t<int32_t> x_range{0, 240 - 1};
     // static constexpr range_t<int32_t> y_range{0, 320 - 1};
 
+<<<<<<< HEAD
     static range_t<int32_t> x_range{0, screen_width - 1};
     static range_t<int32_t> y_range{0, screen_height - 1};
+=======
+    static constexpr range_t<int32_t> x_range{0, 320 - 1};
+    static constexpr range_t<int32_t> y_range{0, 480 - 1};
+>>>>>>> a8149f33222353859a0f315bd7789e0ba82aefeb
 
     const int32_t x = (a * p.x + b * p.y + c) / k;
     const int32_t y = (d * p.x + e * p.y + f) / k;

@@ -83,6 +83,9 @@
 #include "file_path.hpp"
 #include "ff.h"
 
+// #include"my_test.hpp"
+
+
 #include <locale>
 #include <codecvt>
 
@@ -122,8 +125,8 @@ const NavigationView::AppList NavigationView::appList = {
     {nullptr, "Tranceiver", HOME, Color::cyan(), &bitmap_icon_tranceivers, new ViewFactory<TranceiversMenuView>()},
     {"recon", "Recon", HOME, Color::green(), &bitmap_icon_scanner, new ViewFactory<ReconView>()},
     {"capture", "Capture", HOME, Color::red(), &bitmap_icon_capture, new ViewFactory<CaptureAppView>()},
-    {"replay", "Replay", HOME, Color::green(), &bitmap_icon_replay, new ViewFactory<PlaylistView>()},
     {"lookingglass", "Looking Glass", HOME, Color::green(), &bitmap_icon_looking, new ViewFactory<GlassView>()},
+    {"replay", "Replay", HOME, Color::green(), &bitmap_icon_replay, new ViewFactory<PlaylistView>()},
     {nullptr, "Utilities", HOME, Color::cyan(), &bitmap_icon_utilities, new ViewFactory<UtilitiesMenuView>()},
     {nullptr, "Games", HOME, Color::cyan(), &bitmap_icon_games, new ViewFactory<GamesMenuView>()},
     {nullptr, "Settings", HOME, Color::cyan(), &bitmap_icon_setup, new ViewFactory<SettingsMenuView>()},
@@ -135,9 +138,10 @@ const NavigationView::AppList NavigationView::appList = {
     {"blerx", "BLE Rx", RX, Color::green(), &bitmap_icon_btle, new ViewFactory<BLERxView>()},
     {"pocsag", "POCSAG", RX, Color::green(), &bitmap_icon_pocsag, new ViewFactory<POCSAGAppView>()},
     {"radiosonde", "Radiosnde", RX, Color::green(), &bitmap_icon_sonde, new ViewFactory<SondeView>()},
-    {"search", "Search", RX, Color::yellow(), &bitmap_icon_search, new ViewFactory<SearchView>()},
     {"subghzd", "SubGhzD", RX, Color::yellow(), &bitmap_icon_remote, new ViewFactory<SubGhzDView>()},
     {"weather", "Weather", RX, Color::green(), &bitmap_icon_thermometer, new ViewFactory<WeatherView>()},
+    {"search", "Search", RX, Color::yellow(), &bitmap_icon_search, new ViewFactory<SearchView>()},
+
     /* TX ********************************************************************/
     {"aprstx", "APRS TX", TX, ui::Color::green(), &bitmap_icon_aprs, new ViewFactory<APRSTXView>()},
     {"bletx", "BLE Tx", TX, ui::Color::green(), &bitmap_icon_btle, new ViewFactory<BLETxView>()},
@@ -146,19 +150,24 @@ const NavigationView::AppList NavigationView::appList = {
     {"rdstx", "RDS", TX, ui::Color::green(), &bitmap_icon_rds, new ViewFactory<RDSView>()},
     {"touchtune", "TouchTune", TX, ui::Color::green(), &bitmap_icon_touchtunes, new ViewFactory<TouchTunesView>()},
     {"signalgen", "SignalGen", TX, Color::green(), &bitmap_icon_cwgen, new ViewFactory<SigGenView>()},
+<<<<<<< HEAD
     {"mp3player", "Mp3Player", TX, Color::red(), &bitmap_icon_remote, new ViewFactory<mp3player>()},
     // GAME
     {"espupdate", "espupdate", GAMES,Color::red(), &bitmap_icon_remote, new ViewFactory<esp32Update>()},
+=======
+
+>>>>>>> a8149f33222353859a0f315bd7789e0ba82aefeb
     /* TRX ********************************************************************/
     {"microphone", "Mic", TRX, Color::green(), &bitmap_icon_microphone, new ViewFactory<MicTXView>()},
+    
     /* UTILITIES *************************************************************/
     {"filemanager", "File Manager", UTILITIES, Color::green(), &bitmap_icon_dir, new ViewFactory<FileManagerView>()},
     {"freqman", "Freq. Manager", UTILITIES, Color::green(), &bitmap_icon_freqman, new ViewFactory<FrequencyManagerView>()},
     {"iqtrim", "IQ Trim", UTILITIES, Color::orange(), &bitmap_icon_trim, new ViewFactory<IQTrimView>()},
     {"notepad", "Notepad", UTILITIES, Color::dark_cyan(), &bitmap_icon_notepad, new ViewFactory<TextEditorView>()},
     {nullptr, "SD Over USB", UTILITIES, Color::yellow(), &bitmap_icon_hackrf, new ViewFactory<SdOverUsbView>()},
+    // to do 
     {nullptr, "Debug", UTILITIES, Color::light_grey(), &bitmap_icon_debug, new ViewFactory<DebugMenuView>()},
-    //{"testapp", "Test App", UTILITIES, Color::dark_grey(), nullptr, new ViewFactory<TestView>()},
     // Dangerous apps.
     {nullptr, "Flash Utility", UTILITIES, Color::red(), &bitmap_icon_peripherals_details, new ViewFactory<FlashUtilityView>()},
 };
@@ -247,6 +256,7 @@ void StatusTray::clear() {
 }
 
 void StatusTray::paint(Painter&) {
+
 }
 
 /* SystemStatusView ******************************************************/
@@ -279,7 +289,9 @@ SystemStatusView::SystemStatusView(
     button_back.id = -1;  // Special ID used by FocusManager
     title.set_style(Theme::getInstance()->bg_dark);
 
+    // 每进入一个窗体就会进入到这里
     button_back.on_select = [this](ImageButton&) {
+        // 这里触发任何事情
         if (pmem::should_use_sdcard_for_pmem()) {
             pmem::save_persistent_settings_to_file();
         }
@@ -312,7 +324,7 @@ SystemStatusView::SystemStatusView(
         if (nav.is_valid() && v) {
             nav.display_modal(
                 "Stealth",
-                "You just enabled stealth mode.\n"
+                "You just enabled \n stealth mode.\n"
                 "When you transmit,\n"
                 "screen will turn off;\n");
         }
@@ -657,9 +669,11 @@ bool NavigationView::is_valid() const {
 
 View* NavigationView::push_view(std::unique_ptr<View> new_view) {
     free_view();
-    const auto p = new_view.get();
-    view_stack.emplace_back(ViewState{std::move(new_view), {}});
 
+    const auto p = new_view.get();
+
+    view_stack.emplace_back(ViewState{std::move(new_view), {}});
+    
     update_view();
     return p;
 }
@@ -670,7 +684,6 @@ void NavigationView::pop(bool trigger_update) {
         return;
 
     auto on_pop = view_stack.back().on_pop;
-
     free_view();
     view_stack.pop_back();
 
@@ -796,11 +809,35 @@ void NavigationView::handle_autostart() {
 void add_apps(NavigationView& nav, BtnGridView& grid, app_location_t loc) {
     for (auto& app : NavigationView::appList) {
         if (app.menuLocation == loc) {
+<<<<<<< HEAD
             grid.add_item({app.displayName, app.iconColor, app.icon,
                            [&nav, &app]() {
+=======
+            if(strcmp(app.displayName,"Replay") == 0)
+            {
+                grid.add_item({app.displayName, app.iconColor, app.icon,
+                            //实际是一个匿名函数
+                           [&nav, &app]() {
+                                // 避免干扰
+                                i2cdev::I2CDevManager::set_autoscan_interval(0); //if i navigate away from any menu, turn off autoscan
+                                // 生成一个全新的的view传入到当前主页面
+                                nav.push_view(std::unique_ptr<View>(app.viewFactory->produce(nav)));
+                             }},
+                          true);
+            }
+            else
+            {
+                grid.add_item({app.displayName, app.iconColor, app.icon,
+                            //实际是一个匿名函数
+                           [&nav, &app]() {
+                            // 避免干扰
+>>>>>>> a8149f33222353859a0f315bd7789e0ba82aefeb
                             i2cdev::I2CDevManager::set_autoscan_interval(0); //if i navigate away from any menu, turn off autoscan
+                            // 生成一个全新的的vie传入到当前主页面
                             nav.push_view(std::unique_ptr<View>(app.viewFactory->produce(nav))); }},
                           true);
+            }
+            
         }
     };
 
@@ -816,10 +853,10 @@ void add_external_items(NavigationView& nav, app_location_t location, BtnGridVie
                           nullptr,
                           [&nav]() {
                               nav.display_modal(
-                                  "Notice",
-                                  "Can't read external apps\n"
-                                  "Check SD card\n"
-                                  "Update SD card content\n");
+                                  " Notice",
+                                  " Can't read external apps\n"
+                                  " Check SD card\n"
+                                  " Update SD card content\n");
                           }},
                          error_tile_pos);
     } else {
@@ -895,7 +932,7 @@ void TranceiversMenuView::on_populate() {
 
 UtilitiesMenuView::UtilitiesMenuView(NavigationView& nav)
     : nav_(nav) {
-    set_max_rows(2);  // allow wider buttons
+    set_max_rows(3);  // allow wider buttons
 }
 
 void UtilitiesMenuView::on_populate() {
@@ -952,6 +989,7 @@ void SystemMenuView::on_populate() {
     }
     add_apps(nav_, *this, HOME);
     add_external_items(nav_, app_location_t::HOME, *this, 0);
+    
     add_item({"HackRF", Theme::getInstance()->fg_cyan->foreground, &bitmap_icon_hackrf, [this]() { hackrf_mode(nav_); }});
 }
 
@@ -964,25 +1002,33 @@ SystemView::SystemView(
       context_(context) {
     set_style(Theme::getInstance()->bg_darkest);
 
-    constexpr Dim status_view_height = 16;
-    constexpr Dim info_view_height = 16;
+    // constexpr Dim status_view_height = 16;
+    // constexpr Dim info_view_height = 16;
 
+    constexpr Dim status_view_height = 16;
+    constexpr Dim info_view_height = 32;
+
+    //这是最顶栏
     add_child(&status_view);
     status_view.set_parent_rect(
         {{0, 0},
+        // 设置的状态栏的高度
          {parent_rect.width(), status_view_height}});
+
     status_view.on_back = [this]() {
         this->navigation_view.pop();
     };
 
+    // 这是实际框体栏目
     add_child(&navigation_view);
     navigation_view.set_parent_rect(
         {{0, status_view_height},
          {parent_rect.width(), static_cast<Dim>(parent_rect.height() - status_view_height)}});
 
+    // 这是最底端的信息栏
     add_child(&info_view);
     info_view.set_parent_rect(
-        {{0, screen_height - 16},
+        {{0, screen_height - info_view_height},
          {screen_width, info_view_height}});
 
     navigation_view.on_view_changed = [this](const View& new_view) {
@@ -996,17 +1042,22 @@ SystemView::SystemView(
 
         this->status_view.set_back_enabled(!this->navigation_view.is_top());
         this->status_view.set_title_image_enabled(this->navigation_view.is_top());
+        // 这里是设置图标让其更好适配显示
         this->status_view.set_title(new_view.title());
+        this->status_view.title.boom_tag = false;
         this->status_view.set_dirty();
     };
 
+    // 这里实际是添加主要显示的Home菜单？
     navigation_view.push<SystemMenuView>();
 
     if (pmem::config_splash()) {
         navigation_view.push<SplashScreenView>();
     }
+
     status_view.set_back_enabled(false);
     status_view.set_title_image_enabled(true);
+    status_view.title.boom_tag = true;
     status_view.set_dirty();
 }
 
@@ -1092,8 +1143,20 @@ void SplashScreenView::paint(Painter&) {
     // if (!bmp_view.load_bmp(splash_dot_bmp)) { //--too slow drawing, bc of the more bmp format support, and up-> down drawing
     if (!portapack::display.draw_bmp_from_sdcard_file({0, 0}, splash_dot_bmp))
         // ^ try draw bmp file from sdcard at (0,0), and the (0,0) already bypassed the status bar, so actual pos is (0, STATUS_BAR_HEIGHT)
+<<<<<<< HEAD
         portapack::display.draw_bitmap({screen_width / 2 - ((bitmap_titlebar_image.size.width() * zoom) / 2),
                                         screen_height / 2},
+=======
+        // portapack::display.draw_bitmap({0,
+        //                                 screen_height / 2},
+        //                                bitmap_titlebar_image.size,
+        //                                bitmap_titlebar_image.data,
+        //                                Theme::getInstance()->bg_darkest->foreground,
+        //                                Theme::getInstance()->bg_darkest->background, 3);
+        // 这里把开机页面的以字符形式显示了
+        portapack::display.draw_bitmap({30,
+                                        screen_height / 5*2},
+>>>>>>> a8149f33222353859a0f315bd7789e0ba82aefeb
                                        bitmap_titlebar_image.size,
                                        bitmap_titlebar_image.data,
                                        Theme::getInstance()->bg_darkest->foreground,
@@ -1192,20 +1255,50 @@ ModalMessageView::ModalMessageView(
 }
 
 void ModalMessageView::paint(Painter& painter) {
+<<<<<<< HEAD
     if (!compact) portapack::display.draw_bitmap({UI_POS_X_CENTER(6),
                                                   UI_POS_Y(4)},
                                                  bitmap_icon_utilities.size,
                                                  bitmap_icon_utilities.data,
                                                  Theme::getInstance()->bg_darkest->foreground,
                                                  Theme::getInstance()->bg_darkest->background, 3);
+=======
+    if (!compact)
+    {
+        // 绘制的窗体扩大四倍
+        portapack::display.draw_bitmap({screen_width / 2 - 3 * 16 / 2,screen_height / 2 - 3 * 16 / 2 - 100 },
+            bitmap_icon_utilities.size,
+            bitmap_icon_utilities.data,
+            Theme::getInstance()->bg_darkest->foreground,
+            Theme::getInstance()->bg_darkest->background, 2);
+    } 
+>>>>>>> a8149f33222353859a0f315bd7789e0ba82aefeb
 
     // Break lines.
     auto lines = split_string(message_, '\n');
+    // source code
+    // for (size_t i = 0; i < lines.size(); ++i) {
+    //     painter.draw_string(
+    //         {1 * 8, (Coord)(((compact) ? 8 * 3 : 120) + (i * 16))},
+    //         style(),
+    //         lines[i]);
+    // }
+    // f change for suit the full screen
+    int start_offset_x = ui::screen_width;
+    int start_offset_y = ui::screen_height;
+
     for (size_t i = 0; i < lines.size(); ++i) {
-        painter.draw_string(
-            {1 * 8, (Coord)(((compact) ? 8 * 3 : 120) + (i * 16))},
+        int tmp_offset_x = 0;
+        // 默认字体是最新的字体
+        tmp_offset_x = (ui::screen_width - 12 * lines[i].length())/2;
+        if(tmp_offset_x < 0)
+            tmp_offset_x = 0;
+        painter.draw_string_with_fitsize(
+            {
+                tmp_offset_x  , (Coord)(((compact) ? ui::new_font_height * 3 : start_offset_y/3) + (i * ui::new_font_height))
+            },
             style(),
-            lines[i]);
+            lines[i],1);
     }
 }
 

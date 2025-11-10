@@ -34,20 +34,23 @@ namespace ui {
 /* FrequencyField ********************************************************/
 
 FrequencyField::FrequencyField(
-    const Point parent_pos)
+    const Point parent_pos,bool boom_tag)
     : Widget{{parent_pos, {8 * 10, 16}}},
       length_{11},
-      range_{rf::tuning_range} {
+      range_{rf::tuning_range},
+      boom_tag{boom_tag} {
     initial_switch_config_ = get_switches_long_press_config();
     set_focusable(true);
 }
 
 FrequencyField::FrequencyField(
     const Point parent_pos,
-    const rf::FrequencyRange range)
+    const rf::FrequencyRange range,
+    bool boom_tag)
     : Widget{{parent_pos, {8 * 10, 16}}},
       length_{11},
-      range_{range} {
+      range_{range},
+      boom_tag{boom_tag} {
     initial_switch_config_ = get_switches_long_press_config();
     set_focusable(true);
 }
@@ -104,16 +107,34 @@ void FrequencyField::paint(Painter& painter) {
     const auto str_value = to_string_short_freq(value_);
     const auto paint_style = has_focus() ? style().invert() : style();
 
-    painter.draw_string(
-        screen_pos(),
-        paint_style,
-        str_value);
+    if(this->boom_tag == true)
+    {
+        painter.draw_string_with_fitsize(screen_pos(),paint_style,str_value,1);
+        if (digit_mode_) {
+            auto p = screen_pos();
+            p += {digit_ * ui::new_font_width, 0};
+            
+            painter.draw_char(p, *Theme::getInstance()->option_active, str_value[digit_]);
+        }
+        // painter.draw_string(
+        // screen_pos(),
+        // paint_style,
+        // str_value);
 
-    // Highlight current digit in digit_mode.
-    if (digit_mode_) {
-        auto p = screen_pos();
-        p += {digit_ * char_width, 0};
-        painter.draw_char(p, *Theme::getInstance()->option_active, str_value[digit_]);
+        // // Highlight current digit in digit_mode.
+        // if (digit_mode_) {
+        //     auto p = screen_pos();
+        //     p += {digit_ * char_width, 0};
+        //     painter.draw_char(p, *Theme::getInstance()->option_active, str_value[digit_]);
+        // }
+    }
+    else{
+         painter.draw_string_with_fitsize(screen_pos(),paint_style,str_value,0);
+        if (digit_mode_) {
+            auto p = screen_pos();
+            p += {digit_ * 8, 0};
+            painter.draw_char_source(p, *Theme::getInstance()->option_active, str_value[digit_]);
+        }
     }
 }
 
@@ -265,6 +286,8 @@ FrequencyKeypadView::FrequencyKeypadView(
 
     const char* const key_caps = "123456789<0.";
 
+    
+
     int n = 0;
     for (auto& button : buttons) {
         add_child(&button);
@@ -275,9 +298,19 @@ FrequencyKeypadView::FrequencyKeypadView(
             focused_button = button.id;
         };
         button.on_select = button_fn;
+        // button.set_parent_rect({(n % 3) * button_w,
+        //                         (n / 3) * button_h + 24,
+        //                         button_w, button_h});
+
         button.set_parent_rect({(n % 3) * button_w,
+<<<<<<< HEAD
                                 (n / 3) * button_h + 25,
                                 button_w, button_h});
+=======
+                                (n / 3) * 64 + 64,
+                                button_w, 64});
+
+>>>>>>> a8149f33222353859a0f315bd7789e0ba82aefeb
         button.set_text(label);
         n++;
     }
@@ -501,15 +534,32 @@ void FrequencyOptionsView::on_reference_ppm_correction_changed(int32_t v) {
 
 /* RFAmpField ************************************************************/
 
-RFAmpField::RFAmpField(
-    Point parent_pos)
+// RFAmpField::RFAmpField(
+//     Point parent_pos)
+//     : NumberField{
+//           parent_pos,
+//           1,
+//           {0, 1},
+//           1,
+//           ' ',
+//       }
+// {
+//     set_value(receiver_model.rf_amp());
+
+//     on_change = [](int32_t v) {
+//         receiver_model.set_rf_amp(v);
+//     };
+// }
+
+RFAmpField::RFAmpField(Point parent_pos,bool can_loop,bool boom_tag)
     : NumberField{
           parent_pos,
           1,
           {0, 1},
           1,
-          ' ',
-      } {
+          ' ',can_loop,boom_tag
+    }
+{
     set_value(receiver_model.rf_amp());
 
     on_change = [](int32_t v) {
@@ -533,14 +583,30 @@ RadioGainOptionsView::RadioGainOptionsView(
 
 /* LNAGainField **********************************************************/
 
+// LNAGainField::LNAGainField(
+//     Point parent_pos)
+//     : NumberField{
+//           parent_pos,
+//           2,
+//           {max283x::lna::gain_db_range.minimum, max283x::lna::gain_db_range.maximum},
+//           max283x::lna::gain_db_step,
+//           ' ',
+//       } {
+//     set_value(receiver_model.lna());
+
+//     on_change = [](int32_t v) {
+//         receiver_model.set_lna(v);
+//     };
+// }
+
 LNAGainField::LNAGainField(
-    Point parent_pos)
+    Point parent_pos,bool can_loop,bool boom_tag)
     : NumberField{
           parent_pos,
           2,
           {max283x::lna::gain_db_range.minimum, max283x::lna::gain_db_range.maximum},
           max283x::lna::gain_db_step,
-          ' ',
+          ' ',can_loop,boom_tag
       } {
     set_value(receiver_model.lna());
 
@@ -548,6 +614,7 @@ LNAGainField::LNAGainField(
         receiver_model.set_lna(v);
     };
 }
+
 
 void LNAGainField::on_focus() {
     if (on_show_options) {
@@ -558,13 +625,13 @@ void LNAGainField::on_focus() {
 /* VGAGainField **********************************************************/
 
 VGAGainField::VGAGainField(
-    Point parent_pos)
+    Point parent_pos,bool can_loop,bool boom_tag)
     : NumberField{
           parent_pos,
           2,
           {max283x::vga::gain_db_range.minimum, max283x::vga::gain_db_range.maximum},
           max283x::vga::gain_db_step,
-          ' ',
+          ' ',can_loop,boom_tag
       } {
     set_value(receiver_model.vga());
 
@@ -581,14 +648,13 @@ void VGAGainField::on_focus() {
 
 /* AudioVolumeField *******************************************************/
 
-AudioVolumeField::AudioVolumeField(
-    Point parent_pos)
+AudioVolumeField::AudioVolumeField(Point parent_pos,bool can_loop,bool boom_tag)
     : NumberField{
           parent_pos,
           /* length */ 2,
           /* range */ {0, 99},
           /* step */ 1,
-          /* fill char */ ' '} {
+          /* fill char */ ' ',can_loop,boom_tag} {
     set_value(receiver_model.normalized_headphone_volume());
 
     on_change = [](int32_t v) {

@@ -294,10 +294,18 @@ FileManBaseView::FileManBaseView(
     std::string filter)
     : nav_{nav},
       extension_filter{filter} {
+<<<<<<< HEAD
     max_filename_length = screen_width / 8 - 10;
     add_children({&labels,
                   &text_current,
                   &button_exit});
+=======
+    add_children({
+        &labels,
+        &text_current,
+        &button_exit
+    });
+>>>>>>> a8149f33222353859a0f315bd7789e0ba82aefeb
 
     button_exit.on_select = [this](Button&) {
         nav_.pop();

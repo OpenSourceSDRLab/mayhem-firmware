@@ -218,6 +218,7 @@ set(EXTCPPSRC
 
 	#gfxEQ 80 byte
 	external/gfxeq/main.cpp
+<<<<<<< HEAD
 	external/gfxeq/ui_gfxeq.cpp
 
 	#detector_rx  168 byte
@@ -264,6 +265,9 @@ set(EXTCPPSRC
 	#adult_toys_controller  144 bytes 
 	external/adult_toys_controller/main.cpp
 	external/adult_toys_controller/ui_adult_toys_controller.cpp
+=======
+	external/gfxeq/ui_gfxeq.cpp	
+>>>>>>> a8149f33222353859a0f315bd7789e0ba82aefeb
 )
 
 set(EXTAPPLIST
@@ -319,6 +323,7 @@ set(EXTAPPLIST
 	scanner
 	level
 	gfxeq
+<<<<<<< HEAD
 	detector_rx
 	spaceinv
 	blackjack
@@ -330,4 +335,6 @@ set(EXTAPPLIST
 	bht_tx
 	morse_practice
 	adult_toys_controller
+=======
+>>>>>>> a8149f33222353859a0f315bd7789e0ba82aefeb
 )

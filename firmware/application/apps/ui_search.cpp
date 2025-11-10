@@ -51,13 +51,53 @@ void RecentEntriesTable<SearchRecentEntries>::draw(
     else
         str_duration = to_string_dec_uint(entry.duration / 600) + "m" + to_string_dec_uint((entry.duration / 10) % 60) + "s";
 
+<<<<<<< HEAD
     str_duration.resize(11, ' ');
     std::string freq = to_string_short_freq(entry.frequency);
     freq.resize(columns.at(0).second, ' ');
     painter.draw_string(target_rect.location(), style, freq + " " + entry.time + " " + str_duration);
+=======
+    str_duration.resize(target_rect.width() / 8, ' ');
+
+    painter.draw_string_with_fitsize(target_rect.location(), style, to_string_short_freq(entry.frequency) + "  " + entry.time + "  " + str_duration);
+>>>>>>> a8149f33222353859a0f315bd7789e0ba82aefeb
 }
 
 /* SearchView ********************************************/
+
+static bool is_pow2(unsigned x) {
+    return x && ((x & (x - 1)) == 0);
+}
+
+uint32_t clamp_width_to_supported(uint32_t w) {
+    // 一组推荐且对齐 3.072MHz 的候选值
+    const uint32_t cand[] = {3072000, 1536000, 768000, 384000, 192000, 96000, 48000, 24000};
+    uint32_t best = cand[0];
+    uint32_t min_diff = (w > best) ? w - best : best - w;
+    for (auto c : cand) {
+        uint32_t diff = (w > c) ? w - c : c - w;
+        if (diff < min_diff) {
+            min_diff = diff; best = c;
+        }
+    }
+    return best;
+}
+
+void safe_set_spectrum(uint32_t width, unsigned bins) {
+    if (!is_pow2(bins) || bins < 32 || bins > 256) {
+        // 32~256 范围内取 2 的幂
+        if (bins < 32) bins = 32;
+        else if (bins <= 64) bins = 64;
+        else if (bins <= 128) bins = 128;
+        else bins = 256;
+    }
+
+    width = clamp_width_to_supported(width);
+
+    // 最后再调用
+    baseband::set_spectrum(width, bins);
+}
+
 
 SearchView::SearchView(
     NavigationView& nav)
@@ -65,6 +105,7 @@ SearchView::SearchView(
     spectrum_row.resize(240);
     baseband::run_image(portapack::spi_flash::image_tag_wideband_spectrum);
 
+<<<<<<< HEAD
     if (!gradient.load_file(default_gradient_file)) {
         gradient.set_default();
     }
@@ -86,10 +127,47 @@ SearchView::SearchView(
                   &big_display,
                   &check_log,
                   &recent_entries_view});
+=======
+    //直接设置
+    gradient.set_default();
+    // if (!gradient.load_file(default_gradient_file)) {
+    //     gradient.set_default();
+    // }
+>>>>>>> a8149f33222353859a0f315bd7789e0ba82aefeb
 
+    add_children({
+        &labels,
+        &field_frequency_min,
+        &field_frequency_max,
+        &field_lna,
+        &field_vga,
+        &field_threshold,
+        &text_mean,
+        &text_slices,
+        &text_rate,
+        &text_infos,
+        &vu_max,
+        &progress_timers,
+        &check_snap,
+        &options_snap,
+        &big_display,
+        &recent_entries_view
+    });
+    
+    // 这个疑似会报内存错误
+    // ???这是干什么的？
     baseband::set_spectrum(SEARCH_SLICE_WIDTH, 31);
+    // 这里会报错
+    // safe_set_spectrum(200000, 31); 
 
+<<<<<<< HEAD
     recent_entries_view.set_parent_rect({0, 28 * 8, screen_width, screen_height - 28 * 8});
+=======
+
+
+    // 这个应该是动态渲染的区域
+    recent_entries_view.set_parent_rect({0, 8*10+8*ui::new_font_height, screen_width, screen_height - 8*10+8*ui::new_font_height});
+>>>>>>> a8149f33222353859a0f315bd7789e0ba82aefeb
     recent_entries_view.on_select = [this, &nav](const SearchRecentEntry& entry) {
         nav.push<FrequencySaveView>(entry.frequency);
     };
@@ -125,6 +203,7 @@ SearchView::SearchView(
     progress_timers.set_max(DETECT_DELAY);
 
     on_range_changed();
+
     receiver_model.enable();
 
     if (pmem::beep_on_packets()) {
@@ -151,6 +230,110 @@ void SearchView::focus() {
     field_frequency_min.focus();
 }
 
+//source
+// void SearchView::do_detection() {
+//     uint8_t power_max = 0;
+//     int32_t bin_max = -1;
+//     uint32_t slice_max = 0;
+//     uint32_t snap_value;
+//     uint8_t power;
+//     rtc::RTC datetime;
+//     std::string str_approx, str_timestamp;
+
+//     // Display spectrum
+//     bin_skip_acc = 0;
+//     pixel_index = 0;
+//     display.draw_pixels(
+//         {{0, 88}, {(Dim)spectrum_row.size(), 1}},
+//         spectrum_row);
+
+//     mean_power = mean_acc / (SEARCH_BIN_NB_NO_DC * slices_nb);
+//     mean_acc = 0;
+
+//     overall_power_max = 0;
+
+//     // Find max power over threshold for all slices
+//     for (size_t slice = 0; slice < slices_nb; slice++) {
+//         power = slices[slice].max_power;
+//         if (power > overall_power_max)
+//             overall_power_max = power;
+
+//         if ((power >= mean_power + settings_.power_threshold) && (power > power_max)) {
+//             power_max = power;
+//             bin_max = slices[slice].max_index;
+//             slice_max = slice;
+//         }
+//     }
+
+//     // Lock / release
+//     if ((bin_max >= last_bin - 2) && (bin_max <= last_bin + 2) && (bin_max > -1) && (slice_max == last_slice)) {
+//         // Staying around the same bin
+//         if (detect_timer >= DETECT_DELAY) {
+//             if ((bin_max != locked_bin) || (!locked)) {
+//                 if (!locked) {
+//                     resolved_frequency = slices[slice_max].center_frequency + (SEARCH_BIN_WIDTH * (bin_max - 128));
+
+//                     if (check_snap.value()) {
+//                         snap_value = options_snap.selected_index_value();
+//                         resolved_frequency = round(resolved_frequency / snap_value) * snap_value;
+//                     }
+
+//                     // Check range
+//                     if ((resolved_frequency >= settings_.freq_min) && (resolved_frequency <= settings_.freq_max)) {
+//                         duration = 0;
+
+//                         auto& entry = ::on_packet(recent, resolved_frequency);
+
+//                         rtcGetTime(&RTCD1, &datetime);
+//                         str_timestamp = to_string_dec_uint(datetime.hour(), 2, '0') + ":" +
+//                                         to_string_dec_uint(datetime.minute(), 2, '0') + ":" +
+//                                         to_string_dec_uint(datetime.second(), 2, '0');
+//                         entry.set_time(str_timestamp);
+//                         recent_entries_view.set_dirty();
+
+//                         text_infos.set("Locked ! ");
+//                         big_display.set_style(Theme::getInstance()->fg_green);
+
+//                         locked = true;
+//                         locked_bin = bin_max;
+
+//                         // TODO: open Audio.
+//                     } else
+//                         text_infos.set("Out of range");
+//                 }
+
+//                 big_display.set(resolved_frequency);
+//             }
+//         }
+//         release_timer = 0;
+//     } else {
+//         detect_timer = 0;
+//         if (locked) {
+//             if (release_timer >= RELEASE_DELAY) {
+//                 locked = false;
+
+//                 auto& entry = ::on_packet(recent, resolved_frequency);
+//                 entry.set_duration(duration);
+//                 recent_entries_view.set_dirty();
+
+//                 text_infos.set("Listening");
+//                 big_display.set_style(Theme::getInstance()->fg_medium);
+//             }
+//         }
+//     }
+
+//     last_bin = bin_max;
+//     last_slice = slice_max;
+//     search_counter++;
+
+//     // Refresh red tick
+//     portapack::display.fill_rectangle({last_tick_pos, 90, 1, 6}, Theme::getInstance()->fg_red->background);
+//     if (bin_max > -1) {
+//         last_tick_pos = (Coord)(bin_max / slices_nb);
+//         portapack::display.fill_rectangle({last_tick_pos, 90, 1, 6}, Theme::getInstance()->fg_red->foreground);
+//     }
+// }
+
 void SearchView::do_detection() {
     uint8_t power_max = 0;
     int32_t bin_max = -1;
@@ -158,7 +341,8 @@ void SearchView::do_detection() {
     uint32_t snap_value;
     uint8_t power;
     rtc::RTC datetime;
-    std::string str_approx, str_timestamp;
+    // 移除std::string变量，减少内存分配
+    // std::string str_approx, str_timestamp;
 
     // Display spectrum
     bin_skip_acc = 0;
@@ -184,9 +368,8 @@ void SearchView::do_detection() {
         }
     }
 
-    // Lock / release
+    // Lock / release logic...
     if ((bin_max >= last_bin - 2) && (bin_max <= last_bin + 2) && (bin_max > -1) && (slice_max == last_slice)) {
-        // Staying around the same bin
         if (detect_timer >= DETECT_DELAY) {
             if ((bin_max != locked_bin) || (!locked)) {
                 if (!locked) {
@@ -197,17 +380,18 @@ void SearchView::do_detection() {
                         resolved_frequency = round(resolved_frequency / snap_value) * snap_value;
                     }
 
-                    // Check range
                     if ((resolved_frequency >= settings_.freq_min) && (resolved_frequency <= settings_.freq_max)) {
                         duration = 0;
 
                         auto& entry = ::on_packet(recent, resolved_frequency);
 
                         rtcGetTime(&RTCD1, &datetime);
-                        str_timestamp = to_string_dec_uint(datetime.hour(), 2, '0') + ":" +
-                                        to_string_dec_uint(datetime.minute(), 2, '0') + ":" +
-                                        to_string_dec_uint(datetime.second(), 2, '0');
-                        entry.set_time(str_timestamp);
+                        // 简化时间字符串处理
+                        char time_str[9];
+                        snprintf(time_str, sizeof(time_str), "%02d:%02d:%02d", 
+                                datetime.hour(), datetime.minute(), datetime.second());
+                        std::string tmp = time_str;
+                        entry.set_time(tmp);
                         recent_entries_view.set_dirty();
 
                         text_infos.set("Locked ! ");
@@ -215,10 +399,13 @@ void SearchView::do_detection() {
 
                         locked = true;
                         locked_bin = bin_max;
+<<<<<<< HEAD
                         if (pmem::beep_on_packets()) {
                             baseband::request_audio_beep(1000, 24000, 60);
                         }
                         // TODO: open Audio.
+=======
+>>>>>>> a8149f33222353859a0f315bd7789e0ba82aefeb
                     } else
                         text_infos.set("Out of range");
                 }
@@ -299,6 +486,65 @@ void SearchView::do_timers() {
     timing_div++;
 }
 
+// void SearchView::on_channel_spectrum(const ChannelSpectrum& spectrum) {
+//     uint8_t max_power = 0;
+//     int16_t max_bin = 0;
+//     uint8_t power;
+//     size_t bin;
+
+//     baseband::spectrum_streaming_stop();
+
+//     // Add pixels to spectrum display and find max power for this slice
+//     // Center 12 bins are ignored (DC spike is blanked)
+//     // Leftmost and rightmost 2 bins are ignored
+//     for (bin = 0; bin < 256; bin++) {
+//         if ((bin < 2) || (bin > 253) || ((bin >= 122) && (bin < 134))) {
+//             power = 0;
+//         } else {
+//             if (bin < 128)
+//                 power = spectrum.db[128 + bin];
+//             else
+//                 power = spectrum.db[bin - 128];
+//         }
+
+//         add_spectrum_pixel(gradient.lut[power]);
+
+//         mean_acc += power;
+//         if (power > max_power) {
+//             max_power = power;
+//             max_bin = bin;
+//         }
+//     }
+
+//     slices[slice_counter].max_power = max_power;
+//     slices[slice_counter].max_index = max_bin;
+
+//     if (slices_nb > 1) {
+//         // Slice sequence
+//         if (slice_counter >= slices_nb) {
+//             do_detection();
+//             slice_counter = 0;
+//         } else
+//             slice_counter++;
+//         receiver_model.set_target_frequency(slices[slice_counter].center_frequency);
+//         baseband::set_spectrum(SEARCH_SLICE_WIDTH, 31);  // Clear
+//     } else {
+//         // Unique slice
+//         do_detection();
+//     }
+
+//     baseband::spectrum_streaming_start();
+// }
+
+static Color get_simple_color(uint8_t power) {
+    // 简单的颜色映射，避免复杂的gradient查找
+    if (power < 64) return ui::Color(0, 0, 255);      // 蓝色
+    if (power < 128) return ui::Color(0, 255, 255);   // 青色
+    if (power < 192) return ui::Color(0, 255, 0);     // 绿色
+    if (power < 224) return ui::Color(255, 255, 0);   // 黄色
+    return ui::Color(255, 0, 0);                      // 红色
+}
+
 void SearchView::on_channel_spectrum(const ChannelSpectrum& spectrum) {
     uint8_t max_power = 0;
     int16_t max_bin = 0;
@@ -307,9 +553,7 @@ void SearchView::on_channel_spectrum(const ChannelSpectrum& spectrum) {
 
     baseband::spectrum_streaming_stop();
 
-    // Add pixels to spectrum display and find max power for this slice
-    // Center 12 bins are ignored (DC spike is blanked)
-    // Leftmost and rightmost 2 bins are ignored
+    // 简化频谱处理，减少计算量
     for (bin = 0; bin < 256; bin++) {
         if ((bin < 2) || (bin > 253) || ((bin >= 122) && (bin < 134))) {
             power = 0;
@@ -320,7 +564,8 @@ void SearchView::on_channel_spectrum(const ChannelSpectrum& spectrum) {
                 power = spectrum.db[bin - 128];
         }
 
-        add_spectrum_pixel(gradient.lut[power]);
+        // 简化颜色查找，避免复杂的gradient.lut访问
+        add_spectrum_pixel(get_simple_color(power));
 
         mean_acc += power;
         if (power > max_power) {
@@ -333,21 +578,21 @@ void SearchView::on_channel_spectrum(const ChannelSpectrum& spectrum) {
     slices[slice_counter].max_index = max_bin;
 
     if (slices_nb > 1) {
-        // Slice sequence
         if (slice_counter >= slices_nb) {
             do_detection();
             slice_counter = 0;
         } else
             slice_counter++;
         receiver_model.set_target_frequency(slices[slice_counter].center_frequency);
-        baseband::set_spectrum(SEARCH_SLICE_WIDTH, 31);  // Clear
+        baseband::set_spectrum(SEARCH_SLICE_WIDTH, 32);  // 使用有效值
     } else {
-        // Unique slice
         do_detection();
     }
 
     baseband::spectrum_streaming_start();
 }
+
+
 
 void SearchView::on_range_changed() {
     rf::Frequency slices_span;

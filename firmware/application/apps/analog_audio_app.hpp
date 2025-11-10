@@ -43,12 +43,21 @@ class AMOptionsView : public View {
 
    private:
     Text label_config{
+<<<<<<< HEAD
         {UI_POS_X(0), UI_POS_Y(0), UI_POS_WIDTH(2), UI_POS_HEIGHT(1)},
         "BW",
     };
 
     OptionsField options_config{
         {UI_POS_X(3), UI_POS_Y(0)},
+=======
+        {0 * 8, 0 * 16, 2 * 8, 1 * ui::new_font_height},
+        "BW",false
+    };
+
+    OptionsField options_config{
+        {3 * ui::new_font_width, 0 * 16},
+>>>>>>> a8149f33222353859a0f315bd7789e0ba82aefeb
         6,  // Max option length
         {
             // Using common messages from freqman_ui.cpp
@@ -68,19 +77,32 @@ class AMFMAptOptionsView : public View {
 
    private:
     Text label_config{
+<<<<<<< HEAD
         {UI_POS_X(0), UI_POS_Y(0), UI_POS_WIDTH(2), UI_POS_HEIGHT(1)},
+=======
+        {0 , 0 , 2 * ui::new_font_width, 1 * ui::new_font_height},
+>>>>>>> a8149f33222353859a0f315bd7789e0ba82aefeb
         "BW",
+        true
     };
 
     OptionsField options_config{
+<<<<<<< HEAD
         {UI_POS_X(3), UI_POS_Y(0)},
+=======
+        {3 * ui::new_font_width, 0 * 16},
+>>>>>>> a8149f33222353859a0f315bd7789e0ba82aefeb
         17,  // Max option length chars   "USB+FM(Wefax Apt)"
         {
             // Using common messages from freqman_ui.cpp In HF USB , Here  we only need USB Audio demod, + post-FM demod fsubcarrier FM tone to get APT signal.
         }};
 
     OptionsField zoom_config{
+<<<<<<< HEAD
         {UI_POS_X_RIGHT(7), UI_POS_Y(0)},
+=======
+        {ui::screen_width - 7 * ui::new_font_width , 0 * 16},
+>>>>>>> a8149f33222353859a0f315bd7789e0ba82aefeb
         7,
         {{"ZOOM x1", 0},
          {"ZOOM x2", 6}}  // offset index array filters.
@@ -93,25 +115,35 @@ class NBFMOptionsView : public View {
 
    private:
     Text label_config{
+<<<<<<< HEAD
         {UI_POS_X(0), UI_POS_Y(0), UI_POS_WIDTH(2), UI_POS_HEIGHT(1)},
         "BW",
+=======
+        {0 * 8, 0 * 16, 2 * 8, 1 * ui::new_font_height},
+        "BW",false
+>>>>>>> a8149f33222353859a0f315bd7789e0ba82aefeb
     };
     OptionsField options_config{
         {UI_POS_X(3), UI_POS_Y(0)},
         3,  // Max option length
         {
             // Using common messages from freqman_ui.cpp
-        }};
+        },false,false};
 
     Text text_squelch{
+<<<<<<< HEAD
         {UI_POS_X(7), UI_POS_Y(0), UI_POS_WIDTH(8), UI_POS_HEIGHT(1)},
         "SQ   /99"};
+=======
+        {7 * 8, 0 * 16, 8 * 8, 1 *  ui::new_font_height},
+        "SQ   /99",false};
+>>>>>>> a8149f33222353859a0f315bd7789e0ba82aefeb
     NumberField field_squelch{
         {UI_POS_X(10), UI_POS_Y(0)},
         2,
         {0, 99},
         1,
-        ' ',
+        ' ',false,false
     };
 };
 
@@ -120,12 +152,23 @@ class WFMOptionsView : public View {
     WFMOptionsView(Rect parent_rect, const Style* style);
 
    private:
+    
     Text label_config{
+<<<<<<< HEAD
         {UI_POS_X(0), UI_POS_Y(0), UI_POS_WIDTH(2), UI_POS_HEIGHT(1)},
         "BW",
+=======
+        {0 * 8, 0 * 16, 2 * ui::new_font_width, 1 * ui::new_font_height},
+        "BW",true
+>>>>>>> a8149f33222353859a0f315bd7789e0ba82aefeb
     };
+
     OptionsField options_config{
+<<<<<<< HEAD
         {UI_POS_X(3), UI_POS_Y(0)},
+=======
+        {3 * ui::new_font_width, 0 * 16},
+>>>>>>> a8149f33222353859a0f315bd7789e0ba82aefeb
         4,  // Max option length
         {
             // Using common messages from freqman_ui.cpp
@@ -142,8 +185,13 @@ class WFMAMAptOptionsView : public View {
         "BW",
     };
     OptionsField options_config{
+<<<<<<< HEAD
         {UI_POS_X(3), UI_POS_Y(0)},
         16,  // Max option char length "80k-NOAA Apt LPF" , example.
+=======
+        {3 * 8, 0 * 16},
+        16,  // Max option char length "80khz (NOAA Apt)" example.
+>>>>>>> a8149f33222353859a0f315bd7789e0ba82aefeb
         {
             // Using common messages from freqman_ui.cpp
         }};
@@ -155,11 +203,21 @@ class SPECOptionsView : public View {
 
    private:
     Text label_config{
+<<<<<<< HEAD
         {UI_POS_X(0), UI_POS_Y(0), UI_POS_WIDTH(2), UI_POS_HEIGHT(1)},
+=======
+        {0 * 8, 0 * 16, 2 * ui::new_font_width, 1 * ui::new_font_height},
+>>>>>>> a8149f33222353859a0f315bd7789e0ba82aefeb
         "BW",
+        true
     };
+
     OptionsField options_config{
+<<<<<<< HEAD
         {UI_POS_X(3), UI_POS_Y(0)},
+=======
+        {3 * ui::new_font_width, 0 * 16},
+>>>>>>> a8149f33222353859a0f315bd7789e0ba82aefeb
         4,
         {
             {"20m ", 20000000},
@@ -169,23 +227,49 @@ class SPECOptionsView : public View {
             {" 1m ", 1000000},
             {"500k", 500000},
             {"100k", 100000},
-        }};
+        },
+        false,
+        // 放大来写
+        true,
+    };
 
     Text text_speed{
+<<<<<<< HEAD
         {UI_POS_X(9), UI_POS_Y(0), UI_POS_WIDTH(8), UI_POS_HEIGHT(1)},
         "SP   /63"};
     NumberField field_speed{
         {UI_POS_X(12), UI_POS_Y(0)},
+=======
+        {9 * ui::new_font_width, 0 * 16, 8 * ui::new_font_width, 1 * ui::new_font_height},
+        "SP   /63",
+        true
+    };
+
+    NumberField field_speed{
+        {12 * ui::new_font_width , 0 * 16},
+>>>>>>> a8149f33222353859a0f315bd7789e0ba82aefeb
         2,
         {0, 63},
         1,
         ' ',
     };
+
+    // 这里用之前原始的字号，否则放不下
     Text text_rx_cal{
+<<<<<<< HEAD
         {UI_POS_X(19), UI_POS_Y(0), UI_POS_WIDTH(11), UI_POS_HEIGHT(1)},  // 18 (x col.) x char_size,  12 (length) x 8 blanking space to delete previous chars.
         "Rx_IQ_CAL  "};
     NumberField field_rx_iq_phase_cal{
         {screen_width - 2 * 8, UI_POS_Y(0)},
+=======
+        {ui::screen_width - 13 * 8 , 0 , 11 * 8, 1 * 16},  // 18 (x col.) x char_size,  12 (length) x 8 blanking space to delete previous chars.
+        "Rx_IQ_CAL  ",
+        false};
+    
+    //最后的两个数组
+    NumberField field_rx_iq_phase_cal{
+        {screen_width - 2 * ui::new_font_width, 0 * 16},
+>>>>>>> a8149f33222353859a0f315bd7789e0ba82aefeb
         2,
         {0, 63},  // 5 or 6 bits IQ CAL phase adjustment (range updated later)
         1,
@@ -225,7 +309,7 @@ class AnalogAudioView : public View {
     void public_for_on_freqchg(int64_t value);
 
    private:
-    static constexpr ui::Dim header_height = 3 * 16;
+    static constexpr ui::Dim header_height = 3 * 24;
 
     NavigationView& nav_;
     RxRadioState radio_state_{};
@@ -246,13 +330,20 @@ class AnalogAudioView : public View {
             {"previous_zoom"sv, &previous_zoom},                      // we are saving and restoring AMFM ZOOM factor from Settings.
         }};
 
+<<<<<<< HEAD
     const Rect options_view_rect{UI_POS_X(0), UI_POS_Y(1), UI_POS_MAXWIDTH, UI_POS_HEIGHT(1)};
     const Rect nbfm_view_rect{UI_POS_X(0), UI_POS_Y(1), UI_POS_WIDTH(18), UI_POS_HEIGHT(1)};
+=======
+
+    const Rect options_view_rect{0 * ui::new_font_width, 1 * ui::new_font_height, screen_width, 1 * ui::new_font_height};    
+    const Rect nbfm_view_rect{0 * ui::new_font_width, 1 * ui::new_font_height, 18 * ui::new_font_width, 1 * ui::new_font_height};
+>>>>>>> a8149f33222353859a0f315bd7789e0ba82aefeb
 
     size_t spec_bw_index = 0;
     uint32_t spec_bw = 20000000;
     uint16_t spec_trigger = 63;
 
+<<<<<<< HEAD
     RSSI rssi{
         {UI_POS_X(21), 0, UI_POS_WIDTH_REMAINING(21) - UI_POS_WIDTH(2), 4}};
 
@@ -275,6 +366,36 @@ class AnalogAudioView : public View {
 
     OptionsField options_modulation{
         {UI_POS_X(0), UI_POS_Y(0)},
+=======
+    RxFrequencyField field_frequency{
+        {5 * ui::new_font_width, 0 * ui::new_font_height},
+        nav_};
+
+    LNAGainField field_lna{
+        {15 * ui::new_font_width, 0 * ui::new_font_height}};
+
+    VGAGainField field_vga{
+        {18 * ui::new_font_width, 0 * ui::new_font_height}};
+
+    RSSI rssi{
+        {screen_width - 2 * ui::new_font_width,0,3 * ui::new_font_width,8}
+    };
+
+    Channel channel{
+        {screen_width - 2 * ui::new_font_width,9,3 * ui::new_font_width,8}
+    };
+
+    Audio audio{
+        {screen_width - 2 * ui::new_font_width,17,3 * ui::new_font_width,8}
+    };
+
+    AudioVolumeField field_volume{
+        {21 * ui::new_font_width, 0}
+    };
+
+    OptionsField options_modulation{
+        {0 * 8, 0 * ui::new_font_height},
+>>>>>>> a8149f33222353859a0f315bd7789e0ba82aefeb
         4,
         {
             {" AM ", toUType(ReceiverModel::Mode::AMAudio)},
@@ -285,17 +406,28 @@ class AnalogAudioView : public View {
             {"FMAM", toUType(ReceiverModel::Mode::WFMAudioAMApt)}  // Added to handle  SAT NOAA APT
         }};
 
+<<<<<<< HEAD
     AudioVolumeField field_volume{
         {screen_width - 2 * 8, UI_POS_Y(0)}};
 
     Text text_ctcss{
         {UI_POS_X(16), UI_POS_Y(1), UI_POS_WIDTH(14), UI_POS_HEIGHT(1)},
+=======
+    
+
+    Text text_ctcss{
+        {16 * ui::new_font_width, 1 * ui::new_font_height, 14 * ui::new_font_width, 1 * ui::new_font_height},
+>>>>>>> a8149f33222353859a0f315bd7789e0ba82aefeb
         ""};
 
     std::unique_ptr<Widget> options_widget{};
 
     RecordView record_view{
+<<<<<<< HEAD
         {UI_POS_X(0), UI_POS_Y(2), UI_POS_MAXWIDTH, UI_POS_HEIGHT(1)},
+=======
+        {0 * 8, 2 * ui::new_font_height, screen_width, 1 * ui::new_font_height},
+>>>>>>> a8149f33222353859a0f315bd7789e0ba82aefeb
         u"AUD",
         u"AUDIO",
         RecordView::FileType::WAV,

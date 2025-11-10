@@ -135,12 +135,17 @@ class WeatherView : public View {
     WeatherRecentEntries recent{};
 
     OptionsField options_temperature{
+<<<<<<< HEAD
         {10 * 8, UI_POS_Y(0)},
+=======
+        {10 * ui::new_font_width, 0 * ui::new_font_height},
+>>>>>>> a8149f33222353859a0f315bd7789e0ba82aefeb
         2,
         {{STR_DEGREES_C, 0},
          {STR_DEGREES_F, 1}}};
 
     RFAmpField field_rf_amp{
+<<<<<<< HEAD
         {13 * 8, UI_POS_Y(0)}};
     LNAGainField field_lna{
         {15 * 8, UI_POS_Y(0)}};
@@ -158,29 +163,58 @@ class WeatherView : public View {
     RxFrequencyField field_frequency{
         {UI_POS_X(0), UI_POS_Y(0)},
         nav_};
+=======
+        {13 * ui::new_font_width, 0 * ui::new_font_height}
+    };
+    LNAGainField field_lna{
+        {15 *ui::new_font_width, 0 * ui::new_font_height}
+    };
+    VGAGainField field_vga{
+        {18 * 8, 0 * ui::new_font_height}
+    };
+    RSSI rssi{
+        {21 * ui::new_font_width, 0, 4 * 8, ui::new_font_height}
+    };
+
+    AudioVolumeField field_volume{
+        {screen_width - 2 * ui::new_font_width, 0 * ui::new_font_height}
+    };
+
+    RxFrequencyField field_frequency{{0 * 8, 0 * ui::new_font_height},nav_};
+>>>>>>> a8149f33222353859a0f315bd7789e0ba82aefeb
 
     SignalToken signal_token_tick_second{};
 
+    // button height use x2 font size look well.
     Button button_clear_list{
-        {0, 16, 7 * 8, 32},
+        {0, ui::new_font_height, 7 * ui::new_font_width, ui::new_font_height*2},
         "Clear"};
 
     Checkbox check_log{
-        {10 * 8, 18},
+        {10 * ui::new_font_width, ui::new_font_height+4},
         3,
         "Log",
         true};
 
-    static constexpr auto header_height = 3 * 16;
+    static constexpr auto header_height = 3 * 24;
 
     std::unique_ptr<WeatherLogger> logger{};
 
+<<<<<<< HEAD
     RecentEntriesColumns columns{{
         {"Type", 0},
         {"Temp", 5},
         {"Hum", 4},
         {"Ch", 3},
         {"Age", 4},
+=======
+    const RecentEntriesColumns columns{{
+        {"Type", 6},
+        {"Temp", 6},
+        {"Hum", 5},
+        {"Ch", 4},
+        {"Age", 5},
+>>>>>>> a8149f33222353859a0f315bd7789e0ba82aefeb
     }};
     WeatherRecentEntriesView recent_entries_view{columns, recent};
 

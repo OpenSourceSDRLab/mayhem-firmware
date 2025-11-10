@@ -73,34 +73,34 @@ class ReconSetupViewMain : public View {
     std::string _output_file{"RECON_RESULTS"};
 
     Button button_input_file{
-        {1 * 8, 12, 18 * 8, 22},
+        {1 * 8, 1*ui::new_font_height, 18 * ui::new_font_width, ui::new_font_height},
         "select input file"};
     Text text_input_file{
-        {1 * 8, 4 + 2 * 16, 18 * 8, 22},
+        {1 * 8, 3*ui::new_font_height, 18 * ui::new_font_width, ui::new_font_height},
         "RECON"};
 
     Button button_choose_output_file{
-        {1 * 8, 4 * 16 - 8, 18 * 8, 22},
+        {1 * 8, 4*ui::new_font_height, 18 * ui::new_font_width, ui::new_font_height},
         "select output file"};
 
     Button button_choose_output_name{
-        {1 * 8, 5 * 16 - 2, 18 * 8, 22},
+        {1 * 8, 6*ui::new_font_height, 18 * ui::new_font_width, ui::new_font_height},
         "RECON_RESULTS"};
 
     Checkbox checkbox_autosave_freqs{
-        {1 * 8, 7 * 16 - 4},
+        {1 * 8, 8*ui::new_font_height},
         3,
         "autosave freqs"};
 
     Checkbox checkbox_autostart_recon{
-        {1 * 8, 9 * 16 - 4},
+        {1 * 8, 10*ui::new_font_height},
         3,
-        "autostart recon"};
+        "autostart recon",true,false};
 
     Checkbox checkbox_clear_output{
-        {1 * 8, 11 * 16 - 4},
+        {1 * 8, 12*ui::new_font_height},
         3,
-        "clear output at start"};
+        "clear output at start",true,false};
 };
 
 class ReconSetupViewMore : public View {
@@ -116,86 +116,88 @@ class ReconSetupViewMore : public View {
         {1 * 8, 12},
         3,
         "load freq",
-        true};
+        true,false};
 
     Checkbox checkbox_load_repeaters{
         {14 * 8, 12},
         3,
         "load repeater",
-        true};
+        true,false};
 
     Checkbox checkbox_load_ranges{
         {1 * 8, 42},
         3,
         "load range",
-        true};
+        true,false};
 
     Checkbox checkbox_load_hamradios{
         {1 * 8, 72},
         3,
         "load hamradio",
-        true};
+        true,false};
 
     Checkbox checkbox_update_ranges_when_recon{
         {1 * 8, 102},
         3,
-        "auto update m-ranges"};
+        "auto update m-ranges",true,false};
 
     Checkbox checkbox_auto_record_locked{
         {1 * 8, 132},
         3,
-        "record locked periods"};
+        "record locked periods",true,false};
 
     Checkbox checkbox_repeat_recorded{
         {1 * 8, 162},
         0,
-        ""};
+        "",true,false};
 
     OptionsField field_repeat_file_mode{
         {4 * 8 + 3, 165},
         13,
         {{"repeat,delete", RECON_REPEAT_AND_DELETE},
-         {"repeat,keep  ", RECON_REPEAT_AND_KEEP}}};
+         {"repeat,keep  ", RECON_REPEAT_AND_KEEP}}
+         ,false,false
+    };
 
     Text text_repeat_nb{
         {20 * 8, 165, 3 * 8, 22},
-        "nb:"};
+        "nb:",false};
 
     NumberField field_repeat_nb{
         {23 * 8, 165},
         2,
         {1, 99},
         1,
-        ' ',
+        ' ',false,false
     };
 
     Checkbox checkbox_repeat_amp{
         {1 * 8, 192},
         3,
-        "AMP,"};
+        "AMP,",true,false};
 
     Text text_repeat_gain{
         {9 * 8, 196, 5 * 8, 22},
-        "GAIN:"};
+        "GAIN:",false};
 
     NumberField field_repeat_gain{
         {14 * 8, 196},
         2,
         {0, 47},
         1,
-        ' ',
+        ' ',false,false
     };
 
     Text text_repeat_delay{
         {16 * 8, 196, 8 * 8, 22},
-        ", delay:"};
+        ", delay:",false};
 
     NumberField field_repeat_delay{
         {24 * 8, 196},
         3,
         {0, 254},
         1,
-        ' ',
+        ' ',false,false
     };
 };
 
@@ -218,6 +220,7 @@ class ReconSetupView : public View {
     Rect view_rect{0, 3 * 8, screen_width, 230};
 
     ReconSetupViewMain viewMain{nav_, view_rect, input_file, output_file};
+
     ReconSetupViewMore viewMore{nav_, view_rect};
 
     TabView tab_view{
@@ -225,7 +228,11 @@ class ReconSetupView : public View {
         {"More", Theme::getInstance()->fg_green->foreground, &viewMore}};
 
     Button button_save{
+<<<<<<< HEAD
         {UI_POS_X_CENTER(18), 255, UI_POS_WIDTH(18), 40},
+=======
+        {9 *ui::new_font_width, ui::screen_height - 40*2, 14 * 8, 40},
+>>>>>>> a8149f33222353859a0f315bd7789e0ba82aefeb
         "SAVE"};
 };
 

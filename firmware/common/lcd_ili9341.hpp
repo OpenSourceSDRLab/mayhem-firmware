@@ -43,8 +43,15 @@ class ILI9341 {
     void operator=(const ILI9341&) = delete;
 
     bool read_display_status();
+<<<<<<< HEAD
     uint32_t lcd_read_display_id();
 
+=======
+    void draw_glyph_v2(const ui::Point p,ui::Size size,const ui::Color foreground,const ui::Color background,void *target);
+    //change there add only paint string
+    void draw_bitmap_only_char(const ui::Point p,const ui::Size size,const uint8_t* const pixels, const ui::Color foreground,const ui::Color background);
+    void draw_bitmap_only_char_16(const ui::Point p,const ui::Size size,const uint16_t* const pixels, const ui::Color foreground,const ui::Color background);
+>>>>>>> a8149f33222353859a0f315bd7789e0ba82aefeb
     void init();
     void shutdown();
 
@@ -88,6 +95,7 @@ class ILI9341 {
     void read_pixels(
         const ui::Rect r,
         std::vector<ui::ColorRGB888>& colors) {
+        //(0,0,320,1)
         read_pixels(r, colors.data(), colors.size());
     }
 

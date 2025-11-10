@@ -102,10 +102,75 @@ uint32_t lcd_read_display_status() {
     return value5 + (value4 << 8) + (value3 << 16) + (value2 << 24);
 }
 
+
+// void lcd_init()
+// {
+//     //完全参照给定的驱动进行开发
+
+//     // 用于设置内部电荷泵的比率，用于驱动液晶面板的电压调节
+//     io.lcd_data_write_command_and_data(0xF7, {0xA9,0x51,0x2C,0x82});
+//     // Set Panel Related Control / Panel Driving Setting
+//     io.lcd_data_write_command_and_data(0xEC, {0x00,0x02,0x03,0x7A});
+//     // Power Control 1（PWR_CTRL1）
+//     io.lcd_data_write_command_and_data(0xC0, {0x13, 0x13});
+//     // Power Control 2（PWR_CTRL2）
+//     io.lcd_data_write_command_and_data(0xC1, {0x41}); 
+//     // VCOM Control 1
+//     io.lcd_data_write_command_and_data(0xC5, {0x00, 0x28, 0x80});
+//     // frame rate
+//     io.lcd_data_write_command_and_data(0xB1, {0xB0, 0x11});
+//     //  Display Inversion Control（INVCTRL）
+//     io.lcd_data_write_command_and_data(0xB4, {0x02});
+//     // Display Function Control / RGB/MCU Interface Control
+//     io.lcd_data_write_command_and_data(0xB6, {0x02,0x22});
+//     // Entry Mode Set
+//     io.lcd_data_write_command_and_data(0xB7, {0xC6});
+//     // Pump Timing Control / Pump Setting
+//     io.lcd_data_write_command_and_data(0xBE, {0x00,0x04});
+
+//     // Set Image Function / Image Enhancement Function
+//     io.lcd_data_write_command_and_data(0xE9, {0x00});
+
+//     // Interface Control
+//     io.lcd_data_write_command_and_data(0xF4, {0x00,0x00,0x0F});
+
+//     // Positive Gamma Correction
+//     io.lcd_data_write_command_and_data(0xE0, {0x00,0x04,0x0E,0x08,0x17,0x0A,0x40,0x79,0x4D,0x07,0x0E,0x0A,0x1A,0x1D,0x0F});
+//     // Negative Gamma Correction（负向伽马校正）
+//     io.lcd_data_write_command_and_data(0xE1, {0x00,0x1B,0x1F,0x02,0x10,0x05,0x32,0x34,0x43,0x02,0x0A,0x09,0x33,0x37,0x0F});
+
+//     // Interface Control
+//     io.lcd_data_write_command_and_data(0xF4, {0x00,0x00,0x0F});
+//     // Memory Access Control (MADCTL)
+//      io.lcd_data_write_command_and_data(0x36, {
+//                                                  (1 << 7) |  // MY=1
+//                                                  (0 << 6) |  // MX=0
+//                                                  (0 << 5) |  // MV=0
+//                                                  (1 << 4) |  // ML=1: reverse vertical refresh to simplify scrolling logic
+//                                                  (1 << 3)    // BGR=1: For Kingtech LCD, BGR filter.
+//                                              });
+
+//     //Interface Mode Control 0x66 18bit; 0x55 16bit
+//     io.lcd_data_write_command_and_data(0x3A, {0x55});
+    
+//     // Display Inversion On
+//     io.lcd_data_write_command_and_data(0x21, {});  
+    
+//     // Sleep Out
+//     io.lcd_data_write_command_and_data(0x11, {});  
+
+//     chThdSleepMilliseconds(120); 
+//      // Display On
+//     io.lcd_data_write_command_and_data(0x29, {}); 
+//     chThdSleepMilliseconds(5); 
+// }
+
+// source 
 void lcd_init() {
     // LCDs are configured for IM[2:0] = 001
     // 8080-I system, 16-bit parallel bus
 
+<<<<<<< HEAD
     io.lcd_data_write_command_and_data(0xE0, {0x00, 0x09, 0x0C, 0x03, 0x10, 0x06, 0x34, 0x68,
                                               0x49, 0x02, 0x0A, 0x07, 0x2C, 0x31, 0x0F});
 
@@ -159,112 +224,57 @@ void lcd_init_pp() {
     //
     // 0x3a: DBI[2:0] = 101
     // MDT[1:0] = XX (if not in 18-bit mode, right?)
+=======
+>>>>>>> a8149f33222353859a0f315bd7789e0ba82aefeb
 
-    // Power control B
-    // 0
-    // PCEQ=1, DRV_ena=0, Power control=3
-    io.lcd_data_write_command_and_data(0xCF, {0x00, 0xD9, 0x30});
+    io.lcd_data_write_command_and_data(0xE0, {0x00, 0x09, 0x0C, 0x03, 0x10, 0x06, 0x34, 0x68,
+                                              0x49, 0x02, 0x0A, 0x07, 0x2C, 0x31, 0x0F});
 
-    // Power on sequence control
-    io.lcd_data_write_command_and_data(0xED, {0x64, 0x03, 0x12, 0x81});
+    io.lcd_data_write_command_and_data(0xE1, {0x00, 0x12, 0x15, 0x02, 0x10, 0x06, 0x35, 0x35,
+                                              0x4A, 0x05, 0x10, 0x0C, 0x2F, 0x33, 0x0F});
 
-    // Driver timing control A
-    io.lcd_data_write_command_and_data(0xE8, {0x85, 0x10, 0x78});
+    io.lcd_data_write_command_and_data(0xC0, {0x0F, 0x0F});  // Vreg1out=4.5 Vreg2out=-4.5
 
-    // Power control A
-    io.lcd_data_write_command_and_data(0xCB, {0x39, 0x2C, 0x00, 0x34, 0x02});
+    io.lcd_data_write_command_and_data(0xC1, {0x44});  // VGH = 5*VCI VGL = -4*VCI
 
-    // Pump ratio control
-    io.lcd_data_write_command_and_data(0xF7, {0x20});
+    io.lcd_data_write_command_and_data(0xC5, {0x00, 0x66, 0x80});  // VCOM
 
-    // Driver timing control B
-    io.lcd_data_write_command_and_data(0xEA, {0x00, 0x00});
-
-    io.lcd_data_write_command_and_data(0xB1, {0x00, 0x1B});
-
-    // Blanking Porch Control
-    // VFP = 0b0000010 = 2 (number of HSYNC of vertical front porch)
-    // VBP = 0b0000010 = 2 (number of HSYNC of vertical back porch)
-    // HFP = 0b0001010 = 10 (number of DOTCLOCK of horizontal front porch)
-    // HBP = 0b0010100 = 20 (number of DOTCLOCK of horizontal back porch)
-    io.lcd_data_write_command_and_data(0xB5, {0x02, 0x02, 0x0a, 0x14});
-
-    // Display Function Control
-    // PT[1:0] = 0b10
-    // PTG[1:0] = 0b10
-    // ISC[3:0] = 0b0010 (scan cycle interval of gate driver: 5 frames)
-    // SM = 0 (gate driver pin arrangement in combination with GS)
-    // SS = 1 (source output scan direction S720 -> S1)
-    // GS = 0 (gate output scan direction G1 -> G320)
-    // REV = 1 (normally white)
-    // NL = 0b100111 (default)
-    // PCDIV = 0b000000 (default?)
-
-    /*as per the datasheet chapter 8.3.7, addr B6h,
-    data "REV" bit, liquid crystal type:*/
-    if (portapack::persistent_memory::config_lcd_normally_black())
-        io.lcd_data_write_command_and_data(0xB6, {0x0A, 0x22, 0x27, 0x00});  // IPS : normally black : 0
-    else
-        io.lcd_data_write_command_and_data(0xB6, {0x0A, 0xA2, 0x27, 0x00});  // TFT : normally white : 1
-
-    // Power Control 1
-    // VRH[5:0]
-    io.lcd_data_write_command_and_data(0xC0, {0x1B});
-
-    // Power Control 2
-    // SAP[2:0];BT[3:0]
-    io.lcd_data_write_command_and_data(0xC1, {0x12});
-
-    // VCOM Control 1
-    io.lcd_data_write_command_and_data(0xC5, {0x32, 0x3C});
-
-    // VCOM Control 2
-    io.lcd_data_write_command_and_data(0xC7, {0x9B});
-
-    // Memory Access Control
-    // Invert X and Y memory access order, so upper-left of
-    // screen is (0,0) when writing to display.
     io.lcd_data_write_command_and_data(0x36, {
                                                  (1 << 7) |  // MY=1
-                                                 (1 << 6) |  // MX=1
+                                                 (0 << 6) |  // MX=0
                                                  (0 << 5) |  // MV=0
                                                  (1 << 4) |  // ML=1: reverse vertical refresh to simplify scrolling logic
                                                  (1 << 3)    // BGR=1: For Kingtech LCD, BGR filter.
                                              });
 
-    // COLMOD: Pixel Format Set
-    // DPI=101 (16 bits/pixel), DBI=101 (16 bits/pixel)
+    // io.lcd_data_write_command_and_data(0x36, {0x48});
+
     io.lcd_data_write_command_and_data(0x3A, {0x55});
 
-    // io.lcd_data_write_command_and_data(0xF6, { 0x01, 0x30 });
-    //  WEMODE=1 (reset column and page number on overflow)
-    //  MDT[1:0]
-    //  EPF[1:0]=00 (use channel MSB for LSB)
-    //  RIM=0 (If COLMOD[6:4]=101 (65k color), 16-bit RGB interface (1 transfer/pixel))
-    //  RM=0 (system interface/VSYNC interface)
-    //  DM[1:0]=00 (internal clock operation)
-    //  ENDIAN=0 (doesn't matter with 16-bit interface)
-    io.lcd_data_write_command_and_data(0xF6, {0x01, 0x30, 0x00});
+    // 这里的刷新率过低？
+    // io.lcd_data_write_command_and_data(0xB1, {0x40, 0x1F});  // fix 60 fps
+    io.lcd_data_write_command_and_data(0xB1, {0xA0, 0x11});  // Frame rate source is 11fps
 
-    // 3Gamma Function Disable
-    io.lcd_data_write_command_and_data(0xF2, {0x00});
+    io.lcd_data_write_command_and_data(0xB4, {0x02});  // 2 dot inversion
 
-    // Gamma curve selected
-    io.lcd_data_write_command_and_data(0x26, {0x01});
+    io.lcd_data_write_command_and_data(0xEE, {0x00, 0x04});
 
-    // Set Gamma
-    io.lcd_data_write_command_and_data(0xE0, {0x0F, 0x1D, 0x19, 0x0E, 0x10, 0x07, 0x4C, 0x63,
-                                              0x3F, 0x03, 0x0D, 0x00, 0x26, 0x24, 0x04});
+    io.lcd_data_write_command_and_data(0xE9, {0x00});
 
-    // Set Gamma
-    io.lcd_data_write_command_and_data(0xE1, {0x00, 0x1C, 0x1F, 0x02, 0x0F, 0x03, 0x35, 0x25,
-                                              0x47, 0x04, 0x0C, 0x0B, 0x29, 0x2F, 0x05});
+    io.lcd_data_write_command_and_data(0xF7, {0xA9, 0x51, 0x2C, 0x82});
 
-    lcd_wake();
+    io.lcd_data_write_command_and_data(0x21, {});  // Display Inversion On
+
+    io.lcd_data_write_command_and_data(0x11, {});  // Sleep Out
+    chThdSleepMilliseconds(120);                   // Delay 120ms
+
+    io.lcd_data_write_command_and_data(0x29, {});  // Display On
+    chThdSleepMilliseconds(50);                    // Delay 50ms
 
     // Turn on Tearing Effect Line (TE) output signal.
     io.lcd_data_write_command_and_data(0x35, {0b00000000});
 }
+
 
 void lcd_set(const uint_fast8_t command, const uint_fast16_t start, const uint_fast16_t end) {
     io.lcd_data_write_command_and_data(command, {static_cast<uint8_t>(start >> 8), static_cast<uint8_t>(start & 0xff),
@@ -277,6 +287,7 @@ void lcd_ramwr_start() {
 
 void lcd_ramrd_start() {
     io.lcd_data_write_command_and_data(0x2e, {});
+    //dummy read
     io.lcd_read_word();
 }
 
@@ -300,6 +311,7 @@ void lcd_start_ram_write(
 void lcd_start_ram_read(
     const ui::Point p,
     const ui::Size s) {
+    //(0,0,320,1)
     lcd_caset(p.x(), p.x() + s.width() - 1);
     lcd_paset(p.y(), p.y() + s.height() - 1);
     lcd_ramrd_start();
@@ -562,8 +574,15 @@ bool ILI9341::draw_bmp_from_sdcard_file(const ui::Point p, const std::filesystem
     bmp_header_t bmp_header;
     uint8_t type = 0;
     char buffer[257];
+<<<<<<< HEAD
     ui::Color line_buffer[320];
     int16_t start_x = p.x();
+=======
+    // 修改为320
+    // ui::Color line_buffer[240];
+    ui::Color line_buffer[320];
+
+>>>>>>> a8149f33222353859a0f315bd7789e0ba82aefeb
     auto result = bmpimage.open(file);
     if (result.is_valid())
         return false;
@@ -597,8 +616,13 @@ bool ILI9341::draw_bmp_from_sdcard_file(const ui::Point p, const std::filesystem
 
     width = bmp_header.width;
     height = bmp_header.height;
+<<<<<<< HEAD
     start_x = (screen_width - start_x - width) / 2 + start_x;  // center horizontally
     if (width > screen_width || width > 320)
+=======
+
+    if (width != 320)
+>>>>>>> a8149f33222353859a0f315bd7789e0ba82aefeb
         return false;
 
     file_pos = bmp_header.image_data;
@@ -658,6 +682,111 @@ bool ILI9341::draw_bmp_from_sdcard_file(const ui::Point p, const std::filesystem
     }
     return true;
 }
+
+// bool ILI9341::draw_bmp_from_sdcard_file(const ui::Point p, const std::filesystem::path& file) {
+//     File bmpimage;
+//     size_t file_pos = 0;
+//     uint16_t pointer = 0;
+//     int16_t px = 0, py, width, height;
+//     bmp_header_t bmp_header;
+//     uint8_t type = 0;
+//     char buffer[257];
+//     ui::Color line_buffer[240];
+
+//     auto result = bmpimage.open(file);
+//     if (result.is_valid())
+//         return false;
+
+//     bmpimage.seek(file_pos);
+//     auto read_size = bmpimage.read(&bmp_header, sizeof(bmp_header));
+//     if (!((bmp_header.signature == 0x4D42) &&                               // "BM" Signature
+//           (bmp_header.planes == 1) &&                                       // Seems always to be 1
+//           (bmp_header.compression == 0 || bmp_header.compression == 3))) {  // No compression
+//         return false;
+//     }
+
+//     switch (bmp_header.bpp) {
+//         case 16:
+//             file_pos = 0x36;
+//             memset(buffer, 0, 16);
+//             bmpimage.read(buffer, 16);
+//             if (buffer[1] == 0x7C)
+//                 type = 3;  // A1R5G5B5
+//             else
+//                 type = 0;  // R5G6B5
+//             break;
+//         case 24:
+//             type = 1;
+//             break;
+//         case 32:
+//         default:
+//             type = 2;
+//             break;
+//     }
+
+//     width = bmp_header.width;
+//     height = bmp_header.height;
+
+//     if (width != 240)
+//         return false;
+
+//     file_pos = bmp_header.image_data;
+
+//     py = height + 16 - 1;
+//     /*                 ^ this is for to "start" AKA "image end" draw at the 17th line,
+//      *                   because the render_line logic below is start with p.y() + py until "end" AKA "image start"*/
+
+//     while (1) {
+//         while (px < width) {
+//             bmpimage.seek(file_pos);
+//             memset(buffer, 0, 257);
+//             read_size = bmpimage.read(buffer, 256);
+//             if (read_size.is_error())
+//                 return false;  // Read error
+
+//             pointer = 0;
+//             while (pointer < 256) {
+//                 if (pointer + 4 > 256)
+//                     break;
+//                 switch (type) {
+//                     case 0:  // R5G6B5
+//                     case 3:  // A1R5G5B5
+//                         if (!type)
+//                             line_buffer[px] = ui::Color((uint16_t)buffer[pointer] | ((uint16_t)buffer[pointer + 1] << 8));
+//                         else
+//                             line_buffer[px] = ui::Color(((uint16_t)buffer[pointer] & 0x1F) | ((uint16_t)buffer[pointer] & 0xE0) << 1 | ((uint16_t)buffer[pointer + 1] & 0x7F) << 9);
+//                         pointer += 2;
+//                         file_pos += 2;
+//                         break;
+//                     case 1:  // 24
+//                     default:
+//                         line_buffer[px] = ui::Color(buffer[pointer + 2], buffer[pointer + 1], buffer[pointer]);
+//                         pointer += 3;
+//                         file_pos += 3;
+//                         break;
+//                     case 2:  // 32
+//                         line_buffer[px] = ui::Color(buffer[pointer + 2], buffer[pointer + 1], buffer[pointer]);
+//                         pointer += 4;
+//                         file_pos += 4;
+//                         break;
+//                 }
+//                 px++;
+//                 if (px >= width) {
+//                     break;
+//                 }
+//             }
+//             if (read_size.value() != 256)
+//                 break;
+//         }
+//         render_line({p.x(), p.y() + py}, px, line_buffer);
+//         px = 0;
+//         py--;
+
+//         if (read_size.value() < 256 || py < 0)
+//             break;
+//     }
+//     return true;
+// }
 
 void ILI9341::draw_line(const ui::Point start, const ui::Point end, const ui::Color color) {
     int x0 = start.x();
@@ -725,12 +854,75 @@ void ILI9341::read_pixels(
     ui::ColorRGB888* const colors,
     const size_t count) {
     /* TODO: Assert that rectangle width x height < count */
+    //(0,0,320,1)
     lcd_start_ram_read(r);
     io.lcd_read_bytes(
         reinterpret_cast<uint8_t*>(colors),
         count * sizeof(ui::ColorRGB888));
 }
 
+
+void ILI9341::draw_bitmap_only_char_16(const ui::Point p,const ui::Size size,const uint16_t* const pixels, const ui::Color foreground,const ui::Color background)
+{
+    lcd_start_ram_write(p, size);
+    for (int row = 0; row < size.height(); ++row) {
+        uint16_t row_bits = pixels[row];  // 每行的12位像素数据（低位在左）
+        for (int col = 0; col < size.width(); ++col) {
+            bool pixel_on = (row_bits >> col) & 1;
+            io.lcd_write_pixel(pixel_on ? foreground : background);
+        }
+    }
+
+}
+
+
+/// @brief 新增加的函数用于处理16*24文字渲染
+/// @param p 
+/// @param size 
+/// @param pixels 
+/// @param foreground 
+/// @param background 
+void ILI9341::draw_bitmap_only_char(const ui::Point p,const ui::Size size,const uint8_t* const pixels, const ui::Color foreground,const ui::Color background)
+{
+    if (ui::Color::magenta().v != background.v)
+    {
+        lcd_start_ram_write(p, size);
+        const size_t count = size.width() * size.height();
+        
+        for (size_t i = 0; i < count; i++) 
+        {
+            const auto pixel = pixels[i >> 3] & (1U << (i & 0x7));
+            io.lcd_write_pixel(pixel ? foreground : background);
+        }
+    }
+     else {
+        // transparent bg
+        int x = p.x();
+        int y = p.y();
+        int maxX = x + size.width();
+        const size_t count = size.width() * size.height();
+        for (size_t i = 0; i < count; i++) {
+                const auto pixel = pixels[i >> 3] & (1U << (i & 0x7));
+                if (pixel) {
+                    draw_pixel(ui::Point(x, y), foreground);
+                }
+                // move to next px
+                x++;
+                if (x >= maxX) {
+                    x = p.x();
+                    y++;
+                }
+        }
+    }
+}
+
+/// @brief 绘制图片类型，此函数最好不要修改
+/// @param p 位置
+/// @param size 大小
+/// @param pixels 具体图像
+/// @param foreground 前景色
+/// @param background 背景色
+/// @param zoom_level 等比例扩大因子
 void ILI9341::draw_bitmap(
     const ui::Point p,
     const ui::Size size,
@@ -744,17 +936,20 @@ void ILI9341::draw_bitmap(
             lcd_start_ram_write(p, size);
 
             const size_t count = size.width() * size.height();
-            for (size_t i = 0; i < count; i++) {
+            for (size_t i = 0; i < count; i++) 
+            {
                 const auto pixel = pixels[i >> 3] & (1U << (i & 0x7));
                 io.lcd_write_pixel(pixel ? foreground : background);
             }
-        } else {
+        } 
+        else {
             // transparent bg
             int x = p.x();
             int y = p.y();
             int maxX = x + size.width();
             const size_t count = size.width() * size.height();
             for (size_t i = 0; i < count; i++) {
+<<<<<<< HEAD
                 const auto pixel = pixels[i >> 3] & (1U << (i & 0x7));
                 if (pixel) {
                     if (x <= screen_width && y <= screen_height) draw_pixel(ui::Point(x, y), foreground);
@@ -765,10 +960,22 @@ void ILI9341::draw_bitmap(
                     x = p.x();
                     y++;
                 }
+=======
+                    const auto pixel = pixels[i >> 3] & (1U << (i & 0x7));
+                    if (pixel) {
+                        draw_pixel(ui::Point(x, y), foreground);
+                    }
+                    // move to next px
+                    x++;
+                    if (x >= maxX) {
+                        x = p.x();
+                        y++;
+                    }
+>>>>>>> a8149f33222353859a0f315bd7789e0ba82aefeb
             }
         }
-    } else {  // zoom
-
+    } 
+    else {  // zoom
         // dot to square
         for (int y = 0; y < size.height(); y++) {
             for (int x = 0; x < size.width(); x++) {
@@ -793,12 +1000,23 @@ void ILI9341::draw_bitmap(
     }
 }
 
+void ILI9341::draw_glyph_v2(const ui::Point p,ui::Size size,const ui::Color foreground,const ui::Color background,void *target)
+{
+    if(size.width() == 12)
+    {
+        draw_bitmap_only_char_16(p, size, (const uint16_t*)target, foreground, background);
+    }
+    else
+        draw_bitmap_only_char(p, size, (const uint8_t*)target, foreground, background);
+}
+
 void ILI9341::draw_glyph(
     const ui::Point p,
     const ui::Glyph& glyph,
     const ui::Color foreground,
     const ui::Color background,
-    uint8_t zoom_level) {
+    uint8_t zoom_level) 
+{
     draw_bitmap(p, glyph.size(), glyph.pixels(), foreground, background, zoom_level);
 }
 

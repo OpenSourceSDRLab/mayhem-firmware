@@ -189,6 +189,7 @@ class StatusTray : public View {
     uint8_t width_{};
 };
 
+// 最顶部的栏目
 class SystemStatusView : public View {
    public:
     std::function<void(void)> on_back{};
@@ -199,6 +200,12 @@ class SystemStatusView : public View {
     void set_back_hidden(bool new_value);
     void set_title_image_enabled(bool new_value);
     void set_title(const std::string new_value);
+    // 
+    Text title{
+        {20, 0, 14 * 8, 1 * ui::good_display_header_height},
+        default_title,
+        false,
+    };
 
    private:
     static constexpr auto default_title = "";
@@ -208,22 +215,30 @@ class SystemStatusView : public View {
     NavigationView& nav_;
 
     Rectangle backdrop{
+<<<<<<< HEAD
         {UI_POS_X(0), UI_POS_Y(0), ui::screen_width, 16},
+=======
+        {0 * 8, 0 * 16, ui::screen_width, ui::good_display_header_height },
+>>>>>>> a8149f33222353859a0f315bd7789e0ba82aefeb
         Theme::getInstance()->bg_dark->background};
 
+
     ImageButton button_back{
+<<<<<<< HEAD
         {0, UI_POS_Y(0), 12 * 8, 16},  // Back button also covers the title for easier touch.
+=======
+        // 修改触控逻辑，好于扩大其接触范围
+        {0, 0 * 16, 12 * 8, ui::good_display_header_height},  // Back button also covers the title for easier touch.
+        // {0, 0 * 16, ui::screen_width / 2, 32},  // Back button also covers the title for easier touch.
+>>>>>>> a8149f33222353859a0f315bd7789e0ba82aefeb
         &bitmap_icon_previous,
         Theme::getInstance()->bg_dark->foreground,
         Theme::getInstance()->bg_dark->background};
 
-    Text title{
-        {20, 0, 14 * 8, 1 * 16},
-        default_title,
-    };
+    
 
     ImageButton button_title{
-        {2, 0, 80, 16},
+        {0, 0, 80, ui::good_display_header_height},
         &bitmap_titlebar_image,
         Theme::getInstance()->bg_dark->foreground,
         Theme::getInstance()->bg_dark->background};
@@ -231,7 +246,7 @@ class SystemStatusView : public View {
     StatusTray status_icons{{screen_width, 0}};
 
     ImageToggle toggle_speaker{
-        {0, 0, 2 * 8, 1 * 16},
+        {0, 0, 2 * 8, 1 * ui::good_display_header_height},
         &bitmap_icon_speaker_mute,
         &bitmap_icon_speaker,
         Theme::getInstance()->fg_light->foreground,
@@ -240,7 +255,7 @@ class SystemStatusView : public View {
         Theme::getInstance()->bg_dark->background};
 
     ImageToggle toggle_mute{
-        {0, 0, 2 * 8, 1 * 16},
+        {0, 0, 2 * 8, 1 * ui::good_display_header_height},
         &bitmap_icon_speaker_and_headphones_mute,
         &bitmap_icon_speaker_and_headphones,
         Theme::getInstance()->fg_light->foreground,
@@ -249,13 +264,13 @@ class SystemStatusView : public View {
         Theme::getInstance()->bg_dark->background};
 
     ImageButton button_converter{
-        {0, 0, 2 * 8, 1 * 16},
+        {0, 0, 2 * 8, 1 * ui::good_display_header_height},
         &bitmap_icon_upconvert,
         Theme::getInstance()->fg_light->foreground,
         Theme::getInstance()->bg_dark->background};
 
     ImageToggle toggle_stealth{
-        {0, 0, 2 * 8, 1 * 16},
+        {0, 0, 2 * 8, 1 * ui::good_display_header_height},
         &bitmap_icon_stealth,
         &bitmap_icon_stealth,
         *Theme::getInstance()->status_active,
@@ -264,40 +279,48 @@ class SystemStatusView : public View {
         Theme::getInstance()->bg_dark->background};
 
     ImageButton button_camera{
-        {0, 0, 2 * 8, 1 * 16},
+        {0, 0, 2 * 8, 1 * ui::good_display_header_height},
         &bitmap_icon_camera,
         Theme::getInstance()->bg_dark->foreground,
         Theme::getInstance()->bg_dark->background};
 
     ImageButton button_sleep{
-        {0, 0, 2 * 8, 1 * 16},
+        {0, 0, 2 * 8, 1 * ui::good_display_header_height},
         &bitmap_icon_sleep,
         Theme::getInstance()->bg_dark->foreground,
         Theme::getInstance()->bg_dark->background};
 
     ImageButton button_bias_tee{
-        {0, 0, 2 * 8, 1 * 16},
+        {0, 0, 2 * 8, 1 * ui::good_display_header_height},
         &bitmap_icon_biast_off,
         Theme::getInstance()->fg_light->foreground,
         Theme::getInstance()->bg_dark->background};
 
     ImageButton button_clock_status{
+<<<<<<< HEAD
         {0, UI_POS_Y(0), 8, 1 * 16},
+=======
+        {0, 0 * 16, 8, 1 * ui::good_display_header_height},
+>>>>>>> a8149f33222353859a0f315bd7789e0ba82aefeb
         &bitmap_icon_clk_int,
         Theme::getInstance()->fg_light->foreground,
         Theme::getInstance()->bg_dark->background};
 
     ImageButton button_fake_brightness{
-        {0, 0, 2 * 8, 1 * 16},
+        {0, 0, 2 * 8, 1 * ui::good_display_header_height},
         &bitmap_icon_brightness,
         *Theme::getInstance()->status_active,
         Theme::getInstance()->bg_dark->background};
 
     SDCardStatusView sd_card_status_view{
+<<<<<<< HEAD
         {0, UI_POS_Y(0), 2 * 8, 1 * 16}};
+=======
+        {0, 0 * 16, 2 * 8, 1 * ui::good_display_header_height}};
+>>>>>>> a8149f33222353859a0f315bd7789e0ba82aefeb
 
-    BatteryTextField battery_text{{0, 0, 2 * 8, 1 * 16}, 102};
-    BatteryIcon battery_icon{{0, 0, 10, 1 * 16}, 102};
+    BatteryTextField battery_text{{0, 0, 2 * 8, 1 * ui::good_display_header_height}, 102};
+    BatteryIcon battery_icon{{0, 0, 10, 1 * ui::good_display_header_height}, 102};
 
     void on_converter();
     void on_bias_tee();
@@ -324,6 +347,7 @@ class SystemStatusView : public View {
         }};
 };
 
+// 最下方的栏目
 class InformationView : public View {
    public:
     InformationView(NavigationView& nav);
@@ -332,18 +356,25 @@ class InformationView : public View {
 
    private:
     // static constexpr auto version_string = "v1.4.4"; // This is commented out as we are now setting the version via ENV (VERSION_STRING=v1.0.0)
+    static constexpr auto version_string = "V2.3.0";
     NavigationView& nav_;
 
     Rectangle backdrop{
-        {0, 0, screen_width, 16},
+        {0, 0, screen_width, ui::new_font_height},
         Theme::getInstance()->bg_darker->background};
 
+    // Text version{
+    //     {2, 0, 11 * 8, 16},
+    //     VERSION_STRING};
+
     Text version{
-        {2, 0, 11 * 8, 16},
-        VERSION_STRING};
+        {0, 0, 11 * 8, ui::new_font_height},
+        version_string,
+        true
+    };
 
     LiveDateTime ltime{
-        {screen_width - 19 * 8, 0, 19 * 8, 16}};
+        {screen_width - 19 * ui::new_font_width, 0, 19 * ui::new_font_width, ui::new_font_height}};
 };
 
 class SplashScreenView : public View {
@@ -423,7 +454,12 @@ class SystemMenuView : public BtnGridView {
     void hackrf_mode(NavigationView& nav);
 };
 
+<<<<<<< HEAD
 // 相当于整个主页面
+=======
+// 主要显示界面
+// 包含状态栏；菜单；最下栏
+>>>>>>> a8149f33222353859a0f315bd7789e0ba82aefeb
 class SystemView : public View {
    public:
     SystemView(
@@ -471,8 +507,9 @@ private:
         };
 };*/
 
+ 
 class ModalMessageView : public View {
-   public:
+    public:
     ModalMessageView(
         NavigationView& nav,
         const std::string& title,
@@ -480,7 +517,7 @@ class ModalMessageView : public View {
         modal_t type,
         std::function<void(bool)> on_choice,
         bool compact = false);
-
+    // 实际绘制图形的位置？？
     void paint(Painter& painter) override;
     void focus() override;
 
@@ -492,19 +529,30 @@ class ModalMessageView : public View {
     const modal_t type_;
     const std::function<void(bool)> on_choice_;
     const bool compact;
-
     Button button_ok{
+<<<<<<< HEAD
         {UI_POS_X_CENTER(10), UI_POS_Y_BOTTOM(5), UI_POS_WIDTH(10), UI_POS_HEIGHT(3)},
+=======
+        {0, ui::screen_height - ui::new_font_height*3 , ui::new_font_width * 8, ui::new_font_height*2},
+>>>>>>> a8149f33222353859a0f315bd7789e0ba82aefeb
         "OK",
     };
 
     Button button_yes{
+<<<<<<< HEAD
         {UI_POS_X_CENTER(8) - UI_POS_WIDTH(6), UI_POS_Y_BOTTOM(5), UI_POS_WIDTH(8), UI_POS_HEIGHT(3)},
+=======
+         {ui::screen_width- 10*8*2 , ui::screen_height - ui::new_font_height*3 , ui::new_font_width * 8, ui::new_font_height*2},
+>>>>>>> a8149f33222353859a0f315bd7789e0ba82aefeb
         "YES",
     };
 
     Button button_no{
+<<<<<<< HEAD
         {UI_POS_X_CENTER(8) + UI_POS_WIDTH(6), UI_POS_Y_BOTTOM(5), UI_POS_WIDTH(8), UI_POS_HEIGHT(3)},
+=======
+        {ui::screen_width - 10*8*1, ui::screen_height - ui::new_font_height*3  , ui::new_font_width * 8, ui::new_font_height*2},
+>>>>>>> a8149f33222353859a0f315bd7789e0ba82aefeb
         "NO",
     };
 };

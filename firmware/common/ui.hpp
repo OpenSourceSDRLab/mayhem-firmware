@@ -26,6 +26,7 @@
 
 namespace ui {
 
+<<<<<<< HEAD
 // Positioning helpers PER CHARACTERS (8*16)
 // EACH parameters must be used az CHAR position, not PX coordinates. So If you wanna use the 8,16 coordinates (that is the second character in X and second character in Y you must use UI_POS_X(1) UI_POS_Y(1) (since we count from 0)
 
@@ -64,6 +65,8 @@ namespace ui {
 // px width of the screen
 #define UI_POS_MAXHEIGHT (screen_height)
 
+=======
+>>>>>>> a8149f33222353859a0f315bd7789e0ba82aefeb
 // Escape sequences for colored text; second character is index into term_colors[]
 #define STR_COLOR_BLACK "\x1B\x00"
 #define STR_COLOR_DARK_BLUE "\x1B\x01"
@@ -91,6 +94,11 @@ using Dim = int16_t;
 extern uint16_t screen_width;
 extern uint16_t screen_height;
 
+extern uint16_t new_font_height;
+extern uint16_t new_font_width;
+extern const uint16_t font12x24[95][24];
+
+extern uint16_t good_display_header_height;
 /* Dimensions for the default font character. */
 constexpr uint16_t char_width = 8;
 constexpr uint16_t char_height = 16;

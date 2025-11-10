@@ -61,41 +61,62 @@ class APRSTXView : public View {
     void on_tx_progress(const uint32_t progress, const bool done);
 
     Labels labels{
+<<<<<<< HEAD
         {{UI_POS_X(0), 1 * 16}, "Source:       SSID:", Theme::getInstance()->fg_light->foreground},  // 6 alphanum + SSID
         {{UI_POS_X(0), 2 * 16}, " Dest.:       SSID:", Theme::getInstance()->fg_light->foreground},
         {{UI_POS_X(0), 4 * 16}, "Info field:", Theme::getInstance()->fg_light->foreground},
+=======
+        {{0 * 8, 1 * ui::new_font_height}, "Source:       SSID:", Theme::getInstance()->fg_light->foreground},  // 6 alphanum + SSID
+        {{0 * 8, 2 * ui::new_font_height}, " Dest.:       SSID:", Theme::getInstance()->fg_light->foreground},
+        {{0 * 8, 4 * ui::new_font_height}, "Info field:", Theme::getInstance()->fg_light->foreground},
+>>>>>>> a8149f33222353859a0f315bd7789e0ba82aefeb
     };
 
+
     SymField sym_source{
-        {7 * 8, 1 * 16},
+        {7 * ui::new_font_width, 1 * ui::new_font_height},
         6,
         SymField::Type::Alpha};
 
     NumberField num_ssid_source{
-        {19 * 8, 1 * 16},
+        {19 * ui::new_font_width, 1 * ui::new_font_height},
         2,
         {0, 15},
         1,
         ' '};
 
     SymField sym_dest{
-        {7 * 8, 2 * 16},
+        {7 * ui::new_font_width, 2 * ui::new_font_height},
         6,
-        SymField::Type::Alpha};
+        SymField::Type::Alpha
+    };
 
     NumberField num_ssid_dest{
-        {19 * 8, 2 * 16},
+        {19 * ui::new_font_width, 2 * ui::new_font_height},
         2,
         {0, 15},
         1,
         ' '};
 
     Text text_payload{
+<<<<<<< HEAD
         {UI_POS_X(0), 5 * 16, screen_width, 16},
         "-"};
     Button button_set{
         {UI_POS_X(0), 6 * 16, 80, 32},
         "Set"};
+=======
+        {0 * 8, 5 * ui::new_font_height, screen_width, ui::new_font_height},
+        "-",
+        true
+    };
+
+
+    Button button_set{
+        {0 * 8, 6 * ui::new_font_height, 80, ui::new_font_height*2},
+        "Set"
+    };
+>>>>>>> a8149f33222353859a0f315bd7789e0ba82aefeb
 
     TransmitterView tx_view{
         (int16_t)UI_POS_Y_BOTTOM(4),

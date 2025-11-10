@@ -100,6 +100,7 @@ class IQTrimView : public View {
     TrimProgressUI progress_ui{};
 
     Labels labels{
+<<<<<<< HEAD
         {{UI_POS_X(0), UI_POS_Y(0)}, "Capture File:", Theme::getInstance()->fg_light->foreground},
         {{UI_POS_X(0), 6 * 16}, "Start  :", Theme::getInstance()->fg_light->foreground},
         {{UI_POS_X(0), 7 * 16}, "End    :", Theme::getInstance()->fg_light->foreground},
@@ -114,6 +115,23 @@ class IQTrimView : public View {
     TextField field_path{
         {UI_POS_X(0), 1 * 16, screen_width, 1 * 16},
         "Open File..."};
+=======
+        {{0 * 8, 0 * 16}, "Capture File:", Theme::getInstance()->fg_light->foreground,false},
+        {{0 * 8, 6 * 16}, "Start  :", Theme::getInstance()->fg_light->foreground,false},
+        {{0 * 8, 7 * 16}, "End    :", Theme::getInstance()->fg_light->foreground,false},
+        {{0 * 8, 8 * 16}, "Samples:", Theme::getInstance()->fg_light->foreground,false},
+        {{0 * 8, 9 * 16}, "Max Pwr:", Theme::getInstance()->fg_light->foreground,false},
+        {{0 * 8, 10 * 16}, "Cutoff :", Theme::getInstance()->fg_light->foreground,false},
+        {{12 * 8, 10 * 16}, "%", Theme::getInstance()->fg_light->foreground,false},
+        {{0 * 8, 12 * 16}, "Amplify:", Theme::getInstance()->fg_light->foreground,false},
+        {{10 * 8, 12 * 16}, "x", Theme::getInstance()->fg_light->foreground,false},
+    };
+
+    TextField field_path{
+        {0 * 8, 1 * 16, screen_width, 1 * 16},
+        "Open File...",false
+    };
+>>>>>>> a8149f33222353859a0f315bd7789e0ba82aefeb
 
     Point pos_lines{UI_POS_X(0), 4 * 16};
     Dim height_lines{2 * 16};
@@ -123,14 +141,16 @@ class IQTrimView : public View {
         10,
         {0, 0},
         1,
-        ' '};
+        ' ',false,false
+    };
 
     NumberField field_end{
         {9 * 8, 7 * 16},
         10,
         {0, 0},
         1,
-        ' '};
+        ' ',false,false
+    };
 
     Text text_samples{
         {9 * 8, 8 * 16, 10 * 8, 1 * 16},
@@ -138,24 +158,30 @@ class IQTrimView : public View {
 
     Text text_max{
         {9 * 8, 9 * 16, 20 * 8, 1 * 16},
-        "0"};
+        "0",false};
 
     NumberField field_cutoff{
         {9 * 8, 10 * 16},
         3,
         {1, 100},
         1,
-        ' '};
+        ' ',false,false
+    };
 
     NumberField field_amplify{
         {9 * 8, 12 * 16},
         1,
         {1, 9},
         1,
-        ' '};
+        ' ',false,false
+    };
 
     Button button_trim{
+<<<<<<< HEAD
         {UI_POS_X_CENTER(8), UI_POS_Y_BOTTOM(3), 8 * 8, 2 * 16},
+=======
+        {ui::screen_width - 8*8 , 16 * 16, 8 * 8, 2 * 16},
+>>>>>>> a8149f33222353859a0f315bd7789e0ba82aefeb
         "Trim"};
 };
 

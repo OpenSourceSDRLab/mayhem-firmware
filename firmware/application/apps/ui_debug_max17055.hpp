@@ -24,10 +24,17 @@ class BatteryCapacityView : public View {
     static RegisterEntry get_entry(size_t index);
 
     Labels labels{
+<<<<<<< HEAD
         {{UI_POS_X(0), UI_POS_Y(0)}, "Reg", Theme::getInstance()->fg_yellow->foreground},
         {{9 * 8, UI_POS_Y(0)}, "Addr", Theme::getInstance()->fg_yellow->foreground},
         {{14 * 8, UI_POS_Y(0)}, "Hex", Theme::getInstance()->fg_yellow->foreground},
         {{21 * 8, UI_POS_Y(0)}, "Value", Theme::getInstance()->fg_yellow->foreground},
+=======
+        {{0 * 8, 0 * 16}, "Reg", Theme::getInstance()->fg_yellow->foreground,false},
+        {{9 * 8, 0 * 16}, "Addr", Theme::getInstance()->fg_yellow->foreground,false},
+        {{14 * 8, 0 * 16}, "Hex", Theme::getInstance()->fg_yellow->foreground,false},
+        {{21 * 8, 0 * 16}, "Value", Theme::getInstance()->fg_yellow->foreground,false},
+>>>>>>> a8149f33222353859a0f315bd7789e0ba82aefeb
     };
     std::array<Text, 16> name_texts = {};
     std::array<Text, 16> addr_texts = {};

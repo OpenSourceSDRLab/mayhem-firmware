@@ -34,6 +34,8 @@
 #include "i2cdev_ppmod.hpp"
 #include "i2cdev_sht4x.hpp"
 
+#include "usb_serial_asyncmsg.hpp"
+
 namespace i2cdev {
 
 // statics
@@ -135,6 +137,7 @@ uint8_t I2cDev::get_update_interval() {
 }
 
 void I2cDev::got_error() {
+    return;
     errcnt++;
     if (errcnt >= 5) need_del = true;  // too many errors. remove dev from list. may be re-discovered and re inited
 }
@@ -152,6 +155,7 @@ void I2cDev::got_success() {
 bool I2cDev::i2c_read(uint8_t* reg, uint8_t reg_size, uint8_t* data, uint8_t bytes) {
     if (bytes == 0) return false;
     bool ret = true;
+
     if (reg_size > 0 && reg) ret = i2cbus.transmit(addr, reg, reg_size, 150);
     if (!ret) {
         got_error();
@@ -289,9 +293,12 @@ std::vector<uint8_t> I2CDevManager::get_gev_list_by_addr() {
     return ret;
 }
 
+// 这个扫描应该避免传输中扫描？
+
 bool I2CDevManager::scan() {
     bool changed = false;
     std::vector<uint8_t> currList;
+
     for (uint8_t i = 1; i < 128; ++i) {
         if (i2cbus.probe(i, 50)) {
             chMtxLock(&mutex_list);
@@ -302,11 +309,19 @@ bool I2CDevManager::scan() {
         chThdSleepMilliseconds(1);
     }
     // remove those not present
+    // 不删除这些已有连接
+    // 更新期间会卡住
+    // 然后恢复
     for (size_t i = 0; i < devlist.size(); ++i) {
         if (std::find(currList.begin(), currList.end(), devlist[i].addr) == currList.end()) {
             // found on our list, but now not discovered, so remove it
-            devlist[i].addr = 0;  // mark to delete
-            changed = true;
+            // dont remove 
+            
+            std::string debug_string = "remove addr" +to_string_hex(devlist[i].addr)+"\n";
+            UsbSerialAsyncmsg::asyncmsg(debug_string);
+
+            // devlist[i].addr = 0;  // mark to delete
+            // changed = true;
         }
     }
     return changed;

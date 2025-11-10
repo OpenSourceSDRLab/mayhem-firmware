@@ -20,6 +20,7 @@
  */
 
 #include "i2c_pp.hpp"
+#include "usb_serial_asyncmsg.hpp"
 
 void I2C::start(const I2CConfig& config) {
     i2cStart(_driver, &config);
@@ -35,14 +36,21 @@ bool I2C::probe(i2caddr_t addr, systime_t timeout) {
     _driver->errors = I2CD_NO_ERROR;
     _driver->state = I2C_ACTIVE_TX;
     msg_t rdymsg = i2c_lld_master_transmit_timeout(_driver, addr, nullptr, 0, nullptr, 0, timeout);
+    
     if (rdymsg == RDY_TIMEOUT)
         _driver->state = I2C_LOCKED;
+    
     else
         _driver->state = I2C_READY;
+        
+    // _driver->state = I2C_READY;
     chSysUnlock();
     i2cReleaseBus(_driver);
+    // return true;
     return (rdymsg == RDY_OK);
 }
+
+// transfer是与web交互，是否与语音交互待测试
 
 bool I2C::transfer(
     const address_t slave_address,
@@ -51,23 +59,61 @@ bool I2C::transfer(
     uint8_t* const data_rx,
     const size_t count_rx,
     systime_t timeout) {
+    
+    if (_driver->state != I2C_READY) {
+        // 如果状态是LOCKED，尝试重置
+        std::string tmp_status = " NOT CHANGE! \n";
+        
+        if (_driver->state == I2C_LOCKED) {
+            chSysLock();
+            _driver->state = I2C_READY;  // 强制设置为READY状态
+            chSysUnlock();
+            tmp_status = " CHANGE!\n";
+        }
+        std::string debug_string = "@@@@@@@@@ I2C::transfer " +to_string_hex(slave_address)+  + "\t"+ std::to_string(_driver->state) +"\t" + " out of func the status is :" +tmp_status;
+        UsbSerialAsyncmsg::asyncmsg(debug_string);
+    }
+    
     i2cAcquireBus(_driver);
+    // 这只是记录断开的情况？
     const msg_t status = i2cMasterTransmitTimeout(
         _driver, slave_address, data_tx, count_tx, data_rx, count_rx, timeout);
     i2cReleaseBus(_driver);
+    // source
     return (status == RDY_OK);
+
+    // if(status != RDY_OK && slave_address == 0x51)
+    // {
+    //     std::string debug_string = "@@@@@@@@@ transfer " +to_string_hex(slave_address)+ " force RDY_OK tag ok\n";
+
+    //     UsbSerialAsyncmsg::asyncmsg(debug_string);
+    // }
+
+
+    // return true;
 }
+
 
 bool I2C::receive(
     const address_t slave_address,
     uint8_t* const data,
     const size_t count,
     systime_t timeout) {
+
     i2cAcquireBus(_driver);
     const msg_t status = i2cMasterReceiveTimeout(
         _driver, slave_address, data, count, timeout);
     i2cReleaseBus(_driver);
+    // source
     return (status == RDY_OK);
+
+    // if(status != RDY_OK && slave_address == 0x51)
+    // {
+    //     std::string debug_string = "@@@@@@@@@ receive " +to_string_hex(slave_address)+ " RDY_OK force tag true \n";
+    
+    //     UsbSerialAsyncmsg::asyncmsg(debug_string);
+    // }
+    // return true;
 }
 
 bool I2C::transmit(

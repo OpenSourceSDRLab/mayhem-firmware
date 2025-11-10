@@ -30,6 +30,8 @@
 #include "event_m0.hpp"
 
 #include "message.hpp"
+//加上一个debug函数
+#include "usb_serial_asyncmsg.hpp"
 
 #include <cstdint>
 #include <cstddef>
@@ -50,8 +52,16 @@ class AudioSpectrumView : public View {
 
     int16_t audio_spectrum[128]{0};
 
+
     Labels labels{
+<<<<<<< HEAD
         {{6 * 8, UI_POS_Y(0)}, "Hz", Theme::getInstance()->fg_light->foreground}};
+=======
+        {
+            {6 * ui::new_font_width, 0 * 16}, "Hz", Theme::getInstance()->fg_light->foreground
+        }
+    };
+>>>>>>> a8149f33222353859a0f315bd7789e0ba82aefeb
 
     NumberField field_frequency{
         {UI_POS_X(0), UI_POS_Y(0)},
@@ -61,7 +71,7 @@ class AudioSpectrumView : public View {
         ' '};
 
     Waveform waveform{
-        {0, 1 * 16 + cursor_band_height, screen_width, 2 * 16},
+        {0, 1 * ui::new_font_height + cursor_band_height, screen_width, 2 * ui::new_font_height},
         audio_spectrum,
         128,
         0,
@@ -150,9 +160,17 @@ class WaterfallView : public View {
    private:
     void update_widgets_rect();
 
+<<<<<<< HEAD
     const Rect audio_spectrum_view_rect{UI_POS_X(0), UI_POS_Y(0), UI_POS_MAXWIDTH, 2 * 16 + 20};
     static constexpr Dim audio_spectrum_height = 16 * 2 + 20;
     static constexpr Dim scale_height = 20;
+=======
+    // 
+    const Rect audio_spectrum_view_rect{0 * 8, 0 * 16, screen_width, 3 * ui::new_font_height};
+    
+    static constexpr Dim audio_spectrum_height = 24 * 3 ;
+    static constexpr Dim scale_height = 24;
+>>>>>>> a8149f33222353859a0f315bd7789e0ba82aefeb
 
     WaterfallWidget waterfall_widget{};
     FrequencyScale frequency_scale{};
@@ -182,6 +200,7 @@ class WaterfallView : public View {
             this->audio_spectrum_data = message.data;
             this->audio_spectrum_update = true;
         }};
+        
     MessageHandlerRegistration message_handler_frame_sync{
         Message::ID::DisplayFrameSync,
         [this](const Message* const) {

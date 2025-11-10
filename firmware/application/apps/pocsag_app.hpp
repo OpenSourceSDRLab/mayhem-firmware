@@ -54,7 +54,8 @@ namespace ui {
 class BaudIndicator : public Widget {
    public:
     BaudIndicator(Point position)
-        : Widget{{position, {5, height}}} {}
+        // : Widget{{position, {10, height}}} {}
+        : Widget{{position, {12, height}}} {}
 
     void paint(Painter& painter) override;
     void set_rate(uint16_t rate) {
@@ -65,14 +66,15 @@ class BaudIndicator : public Widget {
     }
 
    private:
-    static constexpr uint8_t height = 16;
+    static constexpr uint8_t height = 24;
     uint16_t rate_ = 0;
 };
 
 class BitsIndicator : public Widget {
    public:
     BitsIndicator(Point position)
-        : Widget{{position, {2, height}}} {}
+        // : Widget{{position, {2, height}}} {}
+        : Widget{{position, {8, height}}} {}
 
     void paint(Painter& painter) override;
     void set_bits(uint32_t bits) {
@@ -108,7 +110,7 @@ class FrameIndicator : public Widget {
     }
 
    private:
-    static constexpr uint8_t height = 16;
+    static constexpr uint8_t height = 24;
     uint8_t frame_count_ = 0;
     bool has_sync_ = false;
 };
@@ -140,50 +142,54 @@ class POCSAGSettingsView : public View {
     POCSAGSettings& settings_;
 
     Labels labels{
-        {{2 * 8, 12 * 16}, "Filter Mode:", Theme::getInstance()->fg_light->foreground},
-        {{2 * 8, 13 * 16}, "Filter Addr:", Theme::getInstance()->fg_light->foreground},
+        {{2 * ui::new_font_width, 12 * ui::new_font_height}, "Filter Mode:", Theme::getInstance()->fg_light->foreground},
+        {{2 * ui::new_font_width, 13 * ui::new_font_height}, "Filter Addr:", Theme::getInstance()->fg_light->foreground},
     };
 
     Checkbox check_log{
-        {2 * 8, 2 * 16},
+        {2 * ui::new_font_width, 2* ui::new_font_height},
         10,
         "Enable Log"};
 
     Checkbox check_log_raw{
-        {2 * 8, 4 * 16},
+        {2 * ui::new_font_width, 4 * ui::new_font_height},
         12,
         "Log Raw Data"};
 
     Checkbox check_small_font{
-        {2 * 8, 6 * 16},
+        {2 * ui::new_font_width, 6 * ui::new_font_height},
         4,
         "Use Small Font"};
 
     Checkbox check_hide_bad{
-        {2 * 8, 8 * 16},
+        {2 * ui::new_font_width, 8 * ui::new_font_height},
         22,
         "Hide Bad Data"};
 
     Checkbox check_hide_addr_only{
-        {2 * 8, 10 * 16},
+        {2 * ui::new_font_width, 10 * ui::new_font_height},
         22,
         "Hide Addr Only"};
 
     OptionsField opt_filter_mode{
-        {15 * 8, 12 * 16},
+        {15 * ui::new_font_width, 12 * ui::new_font_height},
         4,
         {{"None", FILTER_NONE},
          {"Drop", FILTER_DROP},
          {"Keep", FILTER_KEEP}}};
 
     SymField field_filter_address{
-        {15 * 8, 13 * 16},
+        {15 * ui::new_font_width, 13  * ui::new_font_height},
         7,
         SymField::Type::Dec,
         true /*explicit_edit*/};
 
     Button button_save{
+<<<<<<< HEAD
         {UI_POS_X_CENTER(10), UI_POS_Y(16), 10 * 8, 2 * 16},
+=======
+        {11 * ui::new_font_width, 16 * ui::new_font_height, 10 * ui::new_font_width, 2  * ui::new_font_height},
+>>>>>>> a8149f33222353859a0f315bd7789e0ba82aefeb
         "Save"};
 };
 
@@ -236,6 +242,7 @@ class POCSAGAppView : public View {
     uint16_t packet_count = 0;
 
     RxFrequencyField field_frequency{
+<<<<<<< HEAD
         {UI_POS_X(0), 0 * 8},
         nav_};
 
@@ -245,52 +252,87 @@ class POCSAGAppView : public View {
         {13 * 8, UI_POS_Y(0)}};
     VGAGainField field_vga{
         {16 * 8, UI_POS_Y(0)}};
+=======
+        {0 * 8, 0 * ui::new_font_height},
+        nav_};
 
+    RFAmpField field_rf_amp{
+        {11 * ui::new_font_width, 0 * ui::new_font_height}
+    };
+>>>>>>> a8149f33222353859a0f315bd7789e0ba82aefeb
+
+    LNAGainField field_lna{
+        { 13 * ui::new_font_width , 0 * ui::new_font_height }
+    };
+
+    VGAGainField field_vga{
+        {16 * ui::new_font_width, 0 * 160 * ui::new_font_height}
+    };
     RSSI rssi{
+<<<<<<< HEAD
         {19 * 8 - 4, 3, UI_POS_WIDTH_REMAINING(26), 4}};
     Audio audio{
         {19 * 8 - 4, 8, UI_POS_WIDTH_REMAINING(26), 4}};
 
     NumberField field_squelch{
         {UI_POS_X_RIGHT(6), UI_POS_Y(0)},
+=======
+        {19 * ui::new_font_width, 0, 6 * 8, 8}};
+    Audio audio{
+        {19 * ui::new_font_width, 8, 6 * 8, 8}};
+
+    NumberField field_squelch{
+        {25 * ui::new_font_width, 0 * ui::new_font_height},
+>>>>>>> a8149f33222353859a0f315bd7789e0ba82aefeb
         2,
         {0, 99},
         1,
         ' ',
-        true /*wrap*/};
+        true /*wrap*/
+    };
+
     AudioVolumeField field_volume{
+<<<<<<< HEAD
         {UI_POS_X_RIGHT(2), UI_POS_Y(0)}};
+=======
+        {screen_width - 2 * ui::new_font_width, 0 * ui::new_font_height}
+    };
+>>>>>>> a8149f33222353859a0f315bd7789e0ba82aefeb
 
     Image image_status{
-        {0 * 8 + 4, 1 * 16 + 2, 16, 16},
+        {0 * 8 + 4, 1 * ui::new_font_height + 4, 16, 16},
         &bitmap_icon_pocsag,
         Theme::getInstance()->bg_darkest->foreground,
         Theme::getInstance()->bg_darkest->background};
 
     Text text_packet_count{
-        {3 * 8, 1 * 16 + 2, 5 * 8, 16},
-        "0"};
+        {3 * ui::new_font_width , 1 * ui::new_font_height , 5 * ui::new_font_width , ui::new_font_height },
+        "0",
+        true
+    };
 
     BitsIndicator widget_bits{
-        {8 * 8 + 1, 1 * 16 + 2}};
+        {ui::new_font_width * 4 + 9, 1 * ui::new_font_height}
+    };
 
     FrameIndicator widget_frames{
-        {8 * 8 + 4, 1 * 16 + 2}};
+        {ui::new_font_width * 4 + 8, 1 * ui::new_font_height}
+    };
 
     BaudIndicator widget_baud{
-        {8 * 9 + 1, 1 * 16 + 2}};
+        {ui::new_font_width * 4 + 10, 1 * ui::new_font_height+3}
+    };
 
     Button button_filter_last{
-        {10 * 8, 1 * 16, 12 * 8, 20},
+        {6 * ui::new_font_width, 1 * ui::new_font_height, 12 * ui::new_font_width, ui::new_font_height},
         "Filter Last"};
 
     Button button_config{
-        {22 * 8, 1 * 16, 8 * 8, 20},
+        {19 * ui::new_font_width, 1 * ui::new_font_height, 8 * ui::new_font_width, ui::new_font_height},
         "Config"};
-
-    // 54 == status bar (16) + top controls (2 * 16 + 6).
+        
     Console console{
-        {0, 2 * 16 + 6, screen_width, screen_height - 54}};
+        {0, 2 * ui::new_font_height + 6, screen_width, screen_height - 54}};
 
     void on_freqchg(int64_t freq);
 

@@ -136,17 +136,27 @@ class ERTAppView : public View {
     app_settings::SettingsManager settings_{
         "rx_ert", app_settings::Mode::RX};
 
+<<<<<<< HEAD:firmware/application/external/ert/ert_app.hpp
     RecentEntriesColumns columns{{
         {"ID", 0},
         {"Ty", 2},
         {"Consumpt", 8},
         {"Tamp", 4},
         {"Ct", 2},
+=======
+    const RecentEntriesColumns columns{{
+        {"   ID   ", 9}, //10
+        {" Ty  ", 6}, //7 
+        {" Consumpt ",11}, //12
+        {"Tamp", 5}, // 6
+        {"Ct", 3}, //4
+>>>>>>> a8149f33222353859a0f315bd7789e0ba82aefeb:firmware/application/apps/ert_app.hpp
     }};
     ERTRecentEntriesView recent_entries_view{columns, recent};
 
-    static constexpr auto header_height = 1 * 16;
+    static constexpr auto header_height = 1 * 24;
 
+<<<<<<< HEAD:firmware/application/external/ert/ert_app.hpp
     RxFrequencyField field_frequency{
         {UI_POS_X(0), UI_POS_Y(0)},
         nav_};
@@ -166,6 +176,28 @@ class ERTAppView : public View {
 
     AudioVolumeField field_volume{
         {screen_width - 2 * 8, UI_POS_Y(0)}};
+=======
+    RxFrequencyField field_frequency{{0 * 8, 0 * ui::new_font_height},nav_};
+
+    RFAmpField field_rf_amp{
+        {13 * ui::new_font_width ,0 * ui::new_font_height}
+    };
+
+    LNAGainField field_lna{
+        {15 * ui::new_font_width, 0 * ui::new_font_height}
+    };
+
+    VGAGainField field_vga{
+        {18 * ui::new_font_width, 0 * ui::new_font_height}
+    };
+
+    RSSI rssi{
+        {21 *ui::new_font_width, 0, 4 * 8, ui::new_font_height},
+    };
+
+    AudioVolumeField field_volume{
+        {screen_width - 2 * ui::new_font_width, 0 * ui::new_font_height}};
+>>>>>>> a8149f33222353859a0f315bd7789e0ba82aefeb:firmware/application/apps/ert_app.hpp
 
     MessageHandlerRegistration message_handler_packet{
         Message::ID::ERTPacket,

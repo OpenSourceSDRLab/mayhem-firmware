@@ -186,6 +186,7 @@ class RecentEntriesTable : public Widget {
         const auto& s = style();
 
         Rect target_rect{r.location(), {r.width(), s.font.line_height()}};
+
         const size_t visible_item_count = r.height() / s.font.line_height();
 
         set_focusable(!recent.empty());
@@ -201,8 +202,18 @@ class RecentEntriesTable : public Widget {
             const auto& entry = *p;
             const auto is_selected_key = (selected_key == entry.key());
             const auto item_style = (has_focus() && is_selected_key) ? s.invert() : s;
+<<<<<<< HEAD
             draw(entry, target_rect, painter, item_style, columns);
+=======
+            
+            // 这里是绘制每一行信息的地方
+            // 注释掉这里查看是否有文字
+            draw(entry, target_rect, painter, item_style);
+            
+>>>>>>> a8149f33222353859a0f315bd7789e0ba82aefeb
             target_rect += {0, target_rect.height()};
+            // 现在增大一些距离？经过测试这其实是行信息
+            // target_rect += {8*4, target_rect.height()};
         }
 
         painter.fill_rectangle(
@@ -292,11 +303,12 @@ class RecentEntriesView : public View {
     using Entry = typename Entries::value_type;
 
     std::function<void(const Entry& entry)> on_select{};
-
+    // 这里显示动态添加的类似csv文件信息
     RecentEntriesView(
         RecentEntriesColumns& columns,
         Entries& recent)
         : _header{columns},
+<<<<<<< HEAD
           _table{recent, columns} {
         // Re calculate the widths if we got any zero-width columns (max 1). That means 'fill all the remaining space'. Only 1 col can have that
         uint16_t total_width = 0;
@@ -322,6 +334,10 @@ class RecentEntriesView : public View {
             }
         }
 
+=======
+          _table{recent} {
+        // 这里进行修改了,分别为头部还有其每一列
+>>>>>>> a8149f33222353859a0f315bd7789e0ba82aefeb
         add_children({
             &_header,
             &_table,
@@ -331,13 +347,15 @@ class RecentEntriesView : public View {
     }
 
     void set_parent_rect(const Rect new_parent_rect) override {
-        constexpr Dim scale_height = 16;
+        // constexpr Dim scale_height = 16;
+        constexpr Dim scale_height = 24;
 
         View::set_parent_rect(new_parent_rect);
         _header.set_parent_rect({0, 0, new_parent_rect.width(), scale_height});
+        // 按钮的高度是字体的两倍
         _table.set_parent_rect({0, scale_height,
                                 new_parent_rect.width(),
-                                new_parent_rect.height() - scale_height});
+                                new_parent_rect.height() - 4*scale_height});
     }
 
     void paint(Painter&) override {

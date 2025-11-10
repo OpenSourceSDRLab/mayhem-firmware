@@ -25,6 +25,7 @@
 #include "ui_widget.hpp"
 #include "ui_navigation.hpp"
 #include "touch.hpp"
+#include "usb_serial_asyncmsg.hpp"
 
 namespace ui {
 
@@ -75,71 +76,118 @@ class TouchCalibrationView : public View {
     touch::Calibration calibration;
 
     Image image_calibrate_0{
-        {32 - 16, 32 - 16, 32, 32},
+        // {32 - 16, 32 - 16, 32, 32},
+        {32, 48, 32, 32},
         &bitmap_target_calibrate,
         Color::white(),
         Color::black()};
 
     Image image_calibrate_1{
+<<<<<<< HEAD
         {screen_width - 32 - 16, (screen_height - 16) / 2 - 16, 32, 32},
+=======
+        // {240 - 32 - 16, (320 - 16) / 2 - 16, 32, 32},
+        {208, 168, 32, 32},
+>>>>>>> a8149f33222353859a0f315bd7789e0ba82aefeb
         &bitmap_target_calibrate,
         Color::white(),
         Color::black()};
 
     Image image_calibrate_2{
+<<<<<<< HEAD
         {screen_width / 2 - 16, (screen_height - 16) - 32 - 16, 32, 32},
+=======
+        // {240 / 2 - 16, (320 - 16) - 32 - 16, 32, 32},
+        {120, 288, 32, 32},
+>>>>>>> a8149f33222353859a0f315bd7789e0ba82aefeb
         &bitmap_target_calibrate,
         Color::white(),
         Color::black()};
 
     Image image_verify_0{
-        {32 - 16, 32 - 16, 32, 32},
+        // {32 - 16, 32 - 16, 32, 32},
+        {32, 48, 32, 32},
         &bitmap_target_verify,
         Color::white(),
         Color::black()};
 
     Image image_verify_1{
+<<<<<<< HEAD
         {screen_width - 32 - 16, (screen_height - 16) / 2 - 16, 32, 32},
+=======
+        // {240 - 32 - 16, (320 - 16) / 2 - 16, 32, 32},
+        {208, 168, 32, 32},
+>>>>>>> a8149f33222353859a0f315bd7789e0ba82aefeb
         &bitmap_target_verify,
         Color::white(),
         Color::black()};
 
     Image image_verify_2{
+<<<<<<< HEAD
         {screen_width / 2 - 16, (screen_height - 16) - 32 - 16, 32, 32},
+=======
+        // {240 / 2 - 16, (320 - 16) - 32 - 16, 32, 32},
+        {120, 288, 32, 32},
+>>>>>>> a8149f33222353859a0f315bd7789e0ba82aefeb
         &bitmap_target_verify,
         Color::white(),
         Color::black()};
 
     Text label_calibrate{
         {2 * 8, 5 * 16, 26 * 8, 1 * 16},
-        "Touch targets to calibrate"};
+        "Touch targets to calibrate",false
+    };
 
     Text label_calibrate_2{
         {1 * 8, 6 * 16, 28 * 8, 1 * 16},
-        "(hold position using stylus)"};
+        "(hold position using stylus)",false
+    };
 
     Text label_verify{
         {28, 5 * 16, 23 * 8, 1 * 16},
-        "Touch targets to verify"};
+        "Touch targets to verify",false
+    };
 
     Text label_success{
         {32, 5 * 16, 22 * 8, 1 * 16},
-        "Apply new calibration?"};
+        "Apply new calibration?",false
+    };
 
     Text label_failure{
         {16, 5 * 16, 26 * 8, 1 * 16},
-        "Calibration failed. Retry?"};
+        "Calibration failed. Retry?",false
+    };
 
     Button button_cancel{
+<<<<<<< HEAD
         {40, 200, UI_POS_WIDTH(8), 24},
         "Cancel"};
 
     Button button_ok{
         {136, 200, UI_POS_WIDTH(8), 24},
+=======
+        {40, ui::screen_height - ui::new_font_height *3, 8*ui::new_font_width, ui::new_font_height *2},
+        "Cancel"};
+
+    Button button_ok{
+        {136, ui::screen_height - ui::new_font_height *3, 8*ui::new_font_width, ui::new_font_height *2},
+>>>>>>> a8149f33222353859a0f315bd7789e0ba82aefeb
         "OK"};
+
+    Text debug_text{
+        {0,ui::screen_height/4*3,ui::screen_width,ui::new_font_height},
+        "test string",
+        true
+    };
+
+    Button button_for_debug{
+        {0,ui::screen_height-ui::new_font_height *4, 8*ui::new_font_width, ui::new_font_height *2},
+        "debug"
+    };
 
     void on_frame_sync();
 
+    // 这是什么
     MessageHandlerRegistration message_handler_frame_sync{
         Message::ID::DisplayFrameSync,
         [this](const Message* const) {

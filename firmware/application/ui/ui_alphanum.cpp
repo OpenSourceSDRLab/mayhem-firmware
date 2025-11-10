@@ -42,6 +42,7 @@ AlphanumView::AlphanumView(
         &labels,
         &field_raw,
         &text_raw_to_char,
+        
         &button_delete,
         &button_mode,
     });

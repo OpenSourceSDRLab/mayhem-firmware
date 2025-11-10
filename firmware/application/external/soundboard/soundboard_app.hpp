@@ -95,6 +95,7 @@ class SoundBoardView : public View {
     void update_config();
 
     Labels labels{
+<<<<<<< HEAD:firmware/application/external/soundboard/soundboard_app.hpp
         {{24 * 8, UI_POS_Y_BOTTOM(9)}, "Vol:", Theme::getInstance()->fg_light->foreground},
         {{0, UI_POS_Y_BOTTOM(9)}, "Key:", Theme::getInstance()->fg_light->foreground}};
 
@@ -104,17 +105,45 @@ class SoundBoardView : public View {
 
     Button button_prev_page{
         {UI_POS_X_RIGHT(8), UI_POS_Y_BOTTOM(8), 10 * 3, 2 * 14},
+=======
+        {{24 * 8, 180}, "Vol:", Theme::getInstance()->fg_light->foreground},
+        {{0, 180}, "Key:", Theme::getInstance()->fg_light->foreground}
+    
+    };
+
+
+    Button button_prev_page{
+        {ui::screen_width - ui::new_font_width * 7, 26 * 8, 10 * 3, 2 * 14},
+>>>>>>> a8149f33222353859a0f315bd7789e0ba82aefeb:firmware/application/apps/soundboard_app.hpp
         "<="};
+    
+    Button button_next_page{
+        // {30 * 7, 25 * 8, 10 * 3, 2 * 14},
+        {ui::screen_width - ui::new_font_width * 3, 26 * 8, 10 * 3, 2 * 14},
+        "=>"};
 
     Text page_info{
+<<<<<<< HEAD:firmware/application/external/soundboard/soundboard_app.hpp
         {0, UI_POS_Y_BOTTOM(6), screen_width, 16}};
+=======
+        {0, 29 * 8, screen_width, ui::new_font_height}
+        ,true
+    };
+>>>>>>> a8149f33222353859a0f315bd7789e0ba82aefeb:firmware/application/apps/soundboard_app.hpp
 
     MenuView menu_view{
         {0, 0, screen_width, UI_POS_Y_BOTTOM(9)},
         true};
+
     Text text_empty{
+<<<<<<< HEAD:firmware/application/external/soundboard/soundboard_app.hpp
         {UI_POS_X_CENTER(16), 12 * 8, 16 * 8, 16},
+=======
+        // {7 * 8, 12 * 8, 16 * 8, 16},
+        {2*8 , 12 * 8, 16 * ui::new_font_width, ui::new_font_height},
+>>>>>>> a8149f33222353859a0f315bd7789e0ba82aefeb:firmware/application/apps/soundboard_app.hpp
         "Empty directory !",
+        true
     };
 
     /*Text text_title {
@@ -126,28 +155,55 @@ class SoundBoardView : public View {
         };*/
 
     OptionsField options_tone_key{
+<<<<<<< HEAD:firmware/application/external/soundboard/soundboard_app.hpp
         {4 * 8, UI_POS_Y_BOTTOM(9)},
+=======
+        {4 * ui::new_font_width, 180},
+>>>>>>> a8149f33222353859a0f315bd7789e0ba82aefeb:firmware/application/apps/soundboard_app.hpp
         18,
-        {}};
+        {},
+        false,true
+    };
 
     AudioVolumeField field_volume{
+<<<<<<< HEAD:firmware/application/external/soundboard/soundboard_app.hpp
         {screen_width - 2 * 8, UI_POS_Y_BOTTOM(9)}};
     Text text_volume_disabled{
         {screen_width - 2 * 8, UI_POS_Y_BOTTOM(9), 3 * 8, 16},
+=======
+        {screen_width - 3 * ui::new_font_width, 180}};
+    
+    Text text_volume_disabled{
+        {screen_width - 3 * ui::new_font_width, 180, 3 * ui::new_font_width, ui::new_font_height},
+>>>>>>> a8149f33222353859a0f315bd7789e0ba82aefeb:firmware/application/apps/soundboard_app.hpp
         "--"};
 
     Checkbox check_loop{
         {0, UI_POS_Y_BOTTOM(8)},
         4,
-        "Loop"};
+        "Loop",
+        false,
+        true
+    };
 
     Checkbox check_random{
+<<<<<<< HEAD:firmware/application/external/soundboard/soundboard_app.hpp
         {10 * 7, UI_POS_Y_BOTTOM(8)},
+=======
+        {10 * 10, 25 * 8 + 4},
+>>>>>>> a8149f33222353859a0f315bd7789e0ba82aefeb:firmware/application/apps/soundboard_app.hpp
         6,
-        "Random"};
+        "Random",
+        false,
+        true
+    };
 
     ProgressBar progressbar{
+<<<<<<< HEAD:firmware/application/external/soundboard/soundboard_app.hpp
         {UI_POS_X(0), UI_POS_Y_BOTTOM(4.5) + 2, screen_width, 4}};
+=======
+        {0 * 8, 180-10, screen_width, 8}};
+>>>>>>> a8149f33222353859a0f315bd7789e0ba82aefeb:firmware/application/apps/soundboard_app.hpp
 
     TransmitterView tx_view{
         (int16_t)UI_POS_Y_BOTTOM(4),

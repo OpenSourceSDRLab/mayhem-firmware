@@ -37,7 +37,9 @@ void Tab::set(
     Dim width,
     std::string text,
     Color text_color) {
-    set_parent_rect({(Coord)(index * width), 0, width, 24});
+
+    // set_parent_rect({(Coord)(index * width), 0, width, 24});
+    set_parent_rect({(Coord)(index * width), 0, width, ui::new_font_height});
 
     text_ = text.substr(0, (width - 8) / 8);
     text_color_ = text_color;
@@ -49,26 +51,38 @@ void Tab::paint(Painter& painter) {
     const auto rect = screen_rect();
     const Color color = highlighted() ? Theme::getInstance()->bg_darkest->background : Theme::getInstance()->bg_medium->background;
 
-    painter.fill_rectangle({rect.left(), rect.top(), rect.width() - 8, rect.height()}, color);
+    // painter.fill_rectangle({rect.left(), rect.top(), rect.width() - 8, rect.height()}, color);
+    
+    // 绘制每一个标签页矩形
+    painter.fill_rectangle({rect.left(), rect.top(), rect.width()-8 , rect.height()}, color);
 
+    // 这里是什么意思？？
     if (!highlighted())
-        painter.draw_hline({rect.left(), rect.top()}, rect.width() - 9, Theme::getInstance()->bg_light->background);
-
-    painter.draw_bitmap(
-        {rect.right() - 8, rect.top()},
-        bitmap_tab_edge,
-        color,
-        Theme::getInstance()->bg_dark->background);
+        // painter.draw_hline({rect.left(), rect.top()}, rect.width() - 9, Theme::getInstance()->bg_light->background);
+         painter.draw_hline({rect.left(), rect.top()}, rect.width()-8 , Theme::getInstance()->bg_light->background);
+    
+    // 这个是个8*24的图组？
+    // painter.draw_bitmap(
+    //     {rect.right() - 8, rect.top()},
+    //     bitmap_tab_edge,
+    //     color,
+    //     Theme::getInstance()->bg_dark->background);
 
     auto text_point = rect.center() - Point(4, 0) - Point(text_.size() * 8 / 2, 16 / 2);
 
-    painter.draw_string(
-        text_point,
-        {ui::font::fixed_8x16, color, text_color_},
-        text_);
+    // auto text_point = rect.center() - Point(4, 0) - Point(text_.size() * ui::new_font_width / 2, ui::new_font_height/2);
 
+    painter.draw_string_with_fitsize(text_point,{ui::font::fixed_8x16, color, text_color_},text_,0);
+
+    // painter.draw_string(
+    //     text_point,
+    //     {ui::font::fixed_8x16, color, text_color_},
+    //     text_);
+
+    // 选中了就在下方增加下划线
     if (has_focus())
         painter.draw_hline(text_point + Point(0, 16), text_.size() * 8, Theme::getInstance()->bg_darkest->foreground);
+        // painter.draw_hline(text_point + Point(0, ui::new_font_height), text_.size() * ui::new_font_width, Theme::getInstance()->bg_darkest->foreground);
 }
 
 bool Tab::on_key(const KeyEvent key) {
@@ -108,6 +122,8 @@ void TabView::set_selected(uint32_t index) {
     tab = &tabs[current_tab];
     tab->set_highlighted(false);
     tab->set_focusable(true);
+
+
     tab->set_dirty();
 
     // Show new view
@@ -137,8 +153,9 @@ TabView::TabView(std::initializer_list<TabDef> tab_definitions) {
 
     size_t tab_width = screen_width / n_tabs;
 
-    set_parent_rect({0, 0, screen_width, 3 * 8});
-
+    // set_parent_rect({0, 0, screen_width, 3 * 8});
+    set_parent_rect({0, 0, screen_width, ui::new_font_height});
+    
     for (auto& tab_definition : tab_definitions) {
         tabs[i].set(i, tab_width, tab_definition.text, tab_definition.color);
         views[i] = tab_definition.view;

@@ -389,11 +389,16 @@ APRSDetailsView::APRSDetailsView(
     };
 };
 
-APRSRXView::APRSRXView(NavigationView& nav)
-    : nav_{nav} {
-    add_children({&tab_view,
-                  &view_stream,
-                  &view_table});
+APRSRXView::APRSRXView(NavigationView& nav): nav_{nav}
+{
+    add_children({
+        // 标签页
+        &tab_view,
+        // stream页                
+        &view_stream,
+        // table页
+        &view_table
+    });
 }
 
 void APRSRXView::focus() {

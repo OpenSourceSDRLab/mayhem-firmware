@@ -33,6 +33,8 @@
 #include "ui_spectrum.hpp"
 #include "ui_transmitter.hpp"
 #include "ui_widget.hpp"
+//加上一个debug函数
+#include "usb_serial_asyncmsg.hpp"
 
 #include <string>
 #include <memory>
@@ -42,13 +44,19 @@ namespace ui {
 
 class PlaylistView : public View {
    public:
-    PlaylistView(NavigationView& nav);
-    PlaylistView(NavigationView& nav, const std::filesystem::path& path);
-    ~PlaylistView();
+    // 首次会调用这里
+   PlaylistView(NavigationView& nav);
 
+   // 测试调用的是哪个
+    PlaylistView(NavigationView& nav, const std::filesystem::path& path);
+
+    ~PlaylistView();
+    bool initialized_ = false;
     // Following 2 called by 'NavigationView::update_view' after view is created.
-    void set_parent_rect(Rect new_parent_rect) override;
     void focus() override;
+    void set_parent_rect(Rect new_parent_rect) override;
+
+    // 这是隐藏代码？？
     void on_hide() override;
 
     std::string title() const override { return "Replay"; };
@@ -60,7 +68,9 @@ class PlaylistView : public View {
         "tx_replay", app_settings::Mode::TX};
 
     // More header == less spectrum view.
-    static constexpr ui::Dim header_height = 6 * 16;
+    // static constexpr ui::Dim header_height = 6 * 16;
+    
+    static constexpr ui::Dim header_height = 8 * 24;
 
     struct playlist_entry {
         std::filesystem::path path{};
@@ -76,7 +86,7 @@ class PlaylistView : public View {
     bool playlist_dirty_{};
     std::vector<playlist_entry> playlist_db_{};
     std::filesystem::path playlist_path_{};
-
+    void clear_ui(); 
     void load_file(const std::filesystem::path& path);
     Optional<playlist_entry> load_entry(std::filesystem::path&& path);
     void on_file_changed(const std::filesystem::path& path);
@@ -100,6 +110,7 @@ class PlaylistView : public View {
     void send_current_track();
     void stop();
 
+
     void update_ui();
 
     /* There are called by Message handlers. */
@@ -107,81 +118,124 @@ class PlaylistView : public View {
     void handle_replay_thread_done(uint32_t return_code);
 
     Text text_filename{
+<<<<<<< HEAD
         {UI_POS_X(0), UI_POS_Y(0), screen_width, 16}};
 
     FrequencyField field_frequency{
         {UI_POS_X(0), 1 * 16}};
+=======
+        {0 * 8, 0 * ui::new_font_height, screen_width, ui::new_font_height},
+        true
+    };
+
+    FrequencyField field_frequency{
+        {0 * 8, 1 * ui::new_font_height}
+    };
+>>>>>>> a8149f33222353859a0f315bd7789e0ba82aefeb
 
     Text text_sample_rate{
-        {10 * 8, 1 * 16, 7 * 8, 16}};
+        {10 * ui::new_font_width, 1 * ui::new_font_height, 7 * ui::new_font_width, ui::new_font_height},
+        true
+    };
 
     ProgressBar progressbar_track{
+<<<<<<< HEAD
         {18 * 8, 1 * 16, UI_POS_WIDTH_REMAINING(19), 8 + 1}};
+=======
+        // {ui::screen_width - 18 *8, 1 * ui::new_font_height,  18 * 8, ui::new_font_height}
+        {ui::screen_width - 18 *8, 2 * ui::new_font_height,  18 * 8, 8}
+
+        
+    };
+>>>>>>> a8149f33222353859a0f315bd7789e0ba82aefeb
 
     // (-1) to overlap with progressbar_track so there's
     // only 1 pixel between them instead of 2.
     ProgressBar progressbar_transmit{
+<<<<<<< HEAD
         {18 * 8, 3 * 8 - 1, UI_POS_WIDTH_REMAINING(19), 8}};
 
     Text text_duration{
         {UI_POS_X(0), 2 * 16, 5 * 8, 16}};
+=======
+        // {ui::screen_width - 18 *8, 2 * ui::new_font_height, 18 * 8, ui::new_font_height}
+        {ui::screen_width - 18 *8, 2 * ui::new_font_height+8,  18 * 8, 8}
+    };
+
+    Text text_duration{
+        {0 * 8, 2 * ui::new_font_height, 5 * 8, ui::new_font_height},
+        true
+    };
+>>>>>>> a8149f33222353859a0f315bd7789e0ba82aefeb
 
     // TODO: delay duration field.
 
     TransmitterView2 tx_view{
-        {11 * 8, 2 * 16},
+        {11 * 8, 3 * ui::new_font_height},
         /*short_ui*/ true};
 
     Checkbox check_loop{
+<<<<<<< HEAD
         {UI_POS_X_RIGHT(9), 2 * 16},
+=======
+        {21 * 8, 3 * ui::new_font_height},
+>>>>>>> a8149f33222353859a0f315bd7789e0ba82aefeb
         4,
         "Loop",
-        true};
+        true,false
+    };
 
     ImageButton button_play{
-        {screen_width - 2 * 8, 2 * 16, 2 * 8, 1 * 16},
+        {screen_width - 2 * 8, 3 * ui::new_font_height, 2 * 8, 1 * ui::new_font_height},
         &bitmap_play,
         Theme::getInstance()->fg_green->foreground,
         Theme::getInstance()->fg_green->background};
 
+
     Text text_track{
+<<<<<<< HEAD
         {UI_POS_X(0), 3 * 16, screen_width, 16}};
+=======
+        {0 * 8, 4 * ui::new_font_height, screen_width, ui::new_font_height},false
+    };
+>>>>>>> a8149f33222353859a0f315bd7789e0ba82aefeb
 
     NewButton button_prev{
-        {2 * 8, 4 * 16, 4 * 8, 2 * 16},
+        {2 * 8, 5 * ui::new_font_height, 4 * 8, 2 * ui::new_font_height},
         "",
         &bitmap_arrow_left,
         Theme::getInstance()->bg_dark->background};
 
     NewButton button_next{
-        {6 * 8, 4 * 16, 4 * 8, 2 * 16},
+        {6 * 8, 5 * ui::new_font_height, 4 * 8, 2 * ui::new_font_height},
         "",
         &bitmap_arrow_right,
         Theme::getInstance()->bg_dark->background};
 
     NewButton button_add{
-        {11 * 8, 4 * 16, 4 * 8, 2 * 16},
+        {15 * 8, 5 * ui::new_font_height, 4 * 8, 2 * ui::new_font_height},
         "",
         &bitmap_icon_new_file,
         Theme::getInstance()->fg_orange->foreground};
 
     NewButton button_delete{
-        {15 * 8, 4 * 16, 4 * 8, 2 * 16},
+        {19 * 8, 5 * ui::new_font_height, 4 * 8, 2 * ui::new_font_height},
         "",
         &bitmap_icon_delete,
         Theme::getInstance()->fg_orange->foreground};
 
     NewButton button_open{
-        {20 * 8, 4 * 16, 4 * 8, 2 * 16},
+        {30 * 8, 5 * ui::new_font_height, 4 * 8, 2 * ui::new_font_height},
         "",
         &bitmap_icon_load,
         Theme::getInstance()->fg_blue->foreground};
 
     NewButton button_save{
-        {24 * 8, 4 * 16, 4 * 8, 2 * 16},
+        {34 * 8, 5 * ui::new_font_height, 4 * 8, 2 * ui::new_font_height},
         "",
         &bitmap_icon_save,
         Theme::getInstance()->fg_blue->foreground};
+
 
     spectrum::WaterfallView waterfall{};
 

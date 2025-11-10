@@ -33,8 +33,8 @@ void text_prompt(
     size_t max_length,
     uint8_t mode,
     std::function<void(std::string&)> on_done) {
-    text_prompt(nav, str, str.length(), max_length, mode, on_done);
-}
+        text_prompt(nav, str, str.length(), max_length, mode, on_done);
+    }
 
 void text_prompt(
     NavigationView& nav,
@@ -69,13 +69,13 @@ void TextEntryView::focus() {
     text_input.focus();
 }
 
-TextEntryView::TextEntryView(
-    NavigationView& nav,
-    std::string& str,
-    size_t max_length)
-    : text_input{str, max_length, {0, 0}} {
-    add_children({&text_input,
-                  &button_ok});
+TextEntryView::TextEntryView(NavigationView& nav,std::string& str,size_t max_length)
+    : text_input{str, max_length, {0, 0},26} // 这里实际添加的是一个初始函数类，初始text input 
+{
+    add_children({
+        &text_input,
+        &button_ok
+    });
 
     button_ok.on_select = [this, &str, &nav](Button&) {
         if (on_changed)

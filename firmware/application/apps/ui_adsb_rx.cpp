@@ -402,6 +402,7 @@ void ADSBRxDetailsView::refresh_ui() {
 ADSBRxView::ADSBRxView(NavigationView& nav) {
     baseband::run_image(portapack::spi_flash::image_tag_adsb_rx);
     add_children(
+<<<<<<< HEAD
         {&labels,
          &field_lna,
          &field_vga,
@@ -413,6 +414,23 @@ ADSBRxView::ADSBRxView(NavigationView& nav) {
          &field_volume});
 
     recent_entries_view.set_parent_rect({0, 16, screen_width, UI_POS_HEIGHT_REMAINING(2)});
+=======
+        {
+            &labels,
+            &field_lna,
+            &field_vga,
+            &field_rf_amp,
+            &rssi,
+            // 显示当前东涛显示的区域
+            &recent_entries_view,
+            &status_frame,
+            &status_good_frame,
+            &field_volume
+        }
+    );
+    // 设置动态显示区域位置
+    recent_entries_view.set_parent_rect({0, ui::new_font_height, screen_width, 272});
+>>>>>>> a8149f33222353859a0f315bd7789e0ba82aefeb
     recent_entries_view.on_select = [this, &nav](const AircraftRecentEntry& entry) {
         detail_key = entry.key();
         details_view = nav.push<ADSBRxDetailsView>(entry);

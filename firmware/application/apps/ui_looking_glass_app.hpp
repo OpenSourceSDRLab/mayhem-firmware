@@ -170,36 +170,56 @@ class GlassView : public View {
     uint8_t ignore_dc = 0;
 
     Labels labels{
+<<<<<<< HEAD
         {{0, UI_POS_Y(0)}, "MIN:     MAX:     LNA   VGA  ", Theme::getInstance()->fg_light->foreground},
         {{0, 1 * 16}, "RANGE:       FILTER:     AMP:", Theme::getInstance()->fg_light->foreground},
         {{0, 2 * 16}, "P:", Theme::getInstance()->fg_light->foreground},
         {{0, 3 * 16}, "MARKER:          MHz RXIQCAL", Theme::getInstance()->fg_light->foreground},
+=======
+        {{0, 0 * 16}, "MIN:     MAX:     LNA   VGA  ", Theme::getInstance()->fg_light->foreground,false},
+        {{0, 1 * 16}, "RANGE:       FILTER:     AMP:", Theme::getInstance()->fg_light->foreground,false},
+        {{0, 2 * 16}, "P:", Theme::getInstance()->fg_light->foreground,false},
+        {{0, 3 * 16}, "MARKER:          MHz RXIQCAL", Theme::getInstance()->fg_light->foreground,false},
+>>>>>>> a8149f33222353859a0f315bd7789e0ba82aefeb
         //{{0, 4 * 16}, "RES:    STEPS:", Theme::getInstance()->fg_light->foreground}};
-        {{0, 4 * 16}, "RES:     VOL:", Theme::getInstance()->fg_light->foreground}};
+        {{0, 4 * 16}, "RES:     VOL:", Theme::getInstance()->fg_light->foreground,false}
+    };
 
     NumberField field_frequency_min{
         {4 * 8, UI_POS_Y(0)},
         4,
         {0, 7199},
         1,  // number of steps by encoder delta
-        ' '};
-
+        ' ',false,false
+    };
     NumberField field_frequency_max{
         {13 * 8, UI_POS_Y(0)},
         4,
         {1, 7200},
         1,  // number of steps by encoder delta
-        ' '};
+        ' ',false,false
+    };
 
     LNAGainField field_lna{
+<<<<<<< HEAD
         {21 * 8, UI_POS_Y(0)}};
 
     VGAGainField field_vga{
         {27 * 8, UI_POS_Y(0)}};
+=======
+        {21 * 8, 0 * 16},false,false
+    };
+
+    VGAGainField field_vga{
+        {27 * 8, 0 * 16},false,false
+    };
+>>>>>>> a8149f33222353859a0f315bd7789e0ba82aefeb
 
     TextField field_range{
         {6 * 8, 1 * 16, 6 * 8, 16},
-        ""};
+        "",
+        false
+    };
 
     OptionsField filter_config{
         {20 * 8, 1 * 16},
@@ -208,23 +228,28 @@ class GlassView : public View {
             {"OFF ", 0},
             {"MID ", 118},  // 85 + 25 (110) + a bit more to kill all blue
             {"HIGH", 202},  // 168 + 25 (193)
-        }};
+        },false,false
+    };
 
     RFAmpField field_rf_amp{
-        {28 * 8, 1 * 16}};
+        {28 * 8, 1 * 16},false,false
+    };
 
     OptionsField range_presets{
         {2 * 8, 2 * 16},
         20,
-        {}};
+        {},false,false
+    };
 
     ButtonWithEncoder button_beep_squelch{
         {screen_width - 8 * 8, 2 * 16 + 4, 8 * 8, 1 * 8},
-        ""};
+        "",false,false
+    };
 
     TextField field_marker{
         {7 * 8, 3 * 16, 9 * 8, 16},
-        ""};
+        "",false
+    };
 
     NumberField field_rx_iq_phase_cal{
         {28 * 8, 3 * 16},
@@ -232,6 +257,7 @@ class GlassView : public View {
         {0, 63},  // 5 or 6 bits IQ CAL phase adjustment (range updated later)
         1,
         ' ',
+        false,false
     };
 
     NumberField field_trigger{
@@ -239,10 +265,13 @@ class GlassView : public View {
         3,
         {2, 128},
         2,
-        ' '};
+        ' ',
+    false,false};
 
     AudioVolumeField field_volume{
-        {13 * 8, 4 * 16}};
+        {13 * 8, 4 * 16},
+        false,false
+    };
 
     /*OptionsField steps_config{
         {13 * 8, 4 * 16},
@@ -262,7 +291,8 @@ class GlassView : public View {
         {
             {"F-", LOOKING_GLASS_FASTSCAN},
             {"S-", LOOKING_GLASS_SLOWSCAN},
-        }};
+        },false,false
+    };
 
     OptionsField view_config{
         {19 * 8, 4 * 16},
@@ -271,7 +301,8 @@ class GlassView : public View {
             {"SPCTR-V", 0},
             {"LEVEL-V", 1},
             {"PEAK-V", 2},
-        }};
+        },false,false
+    };
 
     OptionsField level_integration{
         {27 * 8, 4 * 16},
@@ -287,19 +318,27 @@ class GlassView : public View {
             {"x7", 7},
             {"x8", 8},
             {"x9", 9},
-        }};
+        },false,false
+    };
 
     Button button_jump{
         {screen_width - 4 * 8, 5 * 16, 4 * 8, 16},
-        "JMP"};
+        "JMP",false,false};
 
     Button button_rst{
         {screen_width - 9 * 8, 5 * 16, 4 * 8, 16},
-        "RST"};
+        "RST",false,false};
 
     Text freq_stats{
+<<<<<<< HEAD
         {UI_POS_X(0), 5 * 16, screen_width - 10 * 8, 8},
         ""};
+=======
+        {0 * 8, 5 * 16, screen_width - 10 * 8, 8},
+        "",
+        false
+    };
+>>>>>>> a8149f33222353859a0f315bd7789e0ba82aefeb
 
     MessageHandlerRegistration message_handler_spectrum_config{
         Message::ID::ChannelSpectrumConfig,

@@ -71,11 +71,15 @@ class Painter {
     Painter(Painter&&) = delete;
 
     int draw_char(Point p, const Style& style, char c, uint8_t zoom_factor = 1);
-
+    int draw_char_source(Point p, const Style& style, char c, uint8_t zoom_level=1);
+    int draw_string_with_fitsize(Point p, const Style& style, std::string_view text,int fit_size=0);
     int draw_string(Point p, const Style& style, std::string_view text);
     int draw_string(Point p, const Font& font, Color foreground, Color background, std::string_view text);
+    int draw_string_source(Point p, const Font& font, Color foreground, Color background, std::string_view text);
 
     void draw_bitmap(Point p, const Bitmap& bitmap, Color background, Color foreground);
+
+    void draw_bitmap_with_autofit(Point p, const Bitmap& bitmap, Color background, Color foreground,int zoom);
 
     void draw_rectangle(Rect r, Color c);
     void fill_rectangle(Rect r, Color c);

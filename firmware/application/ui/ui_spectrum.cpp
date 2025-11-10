@@ -42,9 +42,11 @@ AudioSpectrumView::AudioSpectrumView(
     : View{parent_rect} {
     set_focusable(true);
 
-    add_children({&labels,
-                  &field_frequency,
-                  &waveform});
+    add_children({
+        &labels,
+        &field_frequency,
+        &waveform
+    });
 
     field_frequency.on_change = [this](int32_t) {
         set_dirty();
@@ -110,6 +112,7 @@ void FrequencyScale::set_cursor_position(const int32_t position) {
     set_dirty();
 }
 
+// change there
 void FrequencyScale::paint(Painter& painter) {
     const auto r = screen_rect();
 
@@ -119,13 +122,24 @@ void FrequencyScale::paint(Painter& painter) {
         // Can't draw without non-zero scale.
         return;
     }
-
+    // 颜色条
     draw_filter_ranges(painter, r);
+    // 上面的数字
     draw_frequency_ticks(painter, r);
 
+    // 下方是那个红色点？
+    // const Rect r_cursor{
+    //     118 + cursor_position, r.bottom() - filter_band_height,
+    //     5, filter_band_height};
+    // 118 是什么意思？？
     const Rect r_cursor{
+<<<<<<< HEAD
         (screen_width / 2 - 2) + cursor_position, r.bottom() - filter_band_height,
+=======
+        320/2 -2 + cursor_position, r.bottom() - filter_band_height,
+>>>>>>> a8149f33222353859a0f315bd7789e0ba82aefeb
         5, filter_band_height};
+
     painter.fill_rectangle(
         r_cursor,
         Color::red());
@@ -143,7 +157,9 @@ void FrequencyScale::clear_background(Painter& painter, const Rect r) {
 void FrequencyScale::draw_frequency_ticks(Painter& painter, const Rect r) {
     const auto x_center = r.width() / 2;
 
+    // 一条竖直的线
     const Rect tick{r.left() + x_center, r.top(), 1, r.height()};
+    // const Rect tick{r.left(), r.top(), 1, r.height()};
     painter.fill_rectangle(tick, Theme::getInstance()->bg_darkest->foreground);
 
     constexpr int tick_count_max = 4;
@@ -168,35 +184,46 @@ void FrequencyScale::draw_frequency_ticks(Painter& painter, const Rect r) {
             (magnitude_n >= 6) ? "M" : (magnitude_n >= 3) ? "k"
                                                           : "";
         const std::string label = to_string_dec_uint(tick_offset) + zero_pad + unit;
-        const auto label_width = style().font.size_of(label).width();
+        // const auto label_width = style().font.size_of(label).width();
+        const auto label_width = label.length()*ui::new_font_width;
 
         const Coord offset_low = r.left() + x_center - pixel_offset;
         const Rect tick_low{offset_low, r.top(), 1, r.height()};
+
         painter.fill_rectangle(tick_low, Theme::getInstance()->bg_darkest->foreground);
         painter.draw_string({offset_low + 2, r.top()}, style(), label);
 
         const Coord offset_high = r.left() + x_center + pixel_offset;
         const Rect tick_high{offset_high, r.top(), 1, r.height()};
         painter.fill_rectangle(tick_high, Theme::getInstance()->bg_darkest->foreground);
-        painter.draw_string({offset_high - 2 - label_width, r.top()}, style(), label);
 
+        painter.draw_string({offset_high - 2 - label_width, r.top()}, style(), label);
         tick_offset += tick_interval;
     }
 }
 
 void FrequencyScale::draw_filter_ranges(Painter& painter, const Rect r) {
+    // 屏幕扩大了多少倍
+    // float width_max_ratio = 240/320;
+    // float width_max_ratio = 1;
+    // float width_max_ratio = 2;
     if (channel_filter_low_frequency != channel_filter_high_frequency) {
         const auto x_center = r.width() / 2;
-
+        // const auto x_low = 0;
+        // const auto x_high = r.width();
         const auto x_low = x_center + channel_filter_low_frequency * spectrum_bins / spectrum_sampling_rate;
         const auto x_high = x_center + channel_filter_high_frequency * spectrum_bins / spectrum_sampling_rate;
+
+        // 这里是为0 --- x_center + channel_filter_low_frequency * spectrum_bins
+        // const auto x_low = x_center + channel_filter_low_frequency * spectrum_bins / spectrum_sampling_rate;
+        // const auto x_high = x_center + channel_filter_high_frequency * spectrum_bins / spectrum_sampling_rate;
 
         if (channel_filter_transition) {
             const auto trans = channel_filter_transition * spectrum_bins / spectrum_sampling_rate;
 
             const Rect r_all{
                 r.left() + x_low - trans, r.bottom() - filter_band_height,
-                x_high - x_low + trans * 2, filter_band_height};
+                (x_high - x_low + trans * 2), filter_band_height};
             painter.fill_rectangle(
                 r_all,
                 Color::yellow());
@@ -257,12 +284,26 @@ bool FrequencyScale::on_touch(const TouchEvent touch) {
 // preventing flicker from drawing. Would use more RAM however.
 
 void WaterfallWidget::on_show() {
-    clear();
 
+    //不行全黑尝试
+    // 先进行移位复制
+    clear();
     const auto screen_r = screen_rect();
+    // 这里打印看看效果
+
+    std::string debug_string = "call aterfallWidget::on_show() the top bottom "+
+    std::to_string(screen_r.top()) + ","+std::to_string(screen_r.bottom())+"\n" ;
+    UsbSerialAsyncmsg::asyncmsg(debug_string);
+    //这里是16,480 -- source code
     display.scroll_set_area(screen_r.top(), screen_r.bottom());
+<<<<<<< HEAD
 
     clear();
+=======
+    clear();
+    //debug modify
+    // display.scroll_set_area(ui::screen_height/2, screen_r.bottom());
+>>>>>>> a8149f33222353859a0f315bd7789e0ba82aefeb
 }
 
 void WaterfallWidget::on_hide() {
@@ -273,9 +314,11 @@ void WaterfallWidget::on_hide() {
     clear();
 }
 
+// 这里修改瀑布渲染图片
 void WaterfallWidget::on_channel_spectrum(
     const ChannelSpectrum& spectrum) {
     /* TODO: static_assert that message.spectrum.db.size() >= pixel_row.size() */
+<<<<<<< HEAD
     std::vector<Color> pixel_row(screen_width);
     for (size_t i = 0; i < screen_width / 2; i++) {
         const auto pixel_color = gradient.lut[spectrum.db[256 - screen_width / 2 + i]];
@@ -287,9 +330,42 @@ void WaterfallWidget::on_channel_spectrum(
         pixel_row[i] = pixel_color;
     }
     const auto draw_y = display.scroll(1);
+=======
+    const unsigned int width_value = 320;
+
+    std::array<Color, width_value> pixel_row;
+    for (size_t i = 0; i < width_value/2 ; i++) {
+        const auto pixel_color = gradient.lut[spectrum.db[256 - width_value/2 + i]];
+        pixel_row[i] = pixel_color;
+    }
+
+    for (size_t i = width_value/2; i < width_value; i++) {
+        const auto pixel_color = gradient.lut[spectrum.db[i - width_value/2]];
+        pixel_row[i] = pixel_color;
+    }
+
+    // std::array<Color, 240> pixel_row;
+    // for (size_t i = 0; i < 120; i++) {
+    //     const auto pixel_color = gradient.lut[spectrum.db[256 - 120 + i]];
+    //     pixel_row[i] = pixel_color;
+    // }
+
+    // for (size_t i = 120; i < 240; i++) {
+    //     const auto pixel_color = gradient.lut[spectrum.db[i - 120]];
+    //     pixel_row[i] = pixel_color;
+    // }
+
+    const auto draw_y = display.scroll(1);
+
+    // std::string debug_string = "WaterfallWidget::on_channel_spectrum x,y "+
+    // std::to_string(0)+ "," +std::to_string(draw_y)+"\n";
+    // UsbSerialAsyncmsg::asyncmsg(debug_string);
+
+>>>>>>> a8149f33222353859a0f315bd7789e0ba82aefeb
     display.draw_pixels(
         {{0, draw_y}, {(int)pixel_row.size(), 1}},
         pixel_row);
+    
 }
 
 bool WaterfallWidget::on_touch(const TouchEvent event) {
@@ -302,6 +378,12 @@ bool WaterfallWidget::on_touch(const TouchEvent event) {
 }
 
 void WaterfallWidget::clear() {
+
+    std::string debug_string = "WaterfallWidget::clear() and the x,y,width,height is "+
+    std::to_string(screen_rect().location().x())+ "," +std::to_string(screen_rect().location().y())+"," +
+    std::to_string(screen_rect().size().width()) + ","+std::to_string(screen_rect().size().height())+"\n" ;
+    UsbSerialAsyncmsg::asyncmsg(debug_string);
+
     display.fill_rectangle(
         screen_rect(),
         Color::black());
@@ -328,6 +410,7 @@ WaterfallView::WaterfallView(const bool cursor) {
         if (sampling_rate) {
             // screen x to frequency scale x, NB we need two widgets align
             int32_t cursor_position = x - (screen_width / 2);
+            // int32_t cursor_position = x - (screen_width / 3);
             frequency_scale.set_cursor_position(cursor_position);
         }
     };
@@ -354,14 +437,22 @@ void WaterfallView::start() {
 
 void WaterfallView::stop() {
     if (running_) {
+        std::string debug_string = "WaterfallView::stop() on running and stop it\n";
+        UsbSerialAsyncmsg::asyncmsg(debug_string);
         baseband::spectrum_streaming_stop();
         running_ = false;
     }
 }
 
 void WaterfallView::show_audio_spectrum_view(const bool show) {
-    if ((audio_spectrum_view && show) || (!audio_spectrum_view && !show)) return;
+    // 这里会直接跳出
+    if ((audio_spectrum_view && show) || (!audio_spectrum_view && !show)) 
+    {
+        return;
+    }
 
+    std::string debug_string = "test for show_audio_spectrum_view\n";
+    UsbSerialAsyncmsg::asyncmsg(debug_string);
     if (show) {
         audio_spectrum_view = std::make_unique<AudioSpectrumView>(audio_spectrum_view_rect);
         add_child(audio_spectrum_view.get());
@@ -375,20 +466,33 @@ void WaterfallView::show_audio_spectrum_view(const bool show) {
 }
 
 void WaterfallView::update_widgets_rect() {
+    // change there
     if (audio_spectrum_view) {
+        // 这是瀑布图上面的信息？？
         frequency_scale.set_parent_rect({0, audio_spectrum_height, screen_rect().width(), scale_height});
         waterfall_widget.set_parent_rect(waterfall_reduced_rect);
     } else {
+        // 这是瀑布图上面的信息？？
         frequency_scale.set_parent_rect({0, 0, screen_rect().width(), scale_height});
         waterfall_widget.set_parent_rect(waterfall_normal_rect);
     }
+    //这是什么？
+    // frequency_scale.set_parent_rect({0, 0, screen_rect().width(), scale_height});
+    // // 这又是什么？
+    // // 这里设置会存在一些问题
+    // // 目前想把这里永远设置为顶层看看效果如何
+    // waterfall_widget.set_parent_rect(waterfall_normal_rect);
+    // 这里的on_show会有很大的问题
+    // 注释掉这里看看
     waterfall_widget.on_show();
 }
 
 void WaterfallView::set_parent_rect(const Rect new_parent_rect) {
     View::set_parent_rect(new_parent_rect);
-
+    // source code is here
     waterfall_normal_rect = {0, scale_height, new_parent_rect.width(), new_parent_rect.height() - scale_height};
+    
+    // waterfall_normal_rect = {0, 0, new_parent_rect.width(), 240};
     waterfall_reduced_rect = {0, audio_spectrum_height + scale_height, new_parent_rect.width(), new_parent_rect.height() - scale_height - audio_spectrum_height};
 
     update_widgets_rect();

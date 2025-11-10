@@ -206,18 +206,24 @@ AnalogAudioView::AnalogAudioView(
     : nav_(nav) {
     // A baseband image _must_ be running before add waterfall view.
     baseband::run_image(portapack::spi_flash::image_tag_wideband_spectrum);
+    // 修改这里按照从上到下 从左到右的顺寻添加
+    add_children({
 
-    add_children({&rssi,
-                  &channel,
-                  &audio,
-                  &field_frequency,
-                  &field_lna,
-                  &field_vga,
-                  &options_modulation,
-                  &field_volume,
-                  &text_ctcss,
-                  &record_view,
-                  &waterfall});
+        &options_modulation,
+        &field_frequency,
+        &field_lna,
+        &field_vga,
+        &rssi,
+        &channel,
+        &audio,
+        &field_volume,
+        
+        &text_ctcss,
+
+        // 第二行
+        &record_view,
+        &waterfall
+    });
 
     // Filename Datetime and Frequency
     record_view.set_filename_date_frequency(true);
@@ -244,6 +250,7 @@ AnalogAudioView::AnalogAudioView(
     options_modulation.on_change = [this](size_t, OptionsField::value_t v) {
         this->on_modulation_changed(static_cast<ReceiverModel::Mode>(v));
     };
+    // 这里是更换显示切换如AM SPEC等不同的试图
     options_modulation.on_show_options = [this]() {
         this->on_show_options_modulation();
     };
@@ -417,22 +424,26 @@ void AnalogAudioView::on_show_options_modulation() {
 
     const auto modulation = receiver_model.modulation();
     switch (modulation) {
+        // AM视图
         case ReceiverModel::Mode::AMAudio:
             widget = std::make_unique<AMOptionsView>(this, options_view_rect, Theme::getInstance()->option_active);
             waterfall.show_audio_spectrum_view(false);
             text_ctcss.hidden(true);
             break;
-
+        // NFM视图
         case ReceiverModel::Mode::NarrowbandFMAudio:
             widget = std::make_unique<NBFMOptionsView>(nbfm_view_rect, Theme::getInstance()->option_active);
             waterfall.show_audio_spectrum_view(false);
             text_ctcss.hidden(false);
+            text_ctcss.boom_tag = false;
             break;
 
+        // WFM视图
         case ReceiverModel::Mode::WidebandFMAudio:
             widget = std::make_unique<WFMOptionsView>(options_view_rect, Theme::getInstance()->option_active);
             waterfall.show_audio_spectrum_view(true);
             text_ctcss.hidden(true);
+
             break;
 
         case ReceiverModel::Mode::WFMAudioAMApt:
@@ -440,13 +451,13 @@ void AnalogAudioView::on_show_options_modulation() {
             waterfall.show_audio_spectrum_view(true);
             text_ctcss.hidden(true);
             break;
-
+        
         case ReceiverModel::Mode::AMAudioFMApt:
             widget = std::make_unique<AMFMAptOptionsView>(this, options_view_rect, Theme::getInstance()->option_active);
             waterfall.show_audio_spectrum_view(false);
             text_ctcss.hidden(true);
             break;
-
+        // spec
         case ReceiverModel::Mode::SpectrumAnalysis:
             widget = std::make_unique<SPECOptionsView>(this, nbfm_view_rect, Theme::getInstance()->option_active);
             waterfall.show_audio_spectrum_view(false);

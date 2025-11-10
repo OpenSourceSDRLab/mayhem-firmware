@@ -403,13 +403,18 @@ class ADSBRxView : public View {
     static constexpr uint8_t max_update_entries = 16;
 
     /* Recent Entries */
+<<<<<<< HEAD
     RecentEntriesColumns columns{
         {{"ICAO/Call", 0},
+=======
+    const RecentEntriesColumns columns{
+        {{"ICAO/Cal", 8},
+>>>>>>> a8149f33222353859a0f315bd7789e0ba82aefeb
          {"Lvl", 3},
          {"Spd", 3},
          {"Amp", 3},
          {"Hit", 3},
-         {"Age", 4}}};
+         {"Age", 3}}};
     AircraftRecentEntries recent{};
     RecentEntriesView<AircraftRecentEntries> recent_entries_view{columns, recent};
 
@@ -422,8 +427,12 @@ class ADSBRxView : public View {
     /* The key of the entry in the details view if shown. */
     AircraftRecentEntry::Key detail_key{AircraftRecentEntry::invalid_key};
     ADSBRxDetailsView* details_view{nullptr};
-
+    
+    // new UI font height is 24
+    // and the label have default boom tag for fit new LCD ILI9488
+    // UI COLUNM 1
     Labels labels{
+<<<<<<< HEAD
         {{UI_POS_X(0), UI_POS_Y(0)}, "LNA:   VGA:   AMP:", Theme::getInstance()->fg_light->foreground}};
 
     LNAGainField field_lna{
@@ -451,6 +460,41 @@ class ADSBRxView : public View {
 
     AudioVolumeField field_volume{
         {UI_POS_X_RIGHT(2), UI_POS_Y(0)}};
+=======
+        {
+            {0 * ui::new_font_width, 0 * ui::new_font_height}, "LNA:   VGA:   AMP:", Theme::getInstance()->fg_light->foreground
+        }
+    };
+    LNAGainField field_lna{
+        {4 * ui::new_font_width, 0 * ui::new_font_height}};
+
+    VGAGainField field_vga{
+        {11 * ui::new_font_width, 0 * ui::new_font_height}};
+
+    RFAmpField field_rf_amp{
+        {18 * ui::new_font_width, 0 * ui::new_font_height}};
+        
+    RSSI rssi{
+        {20 * ui::new_font_width, ui::new_font_height/4, 4 * ui::new_font_width, ui::new_font_height/2},
+    };
+
+    AudioVolumeField field_volume{
+        {screen_width - 2 * ui::new_font_width, 0 * 16}};
+    
+
+
+    // // UI COLUNM 2
+    ActivityDot status_frame{
+        {27 * ui::new_font_width + 2, ui::new_font_height/4+1, 2, 2},
+        Theme::getInstance()->bg_darkest->foreground,
+    };
+    
+
+    ActivityDot status_good_frame{
+        {27 * ui::new_font_width + 2, ui::new_font_height + 1, 2, 2},
+        Theme::getInstance()->fg_green->foreground,
+    };
+>>>>>>> a8149f33222353859a0f315bd7789e0ba82aefeb
 
     MessageHandlerRegistration message_handler_frame{
         Message::ID::ADSBFrame,

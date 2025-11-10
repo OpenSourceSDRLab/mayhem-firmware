@@ -122,6 +122,7 @@ class SubGhzDView : public View {
     SubGhzDRecentEntries recent{};
 
     RFAmpField field_rf_amp{
+<<<<<<< HEAD
         {13 * 8, UI_POS_Y(0)}};
     LNAGainField field_lna{
         {15 * 8, UI_POS_Y(0)}};
@@ -135,27 +136,49 @@ class SubGhzDView : public View {
     RxFrequencyField field_frequency{
         {UI_POS_X(0), UI_POS_Y(0)},
         nav_};
+=======
+        {13 * ui::new_font_width, 0 * ui::new_font_height}};
+    LNAGainField field_lna{
+        {15 * ui::new_font_width, 0 * ui::new_font_height}};
+    VGAGainField field_vga{
+        {18 * ui::new_font_width, 0 * ui::new_font_height}};
+    
+    RSSI rssi{
+        {21 * ui::new_font_width, 0, 8 * 8, ui::new_font_height}
+    };
+    
+    RxFrequencyField field_frequency{{0 * 8, 0 * ui::new_font_height},nav_};
+>>>>>>> a8149f33222353859a0f315bd7789e0ba82aefeb
 
     SignalToken signal_token_tick_second{};
 
     Button button_clear_list{
-        {0, 16, 7 * 8, 32},
-        "Clear"};
+        {0, ui::new_font_height, 7 * ui::new_font_width, ui::new_font_height},
+        "Clear"
+    };
 
     Checkbox check_log{
-        {10 * 8, 18},
+        {10 * ui::new_font_width, ui::new_font_height + 2},
         3,
         "Log",
-        true};
+        true
+    };
 
-    static constexpr auto header_height = 3 * 16;
+    static constexpr auto header_height = 2 * 24;
 
     std::unique_ptr<SubGhzDLogger> logger{};
 
+<<<<<<< HEAD
     RecentEntriesColumns columns{{
         {"Type", 0},
         {"Bits", 4},
         {"Age", 3},
+=======
+    const RecentEntriesColumns columns{{
+        {"Type ", 7},
+        {"Bits ", 7},
+        {"Age ", 6},
+>>>>>>> a8149f33222353859a0f315bd7789e0ba82aefeb
     }};
     SubGhzDRecentEntriesView recent_entries_view{columns, recent};
 

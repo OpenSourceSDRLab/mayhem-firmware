@@ -74,6 +74,7 @@ MEMORY
     ram_external_app_level      (rwx) : org = 0xADE10000, len = 32k
     ram_external_app_gfxeq      (rwx) : org = 0xADE20000, len = 32k
     ram_external_app_noaaapt_rx   (rwx) : org = 0xADE30000, len = 32k
+<<<<<<< HEAD
     ram_external_app_detector_rx   (rwx) : org = 0xADE40000, len = 32k
     ram_external_app_dinogame   (rwx) : org = 0xADE50000, len = 32k
     ram_external_app_spaceinv   (rwx) : org = 0xADE60000, len = 32k
@@ -87,6 +88,8 @@ MEMORY
     ram_external_app_morse_practice  (rwx) : org = 0xADEE0000, len = 32k
     ram_external_app_adult_toys_controller  (rwx) : org = 0xADEF0000, len = 32k
 
+=======
+>>>>>>> a8149f33222353859a0f315bd7789e0ba82aefeb
 }
 
 SECTIONS
@@ -396,6 +399,7 @@ SECTIONS
         KEEP(*(.external_app.app_gfxeq.application_information));
         *(*ui*external_app*gfxeq*);
     } > ram_external_app_gfxeq
+<<<<<<< HEAD
 
     .external_app_detector_rx : ALIGN(4) SUBALIGN(4)
     {
@@ -471,5 +475,6 @@ SECTIONS
         *(*ui*external_app*adult_toys_controller*);
     } > ram_external_app_adult_toys_controller
 
+=======
+>>>>>>> a8149f33222353859a0f315bd7789e0ba82aefeb
 }
-

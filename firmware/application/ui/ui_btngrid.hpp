@@ -97,10 +97,21 @@ class BtnGridView : public View {
     virtual void on_populate() = 0;
 
    private:
+   //change there
     int rows_{3};
+<<<<<<< HEAD
+=======
+    // int rows_{2};
+    uint8_t btn_h_min{40};
+    //change there
+    // uint8_t btn_h_max{60};
+    uint8_t btn_h_max{64};
+>>>>>>> a8149f33222353859a0f315bd7789e0ba82aefeb
     bool keep_highlight{false};
 
     std::vector<GridItem> menu_items{};
+    
+    // 这里是绘制文字的位置
     std::vector<std::unique_ptr<NewButton>> menu_item_views{};
 
     Button button_pgup{
@@ -112,7 +123,7 @@ class BtnGridView : public View {
         "         "};
 
     int button_w = screen_width / rows_;
-    int button_h = 48;
+    int button_h = 72;
     size_t displayed_max{0};
     size_t highlighted_item{0};
     size_t offset{0};

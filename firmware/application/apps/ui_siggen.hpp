@@ -33,6 +33,8 @@
 #include "portapack.hpp"
 #include "message.hpp"
 
+
+
 namespace ui {
 
 class SigGenView : public View {
@@ -45,6 +47,7 @@ class SigGenView : public View {
     std::string title() const override { return "Signal gen"; };
 
    private:
+    int  FIT_OFFSET  = 320/8;
     void start_tx();
     void update_config();
     void update_tone();
@@ -69,13 +72,31 @@ class SigGenView : public View {
     bool auto_update{false};
 
     Labels labels{
-        {{3 * 8, 2 * 8}, "Modulation:", Theme::getInstance()->fg_light->foreground},
-        {{3 * 8, 3 * 8 + 8 + 10}, "Shape:", Theme::getInstance()->fg_light->foreground},
-        {{6 * 8, 2 * 8 + 7 * 8}, "Tone:      Hz", Theme::getInstance()->fg_light->foreground},
-        {{22 * 8, 2 * 8 + 15 * 8 + 4}, "s.", Theme::getInstance()->fg_light->foreground}};
+        {{ 0 , 0 }, "Modulation:", Theme::getInstance()->fg_light->foreground},
+        {{ 0, ui::new_font_height * 1 }, "Shape:", Theme::getInstance()->fg_light->foreground},
+        {{0, ui::new_font_height * 4}, "Tone:      Hz", Theme::getInstance()->fg_light->foreground,false},
+        {{ ui::screen_width /2 + 4*ui::new_font_width,  9*ui::new_font_height}, "s.", Theme::getInstance()->fg_light->foreground}
+    };
+
+    OptionsField options_mod{
+        {12 * ui::new_font_width, 0},
+        12,
+        {
+            {"CW (No mod.)", 0},
+            {"FM", 1},
+            {"BPSK", 2},
+            {"QPSK", 3},
+            {"DSB", 4},
+            {"AM 100% dep.", 5},
+            {"AM 50% depth", 6},
+            {"Pulse CW 25%", 7}
+         },
+         false,
+         true
+    };
 
     ImageOptionsField options_shape{
-        {10 * 8, 3 * 8 + 8, 32, 32},
+        { 7*ui::new_font_width, ui::new_font_height * 1, 32, 32},
         Theme::getInstance()->bg_darkest->foreground,
         Theme::getInstance()->bg_darkest->background,
         {{&bitmap_sig_sine, 0},
@@ -86,45 +107,36 @@ class SigGenView : public View {
          {&bitmap_sig_noise, 5}}};
 
     Text text_shape{
-        {15 * 8, 3 * 8 + 8 + 10, 15 * 8, 16},
-        ""};
+        { 12 * ui::new_font_width,ui::new_font_height * 1, 15 * ui::new_font_width, ui::new_font_height},
+        "-",true
+    };
 
     SymField symfield_tone{
-        {12 * 8, 2 * 8 + 7 * 8},
-        5};
+        {5 * 8, ui::new_font_height * 4},
+        5,
+    };
+
 
     Button button_update{
-        {5 * 8, 2 * 8 + 10 * 8, 8 * 8, 3 * 8},
+        {0, 5*ui::new_font_height+4 , 8 * ui::new_font_width, 2*ui::new_font_height},
         "Update"};
 
     Checkbox checkbox_auto{
-        {15 * 8, 2 * 8 + 10 * 8},
+        {0, 8*ui::new_font_height},
         4,
         "Auto"};
 
     Checkbox checkbox_stop{
-        {5 * 8, 2 * 8 + 15 * 8},
+        {0, 9*ui::new_font_height},
         10,
         "Stop after"};
 
     NumberField field_stop{
-        {20 * 8, 2 * 8 + 15 * 8 + 4},
+        {ui::screen_width / 2 , 9*ui::new_font_height},
         2,
         {1, 99},
         1,
         ' '};
-
-    OptionsField options_mod{
-        {15 * 8, 2 * 8},
-        12,
-        {{"CW (No mod.)", 0},
-         {"FM", 1},
-         {"BPSK", 2},
-         {"QPSK", 3},
-         {"DSB", 4},
-         {"AM 100% dep.", 5},
-         {"AM 50% depth", 6},
-         {"Pulse CW 25%", 7}}};
 
     TransmitterView tx_view{
         (int16_t)UI_POS_Y_BOTTOM(4),

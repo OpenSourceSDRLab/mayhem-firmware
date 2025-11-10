@@ -67,6 +67,8 @@
 #define TOUCHTUNES_REPEATS 4
 #define TOUCHTUNES_SYNC_WORD 0x5D
 
+static int  FIT_OFFSET = 320/8;
+
 // Each 16bit button code is actually 8bit followed by its complement
 const uint8_t button_codes[32] = {
     0x32,  // Pause
@@ -143,17 +145,45 @@ class TouchTunesView : public View {
         std::string text;
     };
 
-    const std::array<remote_layout_t, 32> remote_layout{{{{12 * 8, 0}, "PAUSE"},
-                                                         {{21 * 8, 0}, "POWER"},
+    
 
-                                                         {{14 * 8, 5 * 8}, "P1"},
-                                                         {{18 * 8, 5 * 8}, "P2"},
-                                                         {{22 * 8, 5 * 8}, "P3"},
+    const std::array<remote_layout_t, 32> remote_layout{{
+                                                            {{ui::screen_width - (ui::new_font_width*7)*2 , 0}, "PAUSE"},
+                                                            {{ui::screen_width - (ui::new_font_width*7)*1, 0}, "POWER"},
+                                                         
+                                                            {{0 * ui::new_font_width, 2 *ui::new_font_height + 16}, "1"},
+                                                            {{4 * ui::new_font_width, 2 *ui::new_font_height + 16}, "2"},
+                                                            {{8 * ui::new_font_width, 2 *ui::new_font_height + 16}, "3"},
+                                                            {{14 * ui::new_font_width, 2 *ui::new_font_height + 16}, "P1"},
+                                                            {{18 * ui::new_font_width, 2 *ui::new_font_height + 16}, "P2"},
+                                                            {{22 * ui::new_font_width, 2 *ui::new_font_height + 16}, "P3"},
 
-                                                         {{14 * 8, 10 * 8}, "F1"},
-                                                         {{18 * 8 + 4, 10 * 8}, "^"},
-                                                         {{22 * 8, 10 * 8}, "F2"},
+                                                            {{0 * ui::new_font_width, 4 *ui::new_font_height + 16}, "4"},
+                                                            {{4 * ui::new_font_width, 4 *ui::new_font_height + 16}, "5"},
+                                                            {{8 * ui::new_font_width, 4 *ui::new_font_height + 16}, "6"},
+                                                            {{14 * ui::new_font_width, 4 *ui::new_font_height + 16}, "F1"},
+                                                            {{18 * ui::new_font_width +4, 4 *ui::new_font_height + 16}, "^"},
+                                                            {{22 * ui::new_font_width, 4 *ui::new_font_height + 16}, "F2"},
+                                                        
+                                                            {{0 * ui::new_font_width, 6 *ui::new_font_height + 16 }, "7"},
+                                                            {{4 * ui::new_font_width, 6 *ui::new_font_height + 16}, "8"},
+                                                            {{8 * ui::new_font_width, 6 *ui::new_font_height + 16}, "9"},
+                                                            {{14 * ui::new_font_width, 6 *ui::new_font_height + 16}, "<"},
+                                                            {{18 * ui::new_font_width, 6 *ui::new_font_height + 16}, "OK"},
+                                                            {{22 * ui::new_font_width + 8, 6 *ui::new_font_height + 16}, ">"},
+                                                            
+                                                            {{0 * ui::new_font_width, 8 * ui::new_font_height + 16}, "*"},
+                                                            {{4 * ui::new_font_width, 8 * ui::new_font_height + 16}, "0"},
+                                                            {{8 * ui::new_font_width, 8 * ui::new_font_height + 16}, "#"},
+                                                            {{14 * ui::new_font_width, 8 * ui::new_font_height + 16}, "F3"},
+                                                            {{18 * ui::new_font_width+4, 8 * ui::new_font_height + 16}, "V"},
+                                                            {{22 * ui::new_font_width, 8 * ui::new_font_height + 16}, "F4"},
+                                                            
+                                                            {{14 * ui::new_font_width, 10 * ui::new_font_height + 16}, "+"},
+                                                            {{18 * ui::new_font_width, 10 * ui::new_font_height + 16}, "+"},
+                                                            {{22 * ui::new_font_width, 10 * ui::new_font_height + 16}, "+"},
 
+<<<<<<< HEAD
                                                          {{14 * 8, 14 * 8}, "<"},
                                                          {{18 * 8, 14 * 8}, "OK"},
                                                          {{23 * 8, 14 * 8}, ">"},
@@ -182,36 +212,53 @@ class TouchTunesView : public View {
                                                          {{13 * 8, 29 * 8}, "-"},
                                                          {{18 * 8, 29 * 8}, "-"},
                                                          {{23 * 8, 29 * 8}, "-"}}};
+=======
+                                                            {{14 * ui::new_font_width, 14 * ui::new_font_height + 16}, "-"},
+                                                            {{18 * ui::new_font_width, 14 * ui::new_font_height + 16} , "-"},
+                                                            {{22 * ui::new_font_width, 14 * ui::new_font_height + 16}, "-"}}};
+                                                         
+                                                         
+                                                         
+                                                         
+                                                         
+>>>>>>> a8149f33222353859a0f315bd7789e0ba82aefeb
 
     Labels labels{
-        {{2 * 8, 1 * 8}, "PIN:", Theme::getInstance()->fg_light->foreground},
-        {{13 * 8 + 4, 27 * 8}, "VOL1 VOL2 VOL3", Theme::getInstance()->fg_light->foreground}};
+        {{0 * 8, 0 * ui::new_font_height}, "PIN:", Theme::getInstance()->fg_light->foreground},
+        {{12 * ui::new_font_width, 13 * ui::new_font_height + 8}, "VOL1 VOL2 VOL3", Theme::getInstance()->fg_light->foreground}
+    
+    };
 
-    std::array<Button, 32> buttons{};
-
+    
     NumberField field_pin{
-        {6 * 8, 1 * 8},
+        {6 * ui::new_font_width, 0 * ui::new_font_height},
         3,
         {0, 255},
         1,
         '0'};
 
+    std::array<Button, 32> buttons{};
+
+    
+
     Checkbox check_scan{
-        {2 * 8, 25 * 8},
+        {2 * 8, ui::screen_height - 8*ui::new_font_height},
         4,
         "Scan"};
 
     Checkbox check_ew{
-        {2 * 8, 29 * 8},
+        {2 * 8, ui::screen_height - 6*ui::new_font_height},
         4,
         "EW Mode"};
 
     Text text_status{
-        {2 * 8, 33 * 8, 128, 16},
-        "Ready"};
+        {2 * 8, ui::screen_height - 4*ui::new_font_height , 128, ui::new_font_height},
+        "Ready",true};
 
     ProgressBar progressbar{
-        {2 * 8, 35 * 8, 208, 16}};
+        // {2 * 8, 35 * 8, 208, 16}
+        {2 * 8, ui::screen_height - 16 -ui::new_font_height , 320-2*8*2, 16}
+    };
 
     MessageHandlerRegistration message_handler_tx_progress{
         Message::ID::TXProgress,

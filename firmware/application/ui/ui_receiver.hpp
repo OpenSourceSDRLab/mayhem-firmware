@@ -57,9 +57,9 @@ class FrequencyField : public Widget {
     std::function<void(void)> on_show_options{};
 
     using range_t = rf::FrequencyRange;
-
-    FrequencyField(Point parent_pos);
-    FrequencyField(Point parent_pos, rf::FrequencyRange range);
+    bool boom_tag;
+    FrequencyField(Point parent_pos,bool boom_tag=true);
+    FrequencyField(Point parent_pos, rf::FrequencyRange range,bool boom_tag=true);
     ~FrequencyField();
 
     rf::Frequency value() const;
@@ -204,6 +204,7 @@ class FieldString {
     }
 };
 
+// 计算器布局
 class FrequencyKeypadView : public View {
    public:
     std::function<void(rf::Frequency)> on_changed{};
@@ -222,7 +223,14 @@ class FrequencyKeypadView : public View {
 
    private:
     int16_t focused_button = 0;
+<<<<<<< HEAD
     int button_w = 240 / 3;
+=======
+    // static constexpr int button_w = ui::screen_width / 3;
+    static constexpr int button_w = 106;
+    // static constexpr int button_h =  (ui::screen_height - 16 - ui::new_font_height*2)/4 ;
+    
+>>>>>>> a8149f33222353859a0f315bd7789e0ba82aefeb
     static constexpr int button_h = 48;
 
     static constexpr int mhz_digits = 4;
@@ -231,7 +239,9 @@ class FrequencyKeypadView : public View {
     static constexpr int submhz_base = pow(10, 6 - submhz_digits);
     static constexpr int text_digits = mhz_digits + 1 + submhz_digits;
 
+    // 第一栏目是字帖
     Text text_value{
+<<<<<<< HEAD
         {UI_POS_X(0), 4, screen_width, 16}};
 
     std::array<Button, 12> buttons{};
@@ -260,6 +270,21 @@ class FrequencyKeypadView : public View {
     Button button_done_mhz{
         {UI_POS_WIDTH_PERCENT(66) + 1, 16 * 16, UI_POS_WIDTH_PERCENT(33), UI_POS_HEIGHT(3)},
         "Done MHz"};
+=======
+        {0, 0 , screen_width, ui::new_font_height},true};
+
+    std::array<Button, 12> buttons{};
+
+    Button button_save{
+        {0, ui::screen_height - button_h-16, 80, button_h},
+        "Save"};
+    Button button_load{
+        {80, ui::screen_height - button_h-16, 80, button_h},
+        "Load"};
+    Button button_close{
+        {160, ui::screen_height - button_h-16, 160, button_h},
+        "Done"};
+>>>>>>> a8149f33222353859a0f315bd7789e0ba82aefeb
 
     /* TODO: Template arg required in enum?! */
     FieldString<mhz_digits> mhz{FieldString<4>::Justify::Right};
@@ -286,18 +311,24 @@ class FrequencyKeypadView : public View {
 
 class FrequencyStepView : public OptionsField {
    public:
-    FrequencyStepView(
-        Point parent_pos)
-        : OptionsField{
-              parent_pos,
-              5,
-              {}} {
+    FrequencyStepView(Point parent_pos): OptionsField{parent_pos,5,{},false,true} 
+    {
         options_t options;
         for (const auto& step : freqman_steps) {
             options.emplace_back(step.first, step.second);
         }
         set_options(options);
     }
+
+    FrequencyStepView(Point parent_pos,bool bool1,bool bool2=false): OptionsField{parent_pos,5,{},bool1,bool2} 
+    {
+        options_t options;
+        for (const auto& step : freqman_steps) {
+            options.emplace_back(step.first, step.second);
+        }
+        set_options(options);
+    }
+
 };
 
 class FrequencyOptionsView : public View {
@@ -341,7 +372,8 @@ class FrequencyOptionsView : public View {
 
 class RFAmpField : public NumberField {
    public:
-    RFAmpField(Point parent_pos);
+    // RFAmpField(Point parent_pos);
+    RFAmpField(Point parent_pos,bool can_loop=false,bool boom_tag=true);
 };
 
 class RadioGainOptionsView : public View {
@@ -362,7 +394,7 @@ class LNAGainField : public NumberField {
    public:
     std::function<void(void)> on_show_options{};
 
-    LNAGainField(Point parent_pos);
+    LNAGainField(Point parent_pos,bool can_loop=false,bool boom_tag=true);
 
     void on_focus() override;
 };
@@ -371,14 +403,15 @@ class VGAGainField : public NumberField {
    public:
     std::function<void(void)> on_show_options{};
 
-    VGAGainField(Point parent_pos);
+    VGAGainField(Point parent_pos,bool can_loop=false,bool boom_tag=true);
 
     void on_focus() override;
 };
 
 class AudioVolumeField : public NumberField {
    public:
-    AudioVolumeField(Point parent_pos);
+    // AudioVolumeField(Point parent_pos);
+    AudioVolumeField(Point parent_pos,bool can_loop=false,bool boom_tag=true);
 };
 
 } /* namespace ui */

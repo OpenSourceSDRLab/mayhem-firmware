@@ -122,30 +122,60 @@ class RecordView : public View {
                 Theme::getInstance()->fg_orange->background
         };*/
 
+    // 这里设置一个等倍数渲染的图片
+    // ImageButton button_record{
+    //     //{ 4 * 8, 0 * 16, 2 * 8, 1 * 16 },
+    //     {0 * 8, 0 * 16, 2 * 8, 1 * 16},
+    //     &bitmap_record,
+    //     Theme::getInstance()->fg_red->foreground,
+    //     Theme::getInstance()->fg_red->background};
+
     ImageButton button_record{
+<<<<<<< HEAD
         //{ 4 * 8, UI_POS_Y(0), 2 * 8, 1 * 16 },
         {UI_POS_X(0), UI_POS_Y(0), UI_POS_WIDTH(2), UI_POS_HEIGHT(1)},
+=======
+        //{ 4 * 8, 0 * 16, 2 * 8, 1 * 16 },
+        {0 * 8, 0 * 16, 4 * 8, 1 * ui::new_font_height},
+>>>>>>> a8149f33222353859a0f315bd7789e0ba82aefeb
         &bitmap_record,
         Theme::getInstance()->fg_red->foreground,
         Theme::getInstance()->fg_red->background};
 
     Text text_record_filename{
+<<<<<<< HEAD
         {UI_POS_X(7), UI_POS_Y(0), UI_POS_WIDTH(8), UI_POS_HEIGHT(1)},
+=======
+        {7 * 8, 0 * 16, 8 * 8, ui::new_font_height},
+>>>>>>> a8149f33222353859a0f315bd7789e0ba82aefeb
         "",
     };
 
     Text text_record_dropped{
+<<<<<<< HEAD
         {UI_POS_X(16), UI_POS_Y(0), UI_POS_WIDTH(3), UI_POS_HEIGHT(1)},
+=======
+        {16 * 8, 0 * 16, 3 * ui::new_font_width, ui::new_font_height},
+>>>>>>> a8149f33222353859a0f315bd7789e0ba82aefeb
         "",
     };
 
     Text text_time_available{
+<<<<<<< HEAD
         {UI_POS_X_RIGHT(9), UI_POS_Y(0), UI_POS_WIDTH(9), UI_POS_HEIGHT(1)},
         "",
     };
 
     Image gps_icon{
         {UI_POS_X(2) + 1, UI_POS_Y(0), UI_POS_WIDTH(2), UI_POS_HEIGHT(1)},
+=======
+        {ui::screen_width-10 * ui::new_font_width, 0 * 16, 10 * ui::new_font_width, ui::new_font_height},
+        "",true
+    };
+
+    Image gps_icon{
+        {2 * ui::new_font_width + 1, 0 * 16, 2 * ui::new_font_width, 1 * ui::new_font_height},
+>>>>>>> a8149f33222353859a0f315bd7789e0ba82aefeb
         &bitmap_target,
         Theme::getInstance()->bg_darkest->foreground,
         Theme::getInstance()->bg_darkest->background};

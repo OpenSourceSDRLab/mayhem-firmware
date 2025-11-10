@@ -113,6 +113,7 @@ class GeoPos : public View {
     spd_unit speed_unit_{};
 
     Labels labels_position{
+<<<<<<< HEAD
         {{1 * 8, UI_POS_Y(0)}, "Alt:", Theme::getInstance()->fg_light->foreground},
         {{1 * 8, 1 * 16}, "Lat:    \xB0  '  \"", Theme::getInstance()->fg_light->foreground},  // 0xB0 is degree ° symbol in our 8x16 font
         {{1 * 8, 2 * 16}, "Lon:    \xB0  '  \"", Theme::getInstance()->fg_light->foreground},
@@ -122,71 +123,99 @@ class GeoPos : public View {
     };
     NumberField field_altitude{
         {6 * 8, UI_POS_Y(0)},
+=======
+        {{1 * ui::new_font_width, 0 * ui::new_font_height}, "Alt:", Theme::getInstance()->fg_light->foreground},
+        {{1 * ui::new_font_width, 1 * ui::new_font_height}, "Lat:    \xB0  '  \"", Theme::getInstance()->fg_light->foreground},  // 0xB0 is degree ° symbol in our 8x16 font
+        {{1 * ui::new_font_width, 2 * ui::new_font_height}, "Lon:    \xB0  '  \"", Theme::getInstance()->fg_light->foreground},
+    };
+    Labels label_spd_position{
+        {{15 * ui::new_font_width, 0 * 16}, "Spd:", Theme::getInstance()->fg_light->foreground},
+    };
+    NumberField field_altitude{
+        {6 * ui::new_font_width, 0 * 16},
+>>>>>>> a8149f33222353859a0f315bd7789e0ba82aefeb
         5,
         {-1000, 50000},
         250,
         ' '};
 
     NumberField field_speed{
+<<<<<<< HEAD
         {19 * 8, UI_POS_Y(0)},
+=======
+        {19 * ui::new_font_width, 0 * 16},
+>>>>>>> a8149f33222353859a0f315bd7789e0ba82aefeb
         4,
         {0, 5000},
         1,
         ' '};
     Text text_alt_unit{
+<<<<<<< HEAD
         {12 * 8, UI_POS_Y(0), 2 * 8, 16},
         ""};
     Text text_speed_unit{
         {25 * 8, UI_POS_Y(0), 5 * 8, 16},
         ""};
+=======
+        {12 * ui::new_font_width, 0 * 16, 2 * ui::new_font_width, ui::new_font_height},
+        "",
+        true
+    };
+    Text text_speed_unit{
+        {25 * ui::new_font_width, 0 * 16, 4 * ui::new_font_width, ui::new_font_height},
+        "",
+        true
+    };
+>>>>>>> a8149f33222353859a0f315bd7789e0ba82aefeb
 
     NumberField field_lat_degrees{
-        {5 * 8, 1 * 16},
+        {5 * ui::new_font_width, 1 * ui::new_font_height},
         4,
         {-90, 90},
         1,
         ' '};
     NumberField field_lat_minutes{
-        {10 * 8, 1 * 16},
+        {10 * ui::new_font_width, 1 * ui::new_font_height},
         2,
         {0, 59},
         1,
         ' ',
         true};
     NumberField field_lat_seconds{
-        {13 * 8, 1 * 16},
+        {13 * ui::new_font_width, 1 * ui::new_font_height},
         2,
         {0, 59},
         1,
         ' ',
         true};
+
     Text text_lat_decimal{
-        {17 * 8, 1 * 16, 13 * 8, 1 * 16},
-        ""};
+        {17 * ui::new_font_width, 1 * ui::new_font_height, 13 * ui::new_font_width, 1 * ui::new_font_height},
+        "",true};
 
     NumberField field_lon_degrees{
-        {5 * 8, 2 * 16},
+        {5 * ui::new_font_width, 2 * ui::new_font_height},
         4,
         {-180, 180},
         1,
         ' '};
     NumberField field_lon_minutes{
-        {10 * 8, 2 * 16},
+        {10 * ui::new_font_width, 2 * ui::new_font_height},
         2,
         {0, 59},
         1,
         ' ',
         true};
     NumberField field_lon_seconds{
-        {13 * 8, 2 * 16},
+        {13 * ui::new_font_width, 2 * ui::new_font_height},
         2,
         {0, 59},
         1,
         ' ',
         true};
     Text text_lon_decimal{
-        {17 * 8, 2 * 16, 13 * 8, 1 * 16},
-        ""};
+        {17 * ui::new_font_width, 2 * ui::new_font_height, 13 * ui::new_font_width, 1 * ui::new_font_height},
+        "",true};
 };
 
 enum MapMarkerStored {

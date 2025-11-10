@@ -37,6 +37,7 @@ BtnGridView::BtnGridView(
     : keep_highlight{keep_highlight} {
     set_parent_rect(new_parent_rect);
     set_focusable(true);
+<<<<<<< HEAD
     if (screen_height == 480) {
         button_h = 64;
     }
@@ -49,19 +50,32 @@ BtnGridView::BtnGridView(
                 set_highlighted(0);
         }
     };
+=======
 
-    button_pgdown.set_focusable(false);
-    button_pgdown.on_select = [this](Button&) {
-        if (arrow_down_enabled) {
-            set_highlighted(highlighted_item + displayed_max);
-        }
-    };
+    //先不要设置 page up 和page down 两个标签
+    // button_pgup.set_focusable(false);
+    // button_pgup.on_select = [this](Button&) {
+    //     if (arrow_up_enabled) {
+    //         if (((int64_t)highlighted_item - displayed_max) > 0)
+    //             set_highlighted(highlighted_item - displayed_max);
+    //         else
+    //             set_highlighted(0);
+    //     }
+    // };
+>>>>>>> a8149f33222353859a0f315bd7789e0ba82aefeb
 
-    button_pgup.set_style(Theme::getInstance()->bg_darkest_small);
-    button_pgdown.set_style(Theme::getInstance()->bg_darkest_small);
+    // button_pgdown.set_focusable(false);
+    // button_pgdown.on_select = [this](Button&) {
+    //     if (arrow_down_enabled) {
+    //         set_highlighted(highlighted_item + displayed_max);
+    //     }
+    // };
 
-    add_child(&button_pgup);
-    add_child(&button_pgdown);
+    // button_pgup.set_style(Theme::getInstance()->bg_darkest_small);
+    // button_pgdown.set_style(Theme::getInstance()->bg_darkest_small);
+
+    // add_child(&button_pgup);
+    // add_child(&button_pgdown);
 }
 
 BtnGridView::~BtnGridView() {
@@ -77,12 +91,42 @@ int BtnGridView::rows() {
 
 void BtnGridView::set_parent_rect(const Rect new_parent_rect) {
     View::set_parent_rect(new_parent_rect);
+<<<<<<< HEAD
 
     int space_available = parent_rect().size().height() - 16;  // leave space for arrows
     displayed_max = (parent_rect().size().height() / button_h);
 
     button_pgup.set_parent_rect({0, (Coord)(space_available), screen_width / 2, 16});
     button_pgdown.set_parent_rect({screen_width / 2, (Coord)(space_available), screen_width / 2, 16});
+=======
+    // 之前是16
+    // button_h = 48;  // btn_h_min;
+    // 现在是24
+    button_h = 72;
+    /*
+    // DISABLED FOR NOW. TODO fix next, prev button pos
+    int min_remainder = parent_rect().size().height();
+    uint8_t max_button_count = 0;
+
+    for (int h = btn_h_min; h <= btn_h_max; ++h) {
+        int count = parent_rect().size().height() / h;
+        int remainder = parent_rect().size().height() % h;
+
+        // Prefer smaller remainder, then more buttons, then larger height
+        if (remainder < min_remainder ||
+            (remainder == min_remainder && count > max_button_count) ||
+            (remainder == min_remainder && count == max_button_count && h > button_h)) {
+            button_h = h;
+            min_remainder = remainder;
+            max_button_count = count;
+        }
+    }
+    */
+    displayed_max = (parent_rect().size().height() / button_h);
+
+    button_pgup.set_parent_rect({0, (Coord)(displayed_max * button_h), screen_width / 2, ui::new_font_height});
+    button_pgdown.set_parent_rect({screen_width / 2, (Coord)(displayed_max * button_h), screen_width / 2, ui::new_font_height});
+>>>>>>> a8149f33222353859a0f315bd7789e0ba82aefeb
 
     displayed_max *= rows_;
 

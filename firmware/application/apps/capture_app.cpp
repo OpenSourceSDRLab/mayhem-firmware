@@ -126,6 +126,12 @@ void CaptureAppView::set_parent_rect(const Rect new_parent_rect) {
     View::set_parent_rect(new_parent_rect);
 
     ui::Rect waterfall_rect{0, header_height, new_parent_rect.width(), new_parent_rect.height() - header_height};
+    std::string debug_string = "CaptureAppView::set_parent_rect and the x,y,width,height is "+
+    std::to_string(waterfall_rect.location().x())+ "," +std::to_string(waterfall_rect.location().y())+"," +
+    std::to_string(waterfall_rect.size().width()) + ","+std::to_string(waterfall_rect.size().height())+"\n" ;
+    UsbSerialAsyncmsg::asyncmsg(debug_string);
+    
+    //设置流水的布局位置
     waterfall.set_parent_rect(waterfall_rect);
 }
 

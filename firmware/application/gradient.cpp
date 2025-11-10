@@ -34,10 +34,31 @@ Gradient::Gradient() {
     prev_b = 0;
 }
 
+// 修改默认渐变不要使用浮点类型
 void Gradient::set_default() {
-    step(86, 0, 0, 255);
-    step(171, 0, 255, 0);
-    step(255, 255, 0, 0);
+    
+    for (int16_t i = 0; i <= 85; i++) {
+        int16_t r = 0;
+        int16_t g = (i * 255) / 85;  // 定点运算
+        int16_t b = 255 - (i * 255) / 85;  // 定点运算
+        lut[i] = ui::Color(r, g, b);
+    }
+    
+    // 绿色到红色渐变 (86-255)
+    for (int16_t i = 86; i <= 255; i++) {
+        int16_t r = ((i - 86) * 255) / (255 - 86);  // 定点运算
+        int16_t g = 255 - ((i - 86) * 255) / (255 - 86);  // 定点运算
+        int16_t b = 0;
+        lut[i] = ui::Color(r, g, b);
+    }
+    // step(86, 0, 0, 255);
+    // step(171, 0, 255, 0);
+    // step(255, 255, 0, 0);
+    prev_index = 255;
+    prev_r = 255;
+    prev_g = 0;
+    prev_b = 0;
+    
 }
 
 bool Gradient::load_file(const std::filesystem::path& file_path) {

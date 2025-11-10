@@ -272,9 +272,11 @@ void RecentEntriesTable<ui::SubGhzDRecentEntries>::draw(
     line.resize(columns.at(0).second, ' ');
     std::string ageStr = to_string_dec_uint(entry.age);
     std::string bitsStr = to_string_dec_uint(entry.bits);
-    line += SubGhzDView::pad_string_with_spaces(5 - bitsStr.length()) + bitsStr;
-    line += SubGhzDView::pad_string_with_spaces(4 - ageStr.length()) + ageStr;
+    // line += SubGhzDView::pad_string_with_spaces(5 - bitsStr.length()) + bitsStr;
+    // line += SubGhzDView::pad_string_with_spaces(4 - ageStr.length()) + ageStr;
 
+    line += SubGhzDView::pad_string_with_spaces(10 - bitsStr.length()) + bitsStr;
+    line += SubGhzDView::pad_string_with_spaces(10 - ageStr.length()) + ageStr;
     line.resize(target_rect.width() / 8, ' ');
     painter.draw_string(target_rect.location(), style, line);
 }

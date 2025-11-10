@@ -30,8 +30,8 @@
 #include "debug.hpp"
 #include "string_format.hpp"
 
-#define LINE_HEIGHT 16
-#define CHARACTER_WIDTH 8
+#define LINE_HEIGHT 24
+#define CHARACTER_WIDTH 12
 
 namespace ui {
 class NavigationView;
@@ -60,16 +60,16 @@ class DfuMenu : public View {
         {{6 * CHARACTER_WIDTH, 13 * LINE_HEIGHT}, "M4 miss:", Theme::getInstance()->fg_darkcyan->foreground},
         {{6 * CHARACTER_WIDTH, 14 * LINE_HEIGHT}, "Uptime:", Theme::getInstance()->fg_darkcyan->foreground}};
 
-    Text text_info_line_1{{15 * CHARACTER_WIDTH, 5 * LINE_HEIGHT, 6 * CHARACTER_WIDTH, 1 * LINE_HEIGHT}, ""};
-    Text text_info_line_2{{15 * CHARACTER_WIDTH, 6 * LINE_HEIGHT, 6 * CHARACTER_WIDTH, 1 * LINE_HEIGHT}, ""};
-    Text text_info_line_3{{15 * CHARACTER_WIDTH, 7 * LINE_HEIGHT, 6 * CHARACTER_WIDTH, 1 * LINE_HEIGHT}, ""};
-    Text text_info_line_4{{15 * CHARACTER_WIDTH, 8 * LINE_HEIGHT, 6 * CHARACTER_WIDTH, 1 * LINE_HEIGHT}, ""};
-    Text text_info_line_5{{15 * CHARACTER_WIDTH, 9 * LINE_HEIGHT, 6 * CHARACTER_WIDTH, 1 * LINE_HEIGHT}, ""};
-    Text text_info_line_6{{15 * CHARACTER_WIDTH, 10 * LINE_HEIGHT, 6 * CHARACTER_WIDTH, 1 * LINE_HEIGHT}, ""};
-    Text text_info_line_7{{15 * CHARACTER_WIDTH, 11 * LINE_HEIGHT, 6 * CHARACTER_WIDTH, 1 * LINE_HEIGHT}, ""};
-    Text text_info_line_8{{15 * CHARACTER_WIDTH, 12 * LINE_HEIGHT, 6 * CHARACTER_WIDTH, 1 * LINE_HEIGHT}, ""};
-    Text text_info_line_9{{15 * CHARACTER_WIDTH, 13 * LINE_HEIGHT, 6 * CHARACTER_WIDTH, 1 * LINE_HEIGHT}, ""};
-    Text text_info_line_10{{15 * CHARACTER_WIDTH, 14 * LINE_HEIGHT, 6 * CHARACTER_WIDTH, 1 * LINE_HEIGHT}, ""};
+    Text text_info_line_1{{15 * CHARACTER_WIDTH, 5 * LINE_HEIGHT, 6 * CHARACTER_WIDTH, 1 * LINE_HEIGHT}, "",true};
+    Text text_info_line_2{{15 * CHARACTER_WIDTH, 6 * LINE_HEIGHT, 6 * CHARACTER_WIDTH, 1 * LINE_HEIGHT}, "",true};
+    Text text_info_line_3{{15 * CHARACTER_WIDTH, 7 * LINE_HEIGHT, 6 * CHARACTER_WIDTH, 1 * LINE_HEIGHT}, "",true};
+    Text text_info_line_4{{15 * CHARACTER_WIDTH, 8 * LINE_HEIGHT, 6 * CHARACTER_WIDTH, 1 * LINE_HEIGHT}, "",true};
+    Text text_info_line_5{{15 * CHARACTER_WIDTH, 9 * LINE_HEIGHT, 6 * CHARACTER_WIDTH, 1 * LINE_HEIGHT}, "",true};
+    Text text_info_line_6{{15 * CHARACTER_WIDTH, 10 * LINE_HEIGHT, 6 * CHARACTER_WIDTH, 1 * LINE_HEIGHT}, "",true};
+    Text text_info_line_7{{15 * CHARACTER_WIDTH, 11 * LINE_HEIGHT, 6 * CHARACTER_WIDTH, 1 * LINE_HEIGHT}, "",true};
+    Text text_info_line_8{{15 * CHARACTER_WIDTH, 12 * LINE_HEIGHT, 6 * CHARACTER_WIDTH, 1 * LINE_HEIGHT}, "",true};
+    Text text_info_line_9{{15 * CHARACTER_WIDTH, 13 * LINE_HEIGHT, 6 * CHARACTER_WIDTH, 1 * LINE_HEIGHT}, "",true};
+    Text text_info_line_10{{15 * CHARACTER_WIDTH, 14 * LINE_HEIGHT, 6 * CHARACTER_WIDTH, 1 * LINE_HEIGHT}, "",true};
 };
 
 class DfuMenu2 : public View {
@@ -98,17 +98,17 @@ class DfuMenu2 : public View {
         {{5 * CHARACTER_WIDTH, 15 * LINE_HEIGHT}, "TX SampR:", Theme::getInstance()->fg_darkcyan->foreground},
     };
 
-    Text text_info_line_1{{14 * CHARACTER_WIDTH, 5 * LINE_HEIGHT, 10 * CHARACTER_WIDTH, 1 * LINE_HEIGHT}, ""};
-    Text text_info_line_2{{14 * CHARACTER_WIDTH, 6 * LINE_HEIGHT, 10 * CHARACTER_WIDTH, 1 * LINE_HEIGHT}, ""};
-    Text text_info_line_3{{14 * CHARACTER_WIDTH, 7 * LINE_HEIGHT, 10 * CHARACTER_WIDTH, 1 * LINE_HEIGHT}, ""};
-    Text text_info_line_4{{14 * CHARACTER_WIDTH, 8 * LINE_HEIGHT, 10 * CHARACTER_WIDTH, 1 * LINE_HEIGHT}, ""};
-    Text text_info_line_5{{14 * CHARACTER_WIDTH, 9 * LINE_HEIGHT, 10 * CHARACTER_WIDTH, 1 * LINE_HEIGHT}, ""};
-    Text text_info_line_6{{14 * CHARACTER_WIDTH, 10 * LINE_HEIGHT, 10 * CHARACTER_WIDTH, 1 * LINE_HEIGHT}, ""};
-    Text text_info_line_7{{14 * CHARACTER_WIDTH, 11 * LINE_HEIGHT, 10 * CHARACTER_WIDTH, 1 * LINE_HEIGHT}, ""};
-    Text text_info_line_8{{14 * CHARACTER_WIDTH, 12 * LINE_HEIGHT, 10 * CHARACTER_WIDTH, 1 * LINE_HEIGHT}, ""};
-    Text text_info_line_9{{14 * CHARACTER_WIDTH, 13 * LINE_HEIGHT, 10 * CHARACTER_WIDTH, 1 * LINE_HEIGHT}, ""};
-    Text text_info_line_10{{14 * CHARACTER_WIDTH, 14 * LINE_HEIGHT, 10 * CHARACTER_WIDTH, 1 * LINE_HEIGHT}, ""};
-    Text text_info_line_11{{14 * CHARACTER_WIDTH, 15 * LINE_HEIGHT, 10 * CHARACTER_WIDTH, 1 * LINE_HEIGHT}, ""};
+    Text text_info_line_1{{14 * CHARACTER_WIDTH, 5 * LINE_HEIGHT, 10 * CHARACTER_WIDTH, 1 * LINE_HEIGHT}, "",true};
+    Text text_info_line_2{{14 * CHARACTER_WIDTH, 6 * LINE_HEIGHT, 10 * CHARACTER_WIDTH, 1 * LINE_HEIGHT}, "",true};
+    Text text_info_line_3{{14 * CHARACTER_WIDTH, 7 * LINE_HEIGHT, 10 * CHARACTER_WIDTH, 1 * LINE_HEIGHT}, "",true};
+    Text text_info_line_4{{14 * CHARACTER_WIDTH, 8 * LINE_HEIGHT, 10 * CHARACTER_WIDTH, 1 * LINE_HEIGHT}, "",true};
+    Text text_info_line_5{{14 * CHARACTER_WIDTH, 9 * LINE_HEIGHT, 10 * CHARACTER_WIDTH, 1 * LINE_HEIGHT}, "",true};
+    Text text_info_line_6{{14 * CHARACTER_WIDTH, 10 * LINE_HEIGHT, 10 * CHARACTER_WIDTH, 1 * LINE_HEIGHT}, "",true};
+    Text text_info_line_7{{14 * CHARACTER_WIDTH, 11 * LINE_HEIGHT, 10 * CHARACTER_WIDTH, 1 * LINE_HEIGHT}, "",true};
+    Text text_info_line_8{{14 * CHARACTER_WIDTH, 12 * LINE_HEIGHT, 10 * CHARACTER_WIDTH, 1 * LINE_HEIGHT}, "",true};
+    Text text_info_line_9{{14 * CHARACTER_WIDTH, 13 * LINE_HEIGHT, 10 * CHARACTER_WIDTH, 1 * LINE_HEIGHT}, "",true};
+    Text text_info_line_10{{14 * CHARACTER_WIDTH, 14 * LINE_HEIGHT, 10 * CHARACTER_WIDTH, 1 * LINE_HEIGHT}, "",true};
+    Text text_info_line_11{{14 * CHARACTER_WIDTH, 15 * LINE_HEIGHT, 10 * CHARACTER_WIDTH, 1 * LINE_HEIGHT}, "",true};
 };
 
 } /* namespace ui */

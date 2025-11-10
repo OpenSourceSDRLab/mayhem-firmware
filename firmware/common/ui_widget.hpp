@@ -209,12 +209,16 @@ class Rectangle : public Widget {
 
 class Text : public Widget {
    public:
-    Text()
-        : text{""} {
+   bool boom_tag;
+    Text(bool boom_tag = false):boom_tag{boom_tag},text{""}
+    {
+
     }
 
-    Text(Rect parent_rect, std::string text);
-    Text(Rect parent_rect);
+    
+
+    Text(Rect parent_rect, std::string text,bool boom_tag = false);
+    Text(Rect parent_rect,bool boom_tag = false);
 
     void set(std::string_view value);
 
@@ -236,6 +240,7 @@ class Labels : public Widget {
         Point pos;
         std::string text;
         ui::Color color;
+        bool boom_tag = true;
     };
 
     Labels(const Labels&) = delete;
@@ -378,14 +383,17 @@ class Console : public Widget {
 
 class Checkbox : public Widget {
    public:
+
+    bool boom_tag;
+
     std::function<void(Checkbox&, bool)> on_select{};
 
-    Checkbox(Point parent_pos, size_t length, std::string text, bool small);
+    Checkbox(Point parent_pos, size_t length, std::string text, bool small,bool boom_tag =true);
     Checkbox(
         Point parent_pos,
         size_t length,
         std::string text)
-        : Checkbox{parent_pos, length, text, false} {
+        : Checkbox{parent_pos, length, text, false,true} {
     }
 
     Checkbox()
@@ -423,12 +431,13 @@ class Button : public Widget {
     std::function<void(Button&)> on_touch_press{};    // Executed when touching, before on_select.
     std::function<bool(Button&, KeyEvent)> on_dir{};
     std::function<void(Button&)> on_highlight{};
+    bool boom_tag;
 
-    Button(Rect parent_rect, std::string text, bool instant_exec);  // instant_exec: Execute on_select when you touching instead of releasing
+    Button(Rect parent_rect, std::string text, bool instant_exec,bool boom_tag = true);  // instant_exec: Execute on_select when you touching instead of releasing
     Button(
         Rect parent_rect,
         std::string text)
-        : Button{parent_rect, text, false} {
+        : Button{parent_rect, text, false,true} {
     }
 
     Button()
@@ -459,16 +468,17 @@ class ButtonWithEncoder : public Widget {
     std::function<void(ButtonWithEncoder&)> on_touch_press{};    // Executed when touching, before on_select.
     std::function<bool(ButtonWithEncoder&, KeyEvent)> on_dir{};
     std::function<void(ButtonWithEncoder&)> on_highlight{};
+    bool boom_tag;
 
-    ButtonWithEncoder(Rect parent_rect, std::string text, bool instant_exec);  // instant_exec: Execute on_select when you touching instead of releasing
+    ButtonWithEncoder(Rect parent_rect, std::string text, bool instant_exec,bool boom_tag = true);  // instant_exec: Execute on_select when you touching instead of releasing
     ButtonWithEncoder(
         Rect parent_rect,
         std::string text)
-        : ButtonWithEncoder{parent_rect, text, false} {
+        : ButtonWithEncoder{parent_rect, text,false,true} {
     }
 
     ButtonWithEncoder()
-        : ButtonWithEncoder{{}, {}} {
+        : ButtonWithEncoder{{}, {}, false,true} {
     }
 
     std::function<void()> on_change{};
@@ -686,7 +696,9 @@ class OptionsField : public Widget {
     std::function<void(size_t, value_t)> on_change{};
     std::function<void(void)> on_show_options{};
 
-    OptionsField(Point parent_pos, size_t length, options_t options, bool centered = false);
+    bool boom_tag;
+
+    OptionsField(Point parent_pos, size_t length, options_t options, bool centered = false,bool boom_tag = false);
 
     options_t& options() { return options_; }
     const options_t& options() const { return options_; }
@@ -770,13 +782,16 @@ class TextEdit : public Widget {
     bool insert_mode_;
 };
 
+
 class TextField : public Text {
    public:
     std::function<void(TextField&)> on_select{};
     std::function<void(TextField&)> on_change{};
     std::function<void(TextField&, EncoderEvent)> on_encoder_change{};
 
-    TextField(Rect parent_rect, std::string text);
+    // TextField(Rect parent_rect, std::string text);
+
+    TextField(Rect parent_rect, std::string text,bool boom_tag= false);
 
     const std::string& get_text() const;
     void set_text(std::string_view value);
@@ -845,14 +860,14 @@ class NumberField : public Widget {
     std::function<void(NumberField&)> on_select{};
     std::function<void(int32_t)> on_change{};
     std::function<void(int32_t)> on_wrap{};
-
+    bool boom_tag;
     using range_t = std::pair<int32_t, int32_t>;
 
-    NumberField(Point parent_pos, int length, range_t range, int32_t step, char fill_char, bool can_loop);
+    NumberField(Point parent_pos, int length, range_t range, int32_t step, char fill_char, bool can_loop=false,bool boom_tag=true);
 
-    NumberField(Point parent_pos, int length, range_t range, int32_t step, char fill_char)
-        : NumberField{parent_pos, length, range, step, fill_char, false} {
-    }
+    // NumberField(Point parent_pos, int length, range_t range, int32_t step, char fill_char)
+    //     : NumberField{parent_pos, length, range, step, fill_char, false,true} {
+    // }
 
     NumberField()
         : NumberField{{0, 0}, 1, {0, 1}, 1, ' ', false} {
@@ -902,18 +917,19 @@ class SymField : public Widget {
      * be modified. This means that "slots" are not individually highlighted.
      * This makes navigation on Views with SymFields easier because the
      * whole control can be skipped over instead of one "slot" at a time. */
+    bool boom_tag;
 
     SymField(
         Point parent_pos,
         size_t length,
         Type type = Type::Dec,
-        bool explicit_edits = false);
+        bool explicit_edits = false,bool boom_tag = false);
 
     SymField(
         Point parent_pos,
         size_t length,
         std::string symbol_list,
-        bool explicit_edits = false);
+        bool explicit_edits = false,bool boom_tag = false);
 
     SymField(const SymField&) = delete;
     SymField(SymField&&) = delete;
@@ -1089,6 +1105,7 @@ class VuMeter : public Widget {
    private:
     uint32_t LEDs_, LED_height{0};
     uint32_t value_{0}, prev_value{255};  // Forces painting on first display
+    // uint32_t value_{0}, prev_value{448};
     uint32_t split{0};
     uint16_t max{0}, prev_max{0}, hold_timer{0}, mark{0}, prev_mark{0};
     bool show_max_;
@@ -1113,6 +1130,7 @@ class OptionTabView : public View {
         {2 * 8, UI_POS_Y(0)},
         20,
         "",
+        true,
         false};
 };
 

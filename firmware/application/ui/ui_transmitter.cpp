@@ -55,15 +55,31 @@ static const Style* get_style_for_gain(uint8_t tot_gain) {
 
 void TransmitterView::paint(Painter& painter) {
     size_t c;
+<<<<<<< HEAD
     Point pos = {0, screen_pos().y()};
     Point pos2 = {0, screen_pos().y() + 32 + 8};
     // 24*8 pxstripes
     for (c = 0; c < (size_t)(screen_width / 24 + 1); c++) {
+=======
+    
+    int draw_offset_y = ui::screen_height - 7 * ui::new_font_height; 
+    // Point pos = {0, screen_pos().y()};
+
+    Point pos = {0, draw_offset_y};
+    // for (c = 0; c < 20; c++) 
+    // 这里的逻辑是前一部分绘制上面一行
+    // 即10对应240
+    // 要适配320 需要前半部是 13
+    // 所以总共是26 即 c == 26
+    for (c = 0; c < 26; c++) 
+    {
+>>>>>>> a8149f33222353859a0f315bd7789e0ba82aefeb
         painter.draw_bitmap(
             pos,
             bitmap_stripes,
             Theme::getInstance()->fg_yellow->foreground,
             Theme::getInstance()->fg_yellow->background);
+<<<<<<< HEAD
         painter.draw_bitmap(
             pos2,
             bitmap_stripes,
@@ -71,6 +87,13 @@ void TransmitterView::paint(Painter& painter) {
             Theme::getInstance()->fg_yellow->background);
         pos += {24, 0};
         pos2 += {24, 0};
+=======
+        if (c != 12)
+            pos += {24, 0};
+        else
+            // pos = {0, screen_pos().y() + 32 + 8};
+            pos = {0, draw_offset_y + 6*ui::new_font_height + 16};
+>>>>>>> a8149f33222353859a0f315bd7789e0ba82aefeb
     }
 }
 
@@ -134,7 +157,9 @@ TransmitterView::TransmitterView(
     const uint32_t channel_bandwidth,
     const bool lock)
     : lock_{lock} {
-    set_parent_rect({0, y, screen_width, 6 * 8});
+    // set_parent_rect({0, y, screen_width, 6 * 8});
+
+    set_parent_rect({0, y, screen_width, 6 * ui::new_font_height});
 
     add_children({
         &field_frequency,

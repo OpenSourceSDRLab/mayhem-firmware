@@ -143,7 +143,13 @@ class SearchView : public View {
     uint32_t bin_skip_acc = 0;
     uint32_t bin_skip_frac = 0;
     uint32_t pixel_index = 0;
+<<<<<<< HEAD
     std::vector<Color> spectrum_row{};
+=======
+    // std::array<Color, 240> spectrum_row{};
+    // 修改这里的320逻辑即可
+    std::array<Color, 320> spectrum_row{};
+>>>>>>> a8149f33222353859a0f315bd7789e0ba82aefeb
     ChannelSpectrumFIFO* fifo = nullptr;
 
     uint8_t detect_timer = 0;
@@ -181,6 +187,7 @@ class SearchView : public View {
     RecentEntriesView<RecentEntries<SearchRecentEntry>> recent_entries_view{columns, recent};
 
     Labels labels{
+<<<<<<< HEAD
         {{UI_POS_X(1), UI_POS_Y(0)}, "Min:      Max:       ", Theme::getInstance()->fg_light->foreground},
         {{UI_POS_X_RIGHT(7), UI_POS_Y(0)}, "LNA VGA", Theme::getInstance()->fg_light->foreground},
         {{UI_POS_X(1), UI_POS_Y(2)}, "Trig:   /255", Theme::getInstance()->fg_light->foreground},
@@ -206,14 +213,54 @@ class SearchView : public View {
         {UI_POS_X_RIGHT(7), UI_POS_Y(1)}};
     VGAGainField field_vga{
         {UI_POS_X_RIGHT(3), UI_POS_Y(1)}};
+=======
+        
+        {{1 * 8, 0}, "Min:      Max:       LNA VGA", Theme::getInstance()->fg_light->foreground,false},
+
+        {{1 * 8, 4 * 8}, "Trig:   /255    Mean:   /255", Theme::getInstance()->fg_light->foreground,false},
+        {{1 * 8, 6 * 8}, "Slices:  /32      Rate:   Hz", Theme::getInstance()->fg_light->foreground,false},
+        //这一列以后可以大写
+
+        // {{6 * 8, 10 * 8}, "Timer  Status", Theme::getInstance()->fg_light->foreground,false},
+        
+        {{6 * ui::new_font_width , 10 * 8}, "Timer  Status", Theme::getInstance()->fg_light->foreground,true},
+
+        {{1 * 8, 8*10+6*ui::new_font_height}, "Accuracy +/-4.9kHz", Theme::getInstance()->fg_light->foreground,false},
+        {{26 * 8, 8*10+6*ui::new_font_height}, "MHz", Theme::getInstance()->fg_light->foreground,false}};
+
+    FrequencyField field_frequency_min{
+        {1 * 8, 1 * 16},
+        false
+    };
+    FrequencyField field_frequency_max{
+        {11 * 8, 1 * 16},
+        false
+    };
+
+    LNAGainField field_lna{
+        {22 * 8, 1 * 16},
+        false,
+        false
+    };
+
+    VGAGainField field_vga{
+        {26 * 8, 1 * 16},
+        false,
+        false
+    };
+
+>>>>>>> a8149f33222353859a0f315bd7789e0ba82aefeb
 
     NumberField field_threshold{
         {UI_POS_X(6), UI_POS_Y(2)},
         3,
         {5, 255},
         5,
-        ' '};
+        ' ',false,false
+    };
+    
     Text text_mean{
+<<<<<<< HEAD
         {UI_POS_X_RIGHT(7), UI_POS_Y(2), UI_POS_WIDTH(3), UI_POS_HEIGHT(1)},
         "---"};
     Text text_slices{
@@ -225,10 +272,25 @@ class SearchView : public View {
 
     VuMeter vu_max{
         {UI_POS_X(1), 11 * 8 - 4, 3 * 8, 48},
+=======
+        {22 * 8, 2 * 16, 3 * 8, 16},
+        "---",false};
+    
+    Text text_slices{
+        {8 * 8, 3 * 16, 2 * 8, 16},
+        "--",false};
+    Text text_rate{
+        {24 * 8, 3 * 16, 3 * 8, 16},
+        "---",false};
+
+    VuMeter vu_max{
+        {1 * 8, 10 * 8 + ui::new_font_height, 3 * 8, 48},
+>>>>>>> a8149f33222353859a0f315bd7789e0ba82aefeb
         18,
         false};
 
     ProgressBar progress_timers{
+<<<<<<< HEAD
         {UI_POS_X(6), UI_POS_Y(6), UI_POS_WIDTH(6), UI_POS_HEIGHT(1)}};
     Text text_infos{
         {UI_POS_X(13), UI_POS_Y(6), UI_POS_WIDTH(15), UI_POS_HEIGHT(1)},
@@ -236,10 +298,25 @@ class SearchView : public View {
 
     Checkbox check_snap{
         {UI_POS_X(6), 15 * 8},
+=======
+        {6 * ui::new_font_width, 8*10+1*ui::new_font_height, 6 * 8, ui::new_font_height}
+    };
+
+    Text text_infos{
+        {13 * ui::new_font_width, 8*10+1*ui::new_font_height, 15 * ui::new_font_width, ui::new_font_height},
+        "Listening",
+        true
+    };
+
+    Checkbox check_snap{
+        {6 * ui::new_font_width, 8*10+2*ui::new_font_height+4},
+>>>>>>> a8149f33222353859a0f315bd7789e0ba82aefeb
         7,
         "Snap to:",
-        true};
+        false,true};
+
     OptionsField options_snap{
+<<<<<<< HEAD
         {UI_POS_X(17), 15 * 8},  // Position
         7,                       // Length
         {                        // Options
@@ -250,6 +327,26 @@ class SearchView : public View {
          {"500Hz", 500}}};
 
     BigFrequency big_display{{UI_POS_X_CENTER(28), UI_POS_Y(9), UI_POS_WIDTH(28), 52}, 0};
+=======
+        {17 * ui::new_font_width, 8*10+2*ui::new_font_height+16},
+        // Length
+        7,
+        // Options                 
+        {                  
+            {"25kHz  ", 25'000},
+            {"12.5kHz", 12'500},
+            {"8.33kHz", 8'333},
+            {"2.5kHz", 2'500},
+            {"500Hz", 500}
+        },
+        true,
+        false
+    };
+
+    BigFrequency big_display{
+        {4, 8*10+4*ui::new_font_height - 12,28 * 8 , 52},
+        0};
+>>>>>>> a8149f33222353859a0f315bd7789e0ba82aefeb
 
     MessageHandlerRegistration message_handler_spectrum_config{
         Message::ID::ChannelSpectrumConfig,
@@ -268,7 +365,7 @@ class SearchView : public View {
                 }
             }
             this->do_timers();
-        }};
+    }};
 };
 
 } /* namespace ui */

@@ -92,8 +92,11 @@ SigGenView::SigGenView(
     options_shape.hidden(true);
     text_shape.hidden(true);
     symfield_tone.set_value(1000);  // Default: 1000 Hz
+    
     options_shape.on_change = [this](size_t, OptionsField::value_t v) {
+        
         text_shape.set(shape_strings[v]);
+        
         if (auto_update)
             update_config();
 
@@ -105,6 +108,7 @@ SigGenView::SigGenView(
 
         set_dirty();
     };
+
     options_shape.set_selected_index(0);
     text_shape.set(shape_strings[0]);
 

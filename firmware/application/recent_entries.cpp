@@ -33,6 +33,7 @@ RecentEntriesHeader::RecentEntriesHeader(
     : _columns{columns} {
 }
 
+// 这是修改动态渲染列表头部的地方
 void RecentEntriesHeader::paint(Painter& painter) {
     const auto r = screen_rect();
     const auto& parent_style = style();
@@ -51,8 +52,10 @@ void RecentEntriesHeader::paint(Painter& painter) {
             text.append(width - text.length(), ' ');
         }
 
-        painter.draw_string(p, style, text);
-        p += {static_cast<Coord>((width * 8) + 8), 0};
+        // painter.draw_string(p, style, text);
+        painter.draw_string_with_fitsize(p, style, text,1);
+        p += {static_cast<Coord>((width * ui::new_font_width) + 8), 0};
+        // p += {static_cast<Coord>((width * 8) + 8), 0};
     }
 }
 

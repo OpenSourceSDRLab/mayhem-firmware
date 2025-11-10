@@ -209,6 +209,7 @@ class APRSRxView : public View {
     std::string str_log{""};
 
     RFAmpField field_rf_amp{
+<<<<<<< HEAD
         {UI_POS_X(13), UI_POS_Y(0)}};
     LNAGainField field_lna{
         {UI_POS_X(15), UI_POS_Y(0)}};
@@ -221,27 +222,60 @@ class APRSRxView : public View {
 
     AudioVolumeField field_volume{
         {UI_POS_X_RIGHT(2), UI_POS_Y(0)}};
+=======
+        {13 * ui::new_font_width, 0 * ui::new_font_height}
+    };
+
+    LNAGainField field_lna{
+        {15 * ui::new_font_width , 0 * ui::new_font_height}
+    };
+
+    VGAGainField field_vga{
+        {18 * ui::new_font_width , 0 * ui::new_font_height}
+    };
+
+    RSSI rssi{
+        {21 * ui::new_font_width, 0, 3 * 8, 8}};
+    Channel channel{
+        {21 * ui::new_font_width, 9, 3 * 8, 8}};
+
+    AudioVolumeField field_volume{
+        {screen_width - 2 * ui::new_font_width, 0 * ui::new_font_height}};
+>>>>>>> a8149f33222353859a0f315bd7789e0ba82aefeb
 
     OptionsField options_region{
         {UI_POS_X(0), UI_POS_Y(0)},
         3,
-        {{"MAN", 0},
-         {"NA ", 1},
-         {"NZ ", 2},
-         {"JAP", 3},
-         {"PHI", 4},
-         {"EUR", 5},
-         {"THA", 6},
-         {"AUS", 7},
-         {"BR ", 8},
-         {"ISS", 9}}};
+        {
+            {"MAN", 0},
+            {"NA ", 1},
+            {"NZ ", 2},
+            {"JAP", 3},
+            {"PHI", 4},
+            {"EUR", 5},
+            {"THA", 6},
+            {"AUS", 7},
+            {"BR ", 8},
+            {"ISS", 9}
+        },
+        false,
+        true,
+    };
 
     FrequencyField field_frequency{
+<<<<<<< HEAD
         {UI_POS_X(3), UI_POS_Y(0)}};
+=======
+        {3 * 8, 0 * ui::new_font_height}
+    };
+>>>>>>> a8149f33222353859a0f315bd7789e0ba82aefeb
 
-    // DEBUG
     RecordView record_view{
+<<<<<<< HEAD
         {UI_POS_X(0), UI_POS_Y(1), UI_POS_MAXWIDTH, UI_POS_HEIGHT(1)},
+=======
+        {0 * 8, 1 * ui::new_font_height, screen_width, 1 * ui::new_font_height},
+>>>>>>> a8149f33222353859a0f315bd7789e0ba82aefeb
         u"AFS_????.WAV",
         aprs_dir,
         RecordView::FileType::WAV,
@@ -249,7 +283,13 @@ class APRSRxView : public View {
         4};
 
     Console console{
+<<<<<<< HEAD
         {UI_POS_X(0), UI_POS_Y(2), UI_POS_MAXWIDTH, screen_height - 80}};
+=======
+        // {0, 2 * 16, screen_width, screen_height - 80}
+        {screen_width /8, 2 * ui::new_font_height, screen_width, screen_height - 80}
+    };
+>>>>>>> a8149f33222353859a0f315bd7789e0ba82aefeb
 
     std::unique_ptr<APRSLogger> logger{};
 };
@@ -265,8 +305,13 @@ class APRSRXView : public View {
 
    private:
     NavigationView& nav_;
+<<<<<<< HEAD
     Rect view_rect = {UI_POS_X(0), 3 * 8, UI_POS_MAXWIDTH, screen_height - 40};
 
+=======
+    // Rect view_rect = {0, 3 * 8, screen_width, screen_height - 40};
+    Rect view_rect = {0, ui::new_font_height, screen_width, screen_height - 32};
+>>>>>>> a8149f33222353859a0f315bd7789e0ba82aefeb
     APRSRxView view_stream{nav_, view_rect};
     APRSTableView view_table{nav_, view_rect};
 

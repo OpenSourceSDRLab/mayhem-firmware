@@ -301,15 +301,17 @@ FrequencyManagerView::FrequencyManagerView(
     NavigationView& nav)
     : FreqManBaseView(nav) {
     add_children(
-        {&freqlist_view,
-         &button_add_category,
-         &button_del_category,
-         &button_edit_entry,
-         &rect_padding,
-         &button_edit_freq,
-         &button_edit_desc,
-         &button_add_entry,
-         &button_del_entry});
+    {
+        &freqlist_view,
+        &button_add_category,
+        &button_del_category,
+        &button_edit_entry,
+        // &rect_padding,
+        &button_edit_freq,
+        &button_edit_desc,
+        &button_add_entry,
+        &button_del_entry
+    });
 
     freqlist_view.on_select = [this](size_t) {
         button_edit_entry.focus();

@@ -80,12 +80,21 @@ class POCSAGTXView : public View {
     bool start_tx();
 
     Labels labels{
+<<<<<<< HEAD
         {{3 * 8, 4 * 8}, "Bitrate:", Theme::getInstance()->fg_light->foreground},
         {{3 * 8, 6 * 8}, "Address:", Theme::getInstance()->fg_light->foreground},
         {{6 * 8, 8 * 8}, "Type:", Theme::getInstance()->fg_light->foreground},
         {{2 * 8, 10 * 8}, "Function:", Theme::getInstance()->fg_light->foreground},
         {{5 * 8, 12 * 8}, "Phase:", Theme::getInstance()->fg_light->foreground},
         {{UI_POS_X(0), 14 * 8}, "Message:", Theme::getInstance()->fg_light->foreground}};
+=======
+        {{3 * 8, 4 * 8}, "Bitrate:", Theme::getInstance()->fg_light->foreground,false},
+        {{3 * 8, 6 * 8}, "Address:", Theme::getInstance()->fg_light->foreground,false},
+        {{6 * 8, 8 * 8}, "Type:", Theme::getInstance()->fg_light->foreground,false},
+        {{2 * 8, 10 * 8}, "Function:", Theme::getInstance()->fg_light->foreground,false},
+        {{5 * 8, 12 * 8}, "Phase:", Theme::getInstance()->fg_light->foreground,false},
+        {{0 * 8, 14 * 8}, "Message:", Theme::getInstance()->fg_light->foreground,false}};
+>>>>>>> a8149f33222353859a0f315bd7789e0ba82aefeb
 
     OptionsField options_bitrate{
         {11 * 8, 4 * 8},
@@ -122,6 +131,7 @@ class POCSAGTXView : public View {
         }};
 
     Text text_message{
+<<<<<<< HEAD
         {UI_POS_X(0), 16 * 8, screen_width, 16},
         ""};
     Text text_message_l2{
@@ -134,6 +144,24 @@ class POCSAGTXView : public View {
 
     ProgressBar progressbar{
         {16, 210, UI_POS_WIDTH_REMAINING(4), 16}};
+=======
+        {0 * 8, 16 * 8, screen_width, 16},
+        "",false};
+        
+    Text text_message_l2{
+        {0 * 8, 18 * 8, screen_width, 16},
+        "",false};
+
+    Button button_message{
+        {0 * 8, 20 * 8, 14 * ui::new_font_width, ui::new_font_height},
+        "Set message"};
+
+    ProgressBar progressbar{
+        // {16, 210, 208, 16}
+        {16, 210, 320 - 2 *16, 16}
+    
+    };
+>>>>>>> a8149f33222353859a0f315bd7789e0ba82aefeb
 
     TransmitterView tx_view{
         (int16_t)UI_POS_Y_BOTTOM(4),

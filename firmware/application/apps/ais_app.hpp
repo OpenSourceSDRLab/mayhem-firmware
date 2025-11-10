@@ -178,17 +178,28 @@ class AISAppView : public View {
 
     AISRecentEntries recent{};
     std::unique_ptr<AISLogger> logger{};
+<<<<<<< HEAD
 
     RecentEntriesColumns columns{{
         {"MMSI", 9},
         {"Name/Call", 0},
+=======
+    
+    const RecentEntriesColumns columns{{
+        {"MMSI", 13},
+        {"Name/Call", 26},
+>>>>>>> a8149f33222353859a0f315bd7789e0ba82aefeb
     }};
+
+
     AISRecentEntriesView recent_entries_view{columns, recent};
     AISRecentEntryDetailView recent_entry_detail_view{nav_};
 
     static constexpr auto header_height = 1 * 16;
 
+
     Text label_channel{
+<<<<<<< HEAD
         {UI_POS_X(0), UI_POS_Y(0), 2 * 8, 1 * 16},
         "Ch"};
 
@@ -211,13 +222,54 @@ class AISAppView : public View {
 
     RSSI rssi{
         {UI_POS_X(21), UI_POS_Y(0), UI_POS_WIDTH_REMAINING(23), 4},
+=======
+        {0 , 0 , 2 * ui::new_font_width, 1 * ui::new_font_height},
+        "Ch",
+        true
     };
 
+    OptionsField options_channel{
+        {3 * ui::new_font_width, 0 * ui::new_font_height},
+        5,
+        {
+            {"87B", 161975000},
+            {"88B", 162025000},
+        },
+        false,
+        true
+>>>>>>> a8149f33222353859a0f315bd7789e0ba82aefeb
+    };
+
+    RFAmpField field_rf_amp{
+        {13 * ui::new_font_width, 0 * ui::new_font_height}};
+
+    LNAGainField field_lna{
+        {15 *  ui::new_font_width, 0 * ui::new_font_height}};
+
+    VGAGainField field_vga{
+        {18 *  ui::new_font_width, 0 * ui::new_font_height}};
+
+    RSSI rssi{
+        {
+            21 * ui::new_font_width, 
+            ui::new_font_height/4, 
+            4 * 8, 
+            ui::new_font_height/4
+        },
+    };
+    
     AudioVolumeField field_volume{
+<<<<<<< HEAD
         {UI_POS_X_RIGHT(2), UI_POS_Y(0)}};
 
     Channel channel{
         {UI_POS_X(21), 5, UI_POS_WIDTH_REMAINING(23), 4},
+=======
+        {screen_width - 2 * ui::new_font_width, 0 * ui::new_font_height}};
+
+    Channel channel{
+        {21 * ui::new_font_width, ui::new_font_height/2+1, 4 * 8, ui::new_font_height/4},
+>>>>>>> a8149f33222353859a0f315bd7789e0ba82aefeb
     };
     SignalToken signal_token_tick_second{};
     uint8_t timer_seconds = 0;

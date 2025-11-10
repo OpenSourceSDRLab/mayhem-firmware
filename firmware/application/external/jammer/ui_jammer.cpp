@@ -1,7 +1,6 @@
 /*
  * Copyright (C) 2015 Jared Boone, ShareBrained Technology, Inc.
  * Copyright (C) 2016 Furrtek
- * Copyright (C) 2025 RocketGod - Added modes from my Flipper Zero RF Jammer App - https://betaskynet.com
  *
  * This file is part of PortaPack.
  *
@@ -37,6 +36,7 @@ void RangeView::focus() {
 }
 
 void RangeView::update_start(rf::Frequency f) {
+    // Change everything except max
     frequency_range.min = f;
     button_start.set_text(to_string_short_freq(f));
 
@@ -48,6 +48,7 @@ void RangeView::update_start(rf::Frequency f) {
 }
 
 void RangeView::update_stop(rf::Frequency f) {
+    // Change everything except min
     frequency_range.max = f;
     button_stop.set_text(to_string_short_freq(f));
 
@@ -59,6 +60,7 @@ void RangeView::update_stop(rf::Frequency f) {
 }
 
 void RangeView::update_center(rf::Frequency f) {
+    // Change min/max/center, keep width
     center = f;
     button_center.set_text(to_string_short_freq(center));
 
@@ -73,6 +75,7 @@ void RangeView::update_center(rf::Frequency f) {
 }
 
 void RangeView::update_width(uint32_t w) {
+    // Change min/max/width, keep center
     width = w;
 
     button_width.set_text(to_string_short_freq(width));
@@ -88,6 +91,7 @@ void RangeView::update_width(uint32_t w) {
 }
 
 void RangeView::paint(Painter&) {
+    // Draw lines and arrows
     Rect r;
     Point p;
     Coord c;
@@ -123,6 +127,53 @@ RangeView::RangeView(NavigationView& nav) {
                   &button_center,
                   &button_width});
 
+<<<<<<< HEAD
+=======
+    check_enabled.on_select = [this](Checkbox&, bool v) {
+        frequency_range.enabled = v;
+    };
+
+    button_start.on_select = [this, &nav](Button& button) {
+        auto new_view = nav.push<FrequencyKeypadView>(frequency_range.min);
+        new_view->on_changed = [this, &button](rf::Frequency f) {
+            update_start(f);
+        };
+    };
+
+    button_stop.on_select = [this, &nav](Button& button) {
+        auto new_view = nav.push<FrequencyKeypadView>(frequency_range.max);
+        new_view->on_changed = [this, &button](rf::Frequency f) {
+            update_stop(f);
+        };
+    };
+
+    button_center.on_select = [this, &nav](Button& button) {
+        auto new_view = nav.push<FrequencyKeypadView>(center);
+        new_view->on_changed = [this, &button](rf::Frequency f) {
+            update_center(f);
+        };
+    };
+
+    button_width.on_select = [this, &nav](Button& button) {
+        auto new_view = nav.push<FrequencyKeypadView>(width);
+        new_view->on_changed = [this, &button](rf::Frequency f) {
+            update_width(f);
+        };
+    };
+
+    button_load_range.on_select = [this, &nav](Button&) {
+        auto load_view = nav.push<FrequencyLoadView>();
+        load_view->on_frequency_loaded = [this](rf::Frequency value) {
+            update_center(value);
+            update_width(100000);  // 100kHz default jamming bandwidth when loading unique frequency
+        };
+        load_view->on_range_loaded = [this](rf::Frequency start, rf::Frequency stop) {
+            update_start(start);
+            update_stop(stop);
+        };
+    };
+
+>>>>>>> a8149f33222353859a0f315bd7789e0ba82aefeb
     check_enabled.set_value(false);
 }
 
@@ -146,37 +197,10 @@ void JammerView::set_jammer_channel(uint32_t i, uint32_t width, uint64_t center,
     jammer_channels[i].enabled = true;
     jammer_channels[i].width = (width * 0xFFFFFFULL) / 1536000;
     jammer_channels[i].center = center;
-    jammer_channels[i].duration = duration ? 30720 * duration : 3000;
+    jammer_channels[i].duration = 30720 * duration;
 }
 
 void JammerView::start_tx() {
-    if (update_config()) {
-        jamming = true;
-        button_transmit.set_style(&style_cancel);
-        button_transmit.set_text("STOP");
-
-        transmitter_model.set_rf_amp(field_amp.value());
-        transmitter_model.set_tx_gain(field_gain.value());
-        transmitter_model.set_baseband_bandwidth(28'000'000);
-        transmitter_model.enable();
-
-        baseband::set_jammer(true, (JammerType)options_type.selected_index(), options_speed.selected_index_value());
-        mscounter = 0;
-    }
-}
-
-void JammerView::stop_tx() {
-    button_transmit.set_style(&style_val);
-    button_transmit.set_text("START");
-    transmitter_model.disable();
-    baseband::set_jammer(false, JammerType::TYPE_FSK, 0);
-    jamming = false;
-    cooling = false;
-    seconds = 0;
-    mscounter = 0;
-}
-
-bool JammerView::update_config() {
     uint32_t c, i = 0;
     size_t num_channels;
     rf::Frequency start_freq, range_bw, range_bw_sub, ch_width;
@@ -184,19 +208,24 @@ bool JammerView::update_config() {
 
     size_t hop_value = options_hop.selected_index_value();
 
+    // Disable all channels by default
     for (c = 0; c < JAMMER_MAX_CH; c++)
         jammer_channels[c].enabled = false;
 
+    // Generate jamming channels with JAMMER_MAX_CH maximum width
+    // Convert ranges min/max to center/bw
     for (size_t r = 0; r < 3; r++) {
         if (range_views[r]->frequency_range.enabled) {
             range_bw = abs(range_views[r]->frequency_range.max - range_views[r]->frequency_range.min);
 
+            // Get lower bound
             if (range_views[r]->frequency_range.min < range_views[r]->frequency_range.max)
                 start_freq = range_views[r]->frequency_range.min;
             else
                 start_freq = range_views[r]->frequency_range.max;
 
             if (range_bw >= JAMMER_CH_WIDTH) {
+                // Split range in multiple channels
                 num_channels = 0;
                 range_bw_sub = range_bw;
 
@@ -216,6 +245,7 @@ bool JammerView::update_config() {
                     i++;
                 }
             } else {
+                // Range fits in a single channel
                 if (i >= JAMMER_MAX_CH) {
                     out_of_ranges = true;
                 } else {
@@ -228,24 +258,43 @@ bool JammerView::update_config() {
 
     if (!out_of_ranges && i) {
         text_range_total.set("/" + to_string_dec_uint(i, 2));
-        return true;
+
+        jamming = true;
+        button_transmit.set_style(&style_cancel);
+        button_transmit.set_text("STOP");
+
+        transmitter_model.set_rf_amp(field_amp.value());
+        transmitter_model.set_tx_gain(field_gain.value());
+        transmitter_model.set_baseband_bandwidth(28'000'000);  // Although tx is narrowband , let's use Max TX LPF .
+        transmitter_model.enable();
+
+        baseband::set_jammer(true, (JammerType)options_type.selected_index(), options_speed.selected_index_value());
+        mscounter = 0;  // euquiq: Reset internal ms counter for do_timer()
     } else {
         if (out_of_ranges)
             nav_.display_modal("Error", "Jamming bandwidth too large.\nMust be 80MHz or less.");
         else
             nav_.display_modal("Error", "No range enabled.");
-        return false;
     }
 }
 
+void JammerView::stop_tx() {
+    button_transmit.set_style(&style_val);
+    button_transmit.set_text("START");
+    transmitter_model.disable();
+    baseband::set_jammer(false, JammerType::TYPE_FSK, 0);
+    jamming = false;
+    cooling = false;
+}
+
+// called each 1/60th of second
 void JammerView::on_timer() {
-    if (++mscounter >= 60) {
+    if (++mscounter == 60) {
         mscounter = 0;
         if (jamming) {
-            int32_t timepause = field_timepause.value();
             if (cooling) {
-                if (timepause == 0 || ++seconds >= timepause) {
-                    transmitter_model.set_baseband_bandwidth(28'000'000);
+                if (++seconds >= field_timepause.value()) {                // Re-start TX
+                    transmitter_model.set_baseband_bandwidth(28'000'000);  // Although tx is narrowband , let's use Max TX LPF .
                     transmitter_model.enable();
                     button_transmit.set_text("STOP");
                     baseband::set_jammer(true, (JammerType)options_type.selected_index(), options_speed.selected_index_value());
@@ -261,7 +310,8 @@ void JammerView::on_timer() {
                     seconds = 0;
                 }
             } else {
-                if (timepause && ++seconds >= field_timetx.value()) {
+                if (++seconds >= field_timetx.value())  // Start cooling period:
+                {
                     transmitter_model.disable();
                     button_transmit.set_text("PAUSED");
                     baseband::set_jammer(false, JammerType::TYPE_FSK, 0);
@@ -281,9 +331,11 @@ void JammerView::on_timer() {
     }
 }
 
-JammerView::JammerView(NavigationView& nav)
+JammerView::JammerView(
+    NavigationView& nav)
     : nav_{nav} {
     Rect view_rect = {0, 3 * 8, screen_width, 80};
+    // baseband::run_image(portapack::spi_flash::image_tag_jammer);
     baseband::run_prepared_image(portapack::memory::map::m4_code.base());
 
     add_children({&tab_view,
@@ -307,21 +359,12 @@ JammerView::JammerView(NavigationView& nav)
     view_range_b.set_parent_rect(view_rect);
     view_range_c.set_parent_rect(view_rect);
 
-    view_range_a.check_enabled.set_value(true);
-    view_range_a.frequency_range.enabled = true;
-    view_range_a.update_center(315'000'000);
-    view_range_a.update_width(1'000'000);
-
-    options_type.set_selected_index(3);
-    options_speed.set_selected_index(3);
-    options_hop.set_selected_index(0);
-    field_timetx.set_value(30);
-    field_timepause.set_value(0);
-    field_jitter.set_value(0);
-    field_gain.set_value(transmitter_model.tx_gain());
-    field_amp.set_value(transmitter_model.rf_amp());
+    options_type.set_selected_index(3);   // Rand CW
+    options_speed.set_selected_index(3);  // 10kHz
+    options_hop.set_selected_index(1);    // 50ms
     button_transmit.set_style(&style_val);
 
+<<<<<<< HEAD
     options_type.on_change = [this](size_t, OptionsField::value_t) {
         if (jamming) update_config();
         if (jamming && !cooling) baseband::set_jammer(true, (JammerType)options_type.selected_index(), options_speed.selected_index_value());
@@ -403,6 +446,12 @@ JammerView::JammerView(NavigationView& nav)
             };
         };
     }
+=======
+    field_timetx.set_value(30);
+    field_timepause.set_value(1);
+    field_gain.set_value(transmitter_model.tx_gain());
+    field_amp.set_value(transmitter_model.rf_amp());
+>>>>>>> a8149f33222353859a0f315bd7789e0ba82aefeb
 
     button_transmit.on_select = [this](Button&) {
         if (jamming || cooling)

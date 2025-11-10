@@ -36,19 +36,120 @@ Style Style::invert() const {
         .foreground = background};
 }
 
-int Painter::draw_char(Point p, const Style& style, char c, uint8_t zoom_level) {
+
+int Painter::draw_char_source(Point p, const Style& style, char c, uint8_t zoom_level) {
     const auto glyph = style.font.glyph(c);
 
     display.draw_glyph(p, glyph, style.foreground, style.background, zoom_level);
-
     return glyph.advance().x() * zoom_level;
+}
+
+
+int Painter::draw_char(Point p, const Style& style, char c, uint8_t zoom_level) {
+    if( c >= 0x20 && c<=0x7E)
+    {
+        uint8_t idx = c-0x20;
+        display.draw_glyph_v2(p, ui::Size(12,24), style.foreground, style.background,(void *)font12x24[idx]);
+        return p.x()* zoom_level;
+    }
+    else
+    {
+        return p.x()* zoom_level;
+    }
+}
+
+
+
+static int draw_string_orgin(Point p,const Font& font,Color foreground,Color background,std::string_view text) {
+    bool escape = false;
+    size_t width = 0;
+    Color pen = foreground;
+    for (auto c : text) {
+        if (escape) {
+            if (c < std::size(term_colors))
+                pen = term_colors[(uint8_t)c];
+            else
+                pen = foreground;
+            escape = false;
+        } else {
+            if (c == '\x1B') {
+                escape = true;
+            } else {
+                const auto glyph = font.glyph(c);
+                display.draw_glyph(p, glyph, pen, background);
+                const auto advance = glyph.advance();
+                p += advance;
+                width += advance.x();
+            }
+        }
+    }
+    return width;
 }
 
 int Painter::draw_string(Point p, const Style& style, std::string_view text) {
     return draw_string(p, style.font, style.foreground, style.background, text);
 }
 
+
+/// @brief for fit new screen 
+/// @param p source arg
+/// @param style source arg
+/// @param text source arg
+/// @param fit_size 0 for old paint function or 1 for new paint function
+/// @return 
+int Painter::draw_string_with_fitsize(Point p, const Style& style, std::string_view text,int fit_size)
+{
+    // source
+    if(fit_size == 0)
+    {
+        return draw_string_orgin(p, style.font, style.foreground, style.background, text);
+    }
+    else
+    {
+        return draw_string(p, style.font, style.foreground, style.background, text);
+    }   
+}
+
 int Painter::draw_string(
+    Point p,
+    const Font& font,
+    Color foreground,
+    Color background,
+    std::string_view text) {
+    bool escape = false;
+    size_t width = 0;
+    Color pen = foreground;
+
+    for (auto c : text) {
+        if (escape) {
+            if (c < std::size(term_colors))
+                pen = term_colors[(uint8_t)c];
+            else
+                pen = foreground;
+            escape = false;
+        } else {
+            if (c == '\x1B') {
+                escape = true;
+            } 
+            else {
+                if( c >= 0x20 && c<=0x7E)
+                {
+                    // new font width
+                    int tt_width = 12;
+                    // get new font idx
+                    uint8_t idx = c-0x20;
+                    // show new font
+                    display.draw_glyph_v2(p, ui::Size(12,24), foreground,background,(void *) font12x24[idx]);
+                    p += Point(tt_width,0);
+                    width+=tt_width;
+                }
+            }
+        }
+    }
+    return width;
+}
+
+int Painter::draw_string_source(
     Point p,
     const Font& font,
     Color foreground,
@@ -81,12 +182,22 @@ int Painter::draw_string(
     return width;
 }
 
+
+
 void Painter::draw_bitmap(Point p, const Bitmap& bitmap, Color foreground, Color background) {
     // If bright foreground colors on white background, darken the foreground color to improve visibility
     if ((background.v == ui::Color::white().v) && (foreground.to_greyscale() > 146))
         foreground = foreground.dark();
 
     display.draw_bitmap(p, bitmap.size, bitmap.data, foreground, background);
+}
+
+void Painter::draw_bitmap_with_autofit(Point p, const Bitmap& bitmap, Color background, Color foreground,int zoom)
+{
+    if ((background.v == ui::Color::white().v) && (foreground.to_greyscale() > 146))
+        foreground = foreground.dark();
+
+    display.draw_bitmap(p, bitmap.size, bitmap.data, foreground, background,zoom);
 }
 
 void Painter::draw_hline(Point p, int width, Color c) {
